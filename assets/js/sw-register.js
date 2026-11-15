@@ -1,10 +1,17 @@
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js").then((reg) => {
+  window.addEventListener("load", async () => {
+    try {
+      // Register only when there is no worker yet. In the installed app OneSignal registers this same file
+      // under its own address (sw.js?appId=...); registering the plain address on every load would make the
+      // browser swap the two versions back and forth.
+      const reg = (await navigator.serviceWorker.getRegistration()) || (await navigator.serviceWorker.register("sw.js"));
       // An installed app can stay open for days. Check for a new version whenever it is brought back to the front.
-      const check = () => { if (document.visibilityState === "visible") reg.update().catch(() => {}); };
-      document.addEventListener("visibilitychange", check);
-    }).catch((err) => console.error("Service worker registration failed", err));
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") reg.update().catch(() => {});
+      });
+    } catch (err) {
+      console.error("Service worker registration failed", err);
+    }
   });
 
   // A new version took over while the page was open: load it once, so the old scripts never run against the new ones.
