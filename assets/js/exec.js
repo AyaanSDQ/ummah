@@ -13,7 +13,6 @@ const appView = document.getElementById("app-view");
 const loginForm = document.getElementById("login-form");
 const loginError = document.getElementById("login-error");
 const loginSubmit = document.getElementById("login-submit");
-const logoutBtn = document.getElementById("logout-btn");
 const headerLogout = document.getElementById("header-logout");
 
 const newPostToggle = document.getElementById("new-post-toggle");
@@ -296,7 +295,6 @@ function wireLoginForm() {
     await supabase.auth.signOut();
     location.replace("index.html"); // replace, so Back never returns to an admin page after signing out
   };
-  logoutBtn.addEventListener("click", logout);
   headerLogout.addEventListener("click", logout);
 }
 

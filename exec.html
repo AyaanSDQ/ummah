@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ummah — Administrative</title>
-<link rel="stylesheet" href="assets/css/app.css?v=114">
+<link rel="stylesheet" href="assets/css/app.css?v=115">
 <meta name="robots" content="noindex">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/svg+xml" href="assets/icons/logo.svg">
@@ -57,7 +57,6 @@
       <div class="section-heading exec-heading">
         <div class="label">All events</div>
         <span class="count" id="events-count">0</span>
-        <button type="button" id="logout-btn" class="logout-pill">Log out</button>
       </div>
 
       <div class="new-post-box">
@@ -239,17 +238,12 @@
       </div>
     </section>
 
-    <section data-panel="calendar" id="panel-calendar" hidden>
-      <main id="calendar" class="calendar" aria-live="polite"></main>
-    </section>
-
   </div>
 
   <!-- Outside #app-view on purpose: that element's entrance animation would trap this fixed bar inside it. -->
   <nav id="exec-nav" class="bnav" hidden aria-label="Administrative sections">
       <a href="exec.html" class="bnav-item" data-panel-link="admin" aria-current="page"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-case"></use></svg><span>Admins</span></a>
       <a href="exec.html#view" class="bnav-item" data-panel-link="view"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-mega"></use></svg><span>View</span></a>
-      <a href="exec.html#calendar" class="bnav-item" data-panel-link="calendar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-calendar"></use></svg><span>Calendar</span></a>
     </nav>
 
   <footer class="app-footer">
@@ -278,10 +272,9 @@
 </script>
 <script type="module">
   import { initPanels } from "./assets/js/nav.js?v=1";
-  initPanels({ home: "admin", titles: { admin: "Ummah — Administrative", view: "View — Ummah", calendar: "Calendar — Ummah" } });
+  initPanels({ home: "admin", titles: { admin: "Ummah — Administrative", view: "View — Ummah" } });
 </script>
-<script type="module" src="assets/js/exec.js?v=44"></script>
-<script type="module" src="assets/js/calendar.js?v=30"></script>
+<script type="module" src="assets/js/exec.js?v=45"></script>
 <script src="assets/js/fx.js?v=4" defer></script>
 <script src="assets/js/sw-register.js?v=2"></script>
 </body>

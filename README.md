@@ -48,7 +48,7 @@ A fast, phone-first web app. Install it to your home screen, get a push when som
 
 ```
 index.html        Updates feed and Calendar (two sections of one page, switched without loading)
-exec.html         Administrative login and posting; also holds the View and Calendar sections
+exec.html         Administrative login and posting; also holds the View section
 calendar.html     Old link: redirects to index.html#calendar
 view.html         Old link: redirects to exec.html#view
 privacy.html      Privacy Policy
