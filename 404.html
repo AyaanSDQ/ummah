@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ummah has moved</title>
+<meta name="robots" content="noindex">
+<style>
+  body { font: 16px/1.5 system-ui, sans-serif; background: #efe7f9; color: #2a1646; margin: 0; padding: 48px 20px; text-align: center; }
+  a { color: #5b2e91; font-weight: 700; }
+</style>
+</head>
+<body>
+<h1>Ummah has moved</h1>
+<p>Taking you to <a id="go" href="https://ummahnchs.web.app/">ummahnchs.web.app</a>.</p>
+<p>If you installed the app on your home screen, please remove the old icon and add the new site again.</p>
+<script>
+  // Same page on the new address; keeps ?query and #post-... so old links and notifications still work.
+  var rest = location.pathname.replace(/^\/ummah\/?/, "");
+  var target = "https://ummahnchs.web.app/" + rest + location.search + location.hash;
+  document.getElementById("go").href = target;
+  location.replace(target);
+</script>
+</body>
+</html>
