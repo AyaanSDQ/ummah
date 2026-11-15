@@ -2,7 +2,7 @@ import { icon } from "./icons.js?v=13";
 
 // Public OneSignal App ID — a public identifier meant to ship in client
 // code (same trust model as the Supabase anon key), not a secret.
-const ONESIGNAL_APP_ID = "90056235-55df-4620-b88c-e216a55f1b4d";
+const ONESIGNAL_APP_ID = "73a18eab-2f8d-4909-8005-72bb95c080e5";
 const DISMISS_KEY = "msa-notify-dismissed";
 
 const banner = document.getElementById("notify-banner");
@@ -36,12 +36,17 @@ async function initNotifyBanner(banner) {
   window.OneSignalDeferred.push(async (OneSignal) => {
     await OneSignal.init({
       appId: ONESIGNAL_APP_ID,
-      // Reuse our own app-shell service worker (step 5) instead of
-      // OneSignal's default OneSignalSDKWorker.js — sw.js imports
-      // OneSignal's worker script via importScripts so the two coexist
-      // in one registration rather than fighting over root scope.
-      serviceWorkerPath: "sw.js",
-      serviceWorkerParam: { scope: "/" },
+      // Reuse our own app-shell service worker instead of OneSignal's default
+      // OneSignalSDKWorker.js: sw.js imports OneSignal's worker script, so the
+      // two share one registration. The site lives in a folder (/ummah/ on
+      // GitHub Pages), so the worker is not at the domain root and the scope
+      // cannot be "/" (a worker can only control its own folder and below).
+      // OneSignal wants the path from the site root WITHOUT a leading slash.
+      // Both values come from the page's own address, so they follow the
+      // folder if the repository is ever renamed, and they match the
+      // registration sw-register.js already makes.
+      serviceWorkerPath: new URL("sw.js", location.href).pathname.slice(1),
+      serviceWorkerParam: { scope: new URL("./", location.href).pathname },
     });
 
     if (OneSignal.Notifications.permission && OneSignal.User.PushSubscription.optedIn) {

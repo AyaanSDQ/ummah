@@ -1,11 +1,19 @@
 # Push notifications: where things stand and how to finish
 
-Last updated 2026-11-10. Live site: https://ayaansdq.github.io/ummah/ (GitHub Pages, branch `ummah-app`; `main` is kept in step with it).
+Last updated 2026-11-15. Live site: https://ayaansdq.github.io/ummah/ (GitHub Pages, branch `ummah-app`; `main` is kept in step with it).
 No secrets are recorded here. Keys live in `.env` (git-ignored), Supabase secrets and Supabase Vault.
 
 ## In one paragraph
 
 The server half (database trigger, then an Edge Function, then OneSignal) is built and was verified end to end on 2026-11-09. The device half has never worked: **OneSignal has 0 subscribers**, so no phone or computer has ever received a push. The likeliest cause is a bad service-worker path and scope in `assets/js/notify.js`, which was written for a site at the domain root but the app lives under `/ummah/`. Fixing that, plus two stale URLs, is the whole remaining job.
+
+
+## Update 2026-11-15: new OneSignal project
+
+The OneSignal app was recreated from scratch (Custom Code web setup, Site URL `https://ayaansdq.github.io/ummah/`, REST key with the IP allowlist off because Edge Functions have no fixed IP). Done since the notes below were written:
+- `notify.js` now registers `ummah/sw.js` (path from the site root, no leading slash) with scope `/ummah/`, derived from the page address, and uses the new App ID.
+- Supabase secrets `SITE_URL`, `ONESIGNAL_APP_ID` and `ONESIGNAL_REST_API_KEY` updated; `notify-post` redeployed with the `/ummah/` fallback.
+- Still to confirm on a device: install fresh from `/ummah/`, log out (the banner exists only on the public page, which signed-in admins are redirected away from), tap Enable, and look for 1 subscriber in OneSignal. Sections 3 and 4 below are the history of the diagnosis and are otherwise done.
 
 ---
 
@@ -29,7 +37,7 @@ exec posts an update
 | Vault secret `trigger_service_role_key` | The key the trigger uses to call the function, so nothing secret is in the repo. | Supabase Vault |
 | Edge Function `notify-post` | Builds the heading and message, calls OneSignal, sets the tap link. Deployed, ACTIVE, `verify_jwt: true`. | `supabase/functions/notify-post/index.ts` |
 | Function secrets | `ONESIGNAL_APP_ID`, `ONESIGNAL_REST_API_KEY`, `SITE_URL`. | Supabase, Edge Functions, Secrets |
-| OneSignal app | Push provider, Web Push, custom-code integration, SDK v16. App ID `90056235-55df-4620-b88c-e216a55f1b4d` (public, safe in client code). | OneSignal dashboard |
+| OneSignal app | Push provider, Web Push, custom-code integration, SDK v16. App ID `73a18eab-2f8d-4909-8005-72bb95c080e5` (public, safe in client code). | OneSignal dashboard |
 | `notify.js` | The "Enable notifications" banner. Initialises OneSignal and subscribes the device. **Runs only in an installed PWA (standalone display mode) on a push-capable browser.** Dismissal is remembered in `localStorage` key `msa-notify-dismissed`. | `assets/js/notify.js`, loaded by `index.html` only |
 | `sw.js` | App-shell worker. Also pulls in OneSignal's worker with `importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js")`, so one worker does caching and push. | `sw.js` |
 | `sw-register.js` | Registers `sw.js` on every page. Its default scope is the folder the worker sits in, so `/ummah/`. | `assets/js/sw-register.js` |

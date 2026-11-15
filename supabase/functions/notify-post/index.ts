@@ -9,7 +9,7 @@
 
 const ONESIGNAL_APP_ID = Deno.env.get("ONESIGNAL_APP_ID");
 const ONESIGNAL_REST_API_KEY = Deno.env.get("ONESIGNAL_REST_API_KEY");
-const SITE_URL = Deno.env.get("SITE_URL") ?? "https://ayaansdq.github.io/msa-app/";
+const SITE_URL = Deno.env.get("SITE_URL") ?? "https://ayaansdq.github.io/ummah/";
 
 const TYPE_LABEL: Record<string, string> = {
   prayer: "Prayer",
