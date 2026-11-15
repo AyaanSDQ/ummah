@@ -59,10 +59,13 @@ Deno.serve(async (req) => {
     body: JSON.stringify({
       app_id: ONESIGNAL_APP_ID,
       target_channel: "push",
-      included_segments: ["Subscribed Users"],
+      included_segments: ["Total Subscriptions"], // this app has no "Subscribed Users" segment; OneSignal only delivers to opted-in subscriptions anyway
       headings: { en: heading },
       contents: { en: message },
       url: `${SITE_URL}#post-${id}`,
+      // Highest urgency: Android holds normal-priority web pushes while the phone is idle, and these are time-sensitive.
+      priority: 10,
+      ttl: 60 * 60 * 6, // a prayer or cancellation notice is useless a few hours later
     }),
   });
 
