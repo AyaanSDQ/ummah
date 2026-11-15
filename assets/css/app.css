@@ -1702,3 +1702,18 @@ body::before {
 .footer-link-btn:hover { text-decoration: underline; }
 .footer-link-btn:disabled { opacity: .55; cursor: default; }
 .footer-link-btn[hidden] { display: none; }
+
+/* Room control: the usual rooms on the left, an "Other" box filling the rest of the same line */
+.room-row { display: flex; align-items: stretch; gap: 8px; }
+.room-defaults { display: flex; gap: 8px; flex: none; }
+.room-defaults:empty { display: none; }
+.room-chip {
+  min-height: 40px; padding: 8px 16px; font: inherit; font-size: 14px; font-weight: 700; color: var(--ink-2);
+  background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--r-sm); cursor: pointer;
+  transition: background-color .15s var(--ease), border-color .15s var(--ease), color .15s var(--ease), scale var(--t) var(--ease);
+}
+.room-chip:hover { border-color: var(--brand); }
+.room-chip:active { scale: .96; transition-duration: var(--t-fast); }
+.room-chip[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
+.room-chip:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 25%, transparent); }
+.room-other { flex: 1; min-width: 0; }

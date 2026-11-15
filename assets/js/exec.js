@@ -6,6 +6,7 @@ import {
 } from "./recurrence.js?v=2";
 import { setupRepeat } from "./exec-repeat.js?v=2";
 import { enhancePickers } from "./datetime-picker.js?v=5";
+import { setupRooms, setRoom } from "./exec-room.js?v=1";
 import { TYPE_META, escapeHtml, formatTime, formatDateHeading, formatEventDate, localDateKey, roomLabel, cancelledBanner, animateRemove, keepPlace } from "./shared.js?v=26";
 
 const loginView = document.getElementById("login-view");
@@ -402,6 +403,7 @@ function syncSubmitState() {
 
 function wireNewPostForm() {
   enhancePickers(document); // computers get the app's own date and time picker
+  setupRooms(document); // the Room control: usual rooms plus an Other box
   repeatCtl = setupRepeat(postForm);
   postForm.event_time.addEventListener("input", syncSubmitState);
   postForm.event_time.addEventListener("change", syncSubmitState);
@@ -423,7 +425,7 @@ function wireNewPostForm() {
     if (!btn) return;
     selectedType = btn.dataset.type;
     typeGrid.querySelectorAll(".type-option").forEach((b) => b.classList.toggle("selected", b === btn));
-    locationLabel.textContent = "Room number";
+    locationLabel.textContent = "Room";
     syncSubmitState();
   });
 
@@ -499,7 +501,7 @@ function wireNewPostForm() {
     repeatCtl.reset();
     selectedType = "prayer";
     typeGrid.querySelectorAll(".type-option").forEach((b) => b.classList.toggle("selected", b.dataset.type === "prayer"));
-    locationLabel.textContent = "Room number";
+    locationLabel.textContent = "Room";
     syncSubmitState();
     dismissForm();
     loadEventsAndHeader({ quiet: true });
@@ -779,7 +781,7 @@ function openEditForm() {
   const row = currentDetailUpdate;
   const f = effectiveFields(row, detailOccDate);
   editForm.title.value = f.title || "";
-  editForm.location.value = f.location || "";
+  setRoom(editForm, f.location);
   editForm.time.value = f.time || "";
   editForm.body.value = f.body || "";
   editError.hidden = true;
