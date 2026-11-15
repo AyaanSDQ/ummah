@@ -54,6 +54,8 @@ view.html         Old link: redirects to exec.html#view
 privacy.html      Privacy Policy
 terms.html        Terms of Use
 sw.js             Service worker (bump CACHE_NAME when assets change)
+firebase.json     Firebase Hosting settings (publishes dist/)
+scripts/          build-site.mjs: builds dist/ from the website files
 manifest.json     PWA manifest
 assets/
   css/app.css     All styles and design tokens
@@ -67,6 +69,17 @@ supabase/
   ADMIN-ACCOUNTS.md  How to create officer logins
 design/           Design spec
 ```
+
+## Publishing on Firebase Hosting
+
+The site is a plain folder of files. `scripts/build-site.mjs` copies only the website files into `dist/` (so `.env`, `supabase/` and `docs/` can never be published), and `firebase.json` publishes `dist/`. The Firebase project is `ummahnchs` (see `.firebaserc`).
+
+```
+node scripts/build-site.mjs
+firebase deploy --only hosting
+```
+
+The service worker, the HTML pages and the manifest are sent with `Cache-Control: no-cache`, so a new version reaches installed apps quickly.
 
 ## Make it yours
 
