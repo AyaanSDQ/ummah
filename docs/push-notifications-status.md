@@ -15,6 +15,19 @@ The OneSignal app was recreated from scratch (Custom Code web setup, Site URL `h
 - Supabase secrets `SITE_URL`, `ONESIGNAL_APP_ID` and `ONESIGNAL_REST_API_KEY` updated; `notify-post` redeployed with the `/ummah/` fallback.
 - Still to confirm on a device: install fresh from `/ummah/`, log out (the banner exists only on the public page, which signed-in admins are redirected away from), tap Enable, and look for 1 subscriber in OneSignal. Sections 3 and 4 below are the history of the diagnosis and are otherwise done.
 
+
+## Action points (2026-11-15, from the owner)
+
+Push now works end to end (banner, subscribe, post, delivery). Remaining, in order:
+
+1. **Notification wording for posts.** Title = the post's own title (for a prayer, the prayer name). Message = location and/or time, three cases: `Room 2105 at 1:10 PM`, `Room 2105`, `at 1:10 PM`. Nothing but a title is not allowed by OneSignal, so a post with neither gets a short fallback line.
+2. **Unsubscribe.** A subscribed reader can turn notifications off from the app; once off, the Enable notifications prompt comes back (and the footer offers Turn on).
+3. Commit, push, and explain how to reload the installed app to pick it up.
+
+**Done 2026-11-15:** 1 and 2 are built and live. Wording lives in `supabase/functions/notify-post/message.ts` (tests: `node supabase/functions/notify-post/message.test.mjs`); times use the `SITE_TIMEZONE` secret, default `America/Los_Angeles`; the trigger (migration `20261115000000_notify_payload_details.sql`) now sends the time, repeat rule and cancel reason because the function's database role cannot read `public.updates`. Subscribers get a "Turn off / Turn on notifications" link in the Updates footer (installed app only); turning off brings the Enable prompt back. Announcements lead with their text; cancellations read `Cancelled: <title>` with the place, time and reason.
+
+4. Afterwards, discuss Firebase: Firebase Hosting for a cleaner URL (no `/ummah/` folder), and what Firebase Cloud Messaging itself would offer compared with OneSignal.
+
 ---
 
 ## 1. How it is supposed to work

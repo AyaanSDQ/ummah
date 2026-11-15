@@ -7,29 +7,27 @@
 // project's service_role key (stored in Supabase Vault, not in this repo),
 // which satisfies this function's default JWT verification.
 
+import { buildNotification, type PostFacts } from "./message.ts";
+
 const ONESIGNAL_APP_ID = Deno.env.get("ONESIGNAL_APP_ID");
 const ONESIGNAL_REST_API_KEY = Deno.env.get("ONESIGNAL_REST_API_KEY");
 const SITE_URL = Deno.env.get("SITE_URL") ?? "https://ayaansdq.github.io/ummah/";
-
-const TYPE_LABEL: Record<string, string> = {
-  prayer: "Prayer",
-  social: "Social",
-  announcement: "Announcement",
-};
+// Times in the notification are written in the school's time zone (the server itself runs in UTC).
+const SITE_TIMEZONE = Deno.env.get("SITE_TIMEZONE") ?? "America/Los_Angeles";
 
 Deno.serve(async (req) => {
   if (req.method !== "POST") {
     return new Response("Method not allowed", { status: 405 });
   }
 
-  let payload: { event?: string; id?: string; type?: string; title?: string; body?: string | null; location?: string | null };
+  let payload: Partial<PostFacts> & { id?: string };
   try {
     payload = await req.json();
   } catch {
     return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400 });
   }
 
-  const { event, id, type, title, location } = payload;
+  const { event, id, type, title } = payload;
 
   // Readers never see exec-meeting posts at all (RLS-enforced) — never
   // notify the general audience about them. No other push channel exists
@@ -43,12 +41,11 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({ error: "Server not configured" }), { status: 500 });
   }
 
-  const label = TYPE_LABEL[type] ?? "Update";
-  const isCancelled = event === "cancelled";
-  const heading = isCancelled ? `${label} cancelled` : `New ${label.toLowerCase()} update`;
-  const message = isCancelled
-    ? `"${title}" has been cancelled.`
-    : [title, location].filter(Boolean).join(" — ");
+  const { heading, message } = buildNotification(
+    { event, type, title, body: payload.body, location: payload.location, event_time: payload.event_time,
+      recurrence: payload.recurrence, cancel_reason: payload.cancel_reason },
+    SITE_TIMEZONE,
+  );
 
   const res = await fetch("https://api.onesignal.com/notifications", {
     method: "POST",

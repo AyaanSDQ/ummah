@@ -1696,3 +1696,9 @@ body::before {
     radial-gradient(90% 46vh at 50% calc(100vh - 8vh), rgba(150, 100, 215, .30), rgba(0, 0, 0, 0) 72%),
     linear-gradient(180deg, #f4eefb 0, #f4eefb 100vh, #efe7f9 calc(100vh + 55vh), #ebe1f7 calc(100vh + 100vh), #ebe1f7 100%);
 }
+
+/* Footer button that looks like the footer links (Turn off / Turn on notifications) */
+.footer-link-btn { font: inherit; font-size: 13px; font-weight: 700; color: var(--brand); background: none; border: 0; padding: 0; cursor: pointer; }
+.footer-link-btn:hover { text-decoration: underline; }
+.footer-link-btn:disabled { opacity: .55; cursor: default; }
+.footer-link-btn[hidden] { display: none; }

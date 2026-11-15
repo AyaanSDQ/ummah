@@ -6,6 +6,7 @@ const ONESIGNAL_APP_ID = "73a18eab-2f8d-4909-8005-72bb95c080e5";
 const DISMISS_KEY = "msa-notify-dismissed";
 
 const banner = document.getElementById("notify-banner");
+const toggle = document.getElementById("notify-toggle"); // footer link: Turn off / Turn on notifications
 
 // Push only works on iOS when launched from the home screen icon
 // specifically (not a normal Safari tab, even post-install), and there's
@@ -25,13 +26,6 @@ function supportsPush() {
 }
 
 async function initNotifyBanner(banner) {
-  if (wasDismissed()) return;
-
-  if (Notification.permission === "denied") {
-    renderBlocked(banner);
-    return;
-  }
-
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   window.OneSignalDeferred.push(async (OneSignal) => {
     await OneSignal.init({
@@ -49,15 +43,61 @@ async function initNotifyBanner(banner) {
       serviceWorkerParam: { scope: new URL("./", location.href).pathname },
     });
 
-    if (OneSignal.Notifications.permission && OneSignal.User.PushSubscription.optedIn) {
-      return; // already enabled — nothing to ask
+    const subscribed = () => Notification.permission === "granted" && OneSignal.User.PushSubscription.optedIn === true;
+
+    // Show whatever fits the current state: the first-time prompt, the "blocked" note, or just the footer link.
+    function render() {
+      if (Notification.permission === "denied") {
+        renderBlocked(banner);
+        setToggle(null);
+      } else if (subscribed()) {
+        hide(banner);
+        setToggle("off");
+      } else {
+        if (wasDismissed()) hide(banner);
+        else renderPrompt(banner, enable);
+        setToggle("on");
+      }
     }
 
-    renderPrompt(banner, OneSignal);
+    // Subscribe (asking the browser for permission only if it has not been asked yet).
+    async function enable() {
+      if (Notification.permission === "default") await OneSignal.Notifications.requestPermission();
+      if (Notification.permission === "granted") await OneSignal.User.PushSubscription.optIn();
+      render();
+      return subscribed();
+    }
+
+    // Unsubscribe: the browser permission stays granted, so turning it back on later is one tap with no prompt.
+    async function disable() {
+      await OneSignal.User.PushSubscription.optOut();
+      clearDismissed(); // the Enable notifications prompt comes back
+      render();
+    }
+
+    toggle?.addEventListener("click", async () => {
+      toggle.disabled = true;
+      try {
+        if (toggle.dataset.state === "off") await disable();
+        else await enable();
+      } finally {
+        toggle.disabled = false;
+      }
+    });
+
+    OneSignal.User.PushSubscription.addEventListener("change", render);
+    render();
   });
 }
 
-function renderPrompt(banner, OneSignal) {
+function setToggle(state) {
+  if (!toggle) return;
+  toggle.hidden = state === null;
+  toggle.dataset.state = state ?? "";
+  toggle.textContent = state === "off" ? "Turn off notifications" : "Turn on notifications";
+}
+
+function renderPrompt(banner, enable) {
   show(banner, `
     ${icon("i-bell", { size: 20, stroke: 2.5 })}
     <div class="install-copy">
@@ -71,13 +111,8 @@ function renderPrompt(banner, OneSignal) {
     const btn = document.getElementById("notify-action");
     btn.disabled = true;
     btn.textContent = "Requesting…";
-
-    await OneSignal.Notifications.requestPermission();
-
-    if (OneSignal.Notifications.permission) {
-      await OneSignal.User.PushSubscription.optIn();
-      hide(banner);
-    } else {
+    const ok = await enable(); // on success the prompt is replaced; otherwise put the button back
+    if (!ok && document.getElementById("notify-action")) {
       btn.disabled = false;
       btn.textContent = "Enable";
     }
@@ -113,6 +148,14 @@ function wasDismissed() {
     return localStorage.getItem(DISMISS_KEY) === "1";
   } catch {
     return false;
+  }
+}
+
+function clearDismissed() {
+  try {
+    localStorage.removeItem(DISMISS_KEY);
+  } catch {
+    // storage blocked — nothing to clear
   }
 }
 
