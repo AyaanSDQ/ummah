@@ -7,7 +7,7 @@ import {
 import { setupRepeat } from "./exec-repeat.js?v=2";
 import { enhancePickers } from "./datetime-picker.js?v=6";
 import { setupRooms, setRoom } from "./exec-room.js?v=1";
-import { TYPE_META, escapeHtml, formatTime, formatDateHeading, formatEventDate, localDateKey, roomLabel, cancelledBanner, animateRemove, keepPlace } from "./shared.js?v=26";
+import { TYPE_META, escapeHtml, formatTime, formatDateHeading, formatEventDate, localDateKey, roomLabel, cancelledBanner, animateRemove, keepPlace } from "./shared.js?v=27";
 
 const loginView = document.getElementById("login-view");
 const appView = document.getElementById("app-view");
@@ -127,7 +127,7 @@ async function renderForSession(session) {
   // The View section is the public Updates page; it starts loading now so it is ready when opened.
   if (!readerLoaded) {
     readerLoaded = true;
-    import("./reader.js?v=44").catch((err) => console.error("Failed to load the preview", err));
+    import("./reader.js?v=45").catch((err) => console.error("Failed to load the preview", err));
   }
 }
 

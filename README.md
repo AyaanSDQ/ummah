@@ -28,7 +28,7 @@ A fast, phone-first web app. Install it to your home screen, get a push when som
 
 - **Updates feed**: a featured post up top, then everything else for the day. Announcements, prayers and socials each have their own look, with badges for *Important*, *Urgent* and *Pinned*.
 - **Calendar**: a clean month view with a dot-and-chip summary per day, a list view, swipe between months, and a "Next up" hint on empty days.
-- **Room numbers**: locations are shown as rooms, with the building worked out from the first digit (2105 is in Building 2).
+- **Room numbers**: locations are shown as rooms, with the building worked out from the room (2105 is in Building 2; a room starting with A and a number, like A101, is in Building A; North Creek has Buildings 1, 2, 3 and A).
 - **Install and push**: works offline as a PWA, and sends a push notification when a post goes up or is cancelled.
 - **Admin login**: officers sign in with a username and password, then post, edit, cancel or delete updates.
 - **Feedback**: students can leave quick ratings and notes on events that ask for them.

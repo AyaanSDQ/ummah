@@ -122,10 +122,15 @@ export function cancelledBanner(reason = "") {
 }
 
 // ── Room labels ──────────────────────────────────────────────────────────
-// Rooms starting with 1, 2 or 3 are in Building 1, 2 or 3.
+// North Creek has Buildings 1, 2, 3 and A.
+// A room number starting with 1, 2 or 3 is in Building 1, 2 or 3 (2105 is in Building 2).
+// A room starting with the letter A followed by a number (A101, A-12) is in Building A.
 export function buildingFor(location) {
-  const m = /^\s*([123])\d{2,3}\b/.exec(location || "");
-  return m ? Number(m[1]) : null;
+  const loc = location || "";
+  const m = /^\s*([123])\d{2,3}\b/.exec(loc);
+  if (m) return Number(m[1]);
+  if (/^\s*A[\s-]?\d/i.test(loc)) return "A";
+  return null;
 }
 
 export function roomLabel(location) {
