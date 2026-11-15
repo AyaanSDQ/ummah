@@ -1,8 +1,7 @@
-// The app's own date and time picker for computers (a mouse or trackpad).
+// The app's own date and time picker, used on every device (computers, phones and tablets).
 //
-// Phones and tablets keep the native picker, which is already good there. On a
-// computer the browser's own picker looks different on every system (and badly on
-// Windows), so this swaps it for one that matches the rest of the app.
+// The browser's built-in picker looks different on every system (and badly on Windows),
+// so this swaps it for one that matches the rest of the app everywhere.
 //
 // It enhances existing inputs in place: type="datetime-local", "date" or "time".
 // The original input stays in the page (hidden) and keeps holding the value in the
@@ -10,9 +9,6 @@
 // `input` / `change` listeners keep working exactly as before.
 
 import { icon } from "./icons.js?v=13";
-
-// Mouse or trackpad as the main pointer. Touch devices are left alone.
-const IS_COMPUTER = !!window.matchMedia?.("(hover: hover) and (pointer: fine)").matches;
 
 const pad = (n) => String(n).padStart(2, "0");
 const keyOf = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
@@ -324,8 +320,7 @@ function enhance(input) {
   syncHidden();
 }
 
-// Turn the date, time and date-and-time inputs under `root` into the app's picker (computers only).
+// Turn the date, time and date-and-time inputs under `root` into the app's picker.
 export function enhancePickers(root = document) {
-  if (!IS_COMPUTER) return;
   root.querySelectorAll('input[type="datetime-local"], input[type="date"], input[type="time"]').forEach(enhance);
 }

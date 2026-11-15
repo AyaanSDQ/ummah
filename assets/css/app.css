@@ -1603,7 +1603,7 @@ body {
 #edit-form .input { width: 100%; }
 #edit-error { margin-top: 10px; font-size: 13px; }
 
-/* ══════════════ Round 14: the app's own date and time picker (computers) ══════════════ */
+/* ══════════════ Round 14: the app's own date and time picker (all devices) ══════════════ */
 .dtp-src { display: none !important; }
 .dtp { position: relative; display: block; min-width: 0; }
 .dtp[hidden] { display: none; }
@@ -1717,3 +1717,14 @@ body::before {
 .room-chip[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
 .room-chip:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 25%, transparent); }
 .room-other { flex: 1; min-width: 0; }
+
+/* Date and time picker on a phone: the calendar on top and the time columns under it, so it fits the screen */
+@media (max-width: 560px) {
+  .dtp-body { flex-direction: column; gap: 10px; }
+  .dtp-cal { width: min(300px, calc(100vw - 48px)); }
+  .dtp-time { width: min(300px, calc(100vw - 48px)); grid-template-columns: repeat(3, 1fr); }
+  .dtp-time.has-date { padding-left: 0; border-left: 0; padding-top: 10px; border-top: 1px solid var(--line-2); }
+  .dtp-col, .dtp-time:not(.has-date) .dtp-col { max-height: 132px; overscroll-behavior: contain; }
+  .dtp-opt { padding: 9px 0; }
+  .dtp-pop { padding: 10px; }
+}

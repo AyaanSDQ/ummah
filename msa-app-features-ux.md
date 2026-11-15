@@ -156,4 +156,4 @@ No router needed — a single `currentView: 'list' | 'detail'` state toggle insi
 - **Notes can be edited per post** from its detail page.
 - Admins sign in with a **username**, not an email (see `supabase/ADMIN-ACCOUNTS.md`).
 - **Posts can repeat** (daily, or weekly on chosen days, ending never, on a date or after N times). A repeating post is one row; readers see each date on the calendar and Updates page, and admins can edit, cancel or delete one date, "this and all future", or the whole series. See `docs/recurring-events-concept.md`.
-- **Computers get the app's own date and time picker** (`assets/js/datetime-picker.js`) in place of the browser's, which looks different on every system and poor on Windows. Phones and tablets keep their native picker.
+- **Every device gets the app's own date and time picker** (`assets/js/datetime-picker.js`) in place of the browser's, which looks different on every system and poor on Windows. On phones the calendar and time columns stack to fit the screen.

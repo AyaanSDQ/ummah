@@ -5,7 +5,7 @@ import {
   isFirstOccurrence, overrideCount, parseKey, dateKey, addDays, startOfDay,
 } from "./recurrence.js?v=2";
 import { setupRepeat } from "./exec-repeat.js?v=2";
-import { enhancePickers } from "./datetime-picker.js?v=5";
+import { enhancePickers } from "./datetime-picker.js?v=6";
 import { setupRooms, setRoom } from "./exec-room.js?v=1";
 import { TYPE_META, escapeHtml, formatTime, formatDateHeading, formatEventDate, localDateKey, roomLabel, cancelledBanner, animateRemove, keepPlace } from "./shared.js?v=26";
 
