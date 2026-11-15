@@ -197,6 +197,31 @@ export function emptyCardHtml(kind, title, copy, { cta = null, compact = false }
     <div class="empty-art">${emptyIllustration(kind)}</div>
     <div class="empty-title">${escapeHtml(title)}</div>
     ${copy ? `<p class="empty-copy">${escapeHtml(copy)}</p>` : ""}
-    ${cta ? `<a class="btn btn-secondary empty-cta" href="${escapeHtml(cta.href)}">${escapeHtml(cta.label)}</a>` : ""}
+    ${cta ? `<a class="btn btn-secondary empty-cta" href="${escapeHtml(cta.href)}"${cta.panel ? ` data-panel-link="${escapeHtml(cta.panel)}"` : ""}>${escapeHtml(cta.label)}</a>` : ""}
   </div>`;
+}
+
+// Run a change that may add or remove content above what the reader is looking at, then scroll by
+// the difference so what they are looking at stays exactly where it was. The browser does this
+// itself in Chrome, but Safari (including the iOS home-screen app) does not, which is why new
+// posts used to wait behind a "scroll up" button. Near the top there is nothing to hold in place.
+export function keepPlace(change) {
+  if (window.scrollY <= 40) return change();
+  const seen = [];
+  for (const el of document.querySelectorAll("[data-update-id]")) {
+    if (!el.offsetParent) continue; // not on screen (hidden section)
+    const r = el.getBoundingClientRect();
+    if (r.bottom <= 0) continue;
+    if (r.top >= window.innerHeight) break;
+    seen.push({ id: el.dataset.updateId, top: r.top });
+    if (seen.length >= 6) break;
+  }
+  change();
+  for (const { id, top } of seen) {
+    const el = [...document.querySelectorAll("[data-update-id]")].find((n) => n.dataset.updateId === id && n.offsetParent);
+    if (!el) continue;
+    const delta = el.getBoundingClientRect().top - top;
+    if (delta) window.scrollBy(0, delta);
+    return;
+  }
 }

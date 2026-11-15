@@ -20,7 +20,8 @@ import {
   dateTileHtml,
   emptyCardHtml,
   animateRemove,
-} from "./shared.js?v=25";
+  keepPlace,
+} from "./shared.js?v=26";
 import { expandSeries, nextActive, describeRule, parseKey, addDays, startOfDay } from "./recurrence.js?v=2";
 
 const PAGE_SIZE = 20;
@@ -37,8 +38,6 @@ const loadMoreWrap = document.getElementById("load-more-wrap");
 const loadMoreBtn = document.getElementById("load-more");
 const skeletonEl = document.getElementById("skeleton");
 const pageEl = document.getElementById("page");
-const newUpdatePill = document.getElementById("new-update-pill");
-const newUpdatePillBtn = document.getElementById("new-update-pill-btn");
 
 // Posts are placed by the time set on them (event_time), falling back to when
 // they were posted for untimed ones. History pages through two sources (timed
@@ -59,7 +58,6 @@ let pinnedRows = [];
 // Cancelled posts (pinned or not) all sit above everything else in their own
 // "cancelled hero" cards and are kept out of every other list.
 let cancelledRows = [];
-let hasDeferredTodayUpdate = false;
 
 // Repeating posts: one row each in `updates`. Their occurrences are worked out
 // here (recurrence.js) and dropped into the same sets as ordinary posts, tagged
@@ -103,7 +101,7 @@ async function init() {
   buffered.forEach(handleRealtimeEvent);
 
   setInterval(refreshRelativeTimestamps, 60_000);
-  wireNewUpdatePill();
+  wireStayCurrent();
 
   loadMoreBtn.addEventListener("click", handleLoadMore);
 
@@ -372,9 +370,9 @@ function syncEmptyState() {
 
   if (!hasHero) {
     if (!hasAnything) {
-      heroEl.innerHTML = emptyCardHtml("today", "Welcome to Ummah", "Announcements, events and updates from the MSA show up here the moment they're posted.", { cta: { href: "calendar.html", label: "Open the calendar" } });
+      heroEl.innerHTML = emptyCardHtml("today", "Welcome to Ummah", "Announcements, events and updates from the MSA show up here the moment they're posted.", { cta: { href: "index.html#calendar", panel: "calendar", label: "Open the calendar" } });
     } else if (!hasToday) {
-      heroEl.innerHTML = emptyCardHtml("today", "Nothing new today", "You're all caught up. See what's coming up on the calendar.", { compact: true, cta: { href: "calendar.html", label: "Open the calendar" } });
+      heroEl.innerHTML = emptyCardHtml("today", "Nothing new today", "You're all caught up. See what's coming up on the calendar.", { compact: true, cta: { href: "index.html#calendar", panel: "calendar", label: "Open the calendar" } });
     }
   }
   historySection.hidden = historyCount === 0;
@@ -536,7 +534,7 @@ function refreshRelativeTimestamps() {
 }
 
 function maybeScrollToAnchor() {
-  if (!location.hash) return;
+  if (!location.hash.startsWith("#post-")) return;
   const id = location.hash.replace("#post-", "");
   const el = document.querySelector(`[data-update-id="${id}"]`) || document.querySelector(`[data-update-id^="${id}@"]`);
   if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -560,8 +558,15 @@ function setupRealtime() {
       }
       handleRealtimeEvent(payload);
     })
-    .subscribe();
+    .subscribe((status) => {
+      // After the connection drops and comes back, anything posted in the gap was missed: catch up.
+      if (status === "SUBSCRIBED") {
+        if (hadConnection) refreshAll();
+        hadConnection = true;
+      }
+    });
 }
+let hadConnection = false;
 
 function handleRealtimeEvent(payload) {
   const row = payload.new;
@@ -663,15 +668,16 @@ function handleCancelled(row) {
   showTopChange(now);
 }
 
-// Changes at the top of the page reflow everything below, so they wait behind
-// the "New update" pill unless the reader is already near the top.
+// A change near the top of the page happens straight away, wherever the reader is: if they are
+// scrolled down, the page is moved by exactly the amount the content above them grew or shrank
+// (keepPlace), so they keep reading the same card and never have to scroll up for it.
+function applyTop(change) {
+  if (pageEl.closest("section[data-panel]")?.hidden) return change(); // another section is showing; nothing to hold in place
+  keepPlace(change);
+}
+
 function showTopChange(now) {
-  if (isScrolledNearTop()) {
-    renderToday(now);
-  } else {
-    hasDeferredTodayUpdate = true;
-    newUpdatePill.hidden = false;
-  }
+  applyTop(() => renderToday(now));
 }
 
 function handleActiveArrival(row) {
@@ -694,12 +700,7 @@ function handleActiveArrival(row) {
 
   (bucket === "today" ? todayRows : upcomingRows).push(row);
 
-  if (wasOnTop || isScrolledNearTop()) {
-    renderToday(now);
-  } else {
-    hasDeferredTodayUpdate = true;
-    newUpdatePill.hidden = false;
-  }
+  showTopChange(now);
 }
 
 function handleDeleted(id) {
@@ -719,23 +720,64 @@ function handleDeleted(id) {
   });
 }
 
-function isScrolledNearTop() {
-  return (document.documentElement.scrollTop || document.body.scrollTop) <= 40;
+// ── Staying current ──────────────────────────────────────────────────────
+// A phone can sleep for hours with the app open, and the iOS home-screen app has no pull-to-refresh,
+// so the page brings itself up to date when you come back to it, when the connection returns, when
+// the live connection had to be re-established, and every few minutes while it is open.
+
+let refreshing = null;
+let lastRefreshAt = Date.now();
+let lastDay = new Date().toDateString();
+
+function refreshAll() {
+  if (!initialFetchDone) return Promise.resolve();
+  if (refreshing) return refreshing;
+  refreshing = (async () => {
+    const now = new Date();
+    const depth = historyCount;
+    timedOffset = 0;
+    untimedOffset = 0;
+    historyUpper = null;
+    historyDone = false;
+    seriesReady = fetchSeries().then((rows) => { seriesRows = rows; });
+    const [{ today, upcoming }, pinned, cancelled, firstPage] = await Promise.all([fetchTodayAndUpcoming(now), fetchPinned(), fetchCancelled(), fetchHistoryPage(now), seriesReady]);
+    // keep the same amount of "Earlier" the reader had already loaded
+    const batches = [firstPage];
+    let shown = firstPage.length;
+    while (shown < depth && !historyDone) {
+      const more = await fetchHistoryPage(now);
+      batches.push(more);
+      shown += more.length;
+    }
+    todayRows = today;
+    upcomingRows = upcoming;
+    pinnedRows = pinned;
+    cancelledRows = cancelled;
+    applySeries(now);
+    applyTop(() => {
+      renderToday(now);
+      renderHistoryBatch(batches[0]);
+      batches.slice(1).forEach((rows) => renderHistoryBatch(rows, { append: true }));
+      updateLoadMoreVisibility();
+      syncEmptyState();
+    });
+    refreshRelativeTimestamps();
+    lastRefreshAt = Date.now();
+    lastDay = now.toDateString();
+  })().catch((err) => console.error("Refresh failed", err)).finally(() => { refreshing = null; });
+  return refreshing;
 }
 
-function wireNewUpdatePill() {
-  newUpdatePillBtn.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    applyDeferredToday();
-  });
-  window.addEventListener("scroll", () => {
-    if (hasDeferredTodayUpdate && isScrolledNearTop()) applyDeferredToday();
-  });
-}
-
-function applyDeferredToday() {
-  if (!hasDeferredTodayUpdate) return;
-  hasDeferredTodayUpdate = false;
-  newUpdatePill.hidden = true;
-  renderToday(new Date());
+function wireStayCurrent() {
+  const maybe = () => {
+    if (document.visibilityState !== "visible") return;
+    const stale = Date.now() - lastRefreshAt > 20_000 || new Date().toDateString() !== lastDay;
+    if (stale) refreshAll();
+    else refreshRelativeTimestamps();
+  };
+  document.addEventListener("visibilitychange", maybe);
+  window.addEventListener("pageshow", (e) => { if (e.persisted) refreshAll(); });
+  window.addEventListener("online", () => refreshAll());
+  window.addEventListener("focus", maybe);
+  setInterval(() => { if (document.visibilityState === "visible") refreshAll(); }, 10 * 60_000);
 }

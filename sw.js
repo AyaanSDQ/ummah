@@ -9,7 +9,7 @@ importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
 
 // Bump CACHE_NAME whenever the precache list below changes, so the old
 // cache gets cleaned up on activate instead of accumulating stale entries.
-const CACHE_NAME = "msa-shell-v133";
+const CACHE_NAME = "msa-shell-v134";
 
 const PRECACHE_URLS = [
   "index.html",
@@ -19,19 +19,20 @@ const PRECACHE_URLS = [
   "calendar.html",
   "terms.html",
   "manifest.json",
-  "assets/css/app.css?v=113",
-  "assets/js/reader.js?v=41",
-  "assets/js/exec.js?v=43",
+  "assets/css/app.css?v=114",
+  "assets/js/reader.js?v=43",
+  "assets/js/exec.js?v=44",
   "assets/js/install.js?v=8",
   "assets/js/notify.js?v=4",
-  "assets/js/sw-register.js?v=1",
+  "assets/js/sw-register.js?v=2",
   "assets/js/icons.js?v=13",
   "assets/js/recurrence.js?v=2",
+  "assets/js/nav.js?v=1",
   "assets/js/exec-repeat.js?v=2",
   "assets/js/datetime-picker.js?v=5",
-  "assets/js/calendar.js?v=29",
+  "assets/js/calendar.js?v=30",
   "assets/js/fx.js?v=4",
-  "assets/js/shared.js?v=25",
+  "assets/js/shared.js?v=26",
   "assets/js/config.js",
   "assets/js/supabase-client.js",
   "assets/icons/logo.svg",
@@ -77,7 +78,23 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET") return;
 
   const url = new URL(request.url);
-  if (url.origin !== self.location.origin) return; // never intercept Supabase/Google Fonts calls
+
+  // The Supabase client library and its parts (files on a CDN): kept on the device so the app starts without waiting for it.
+  if (url.hostname === "cdn.jsdelivr.net" && url.pathname.startsWith("/npm/")) {
+    event.respondWith(
+      caches.match(request).then((cached) => {
+        const fresh = fetch(request).then((response) => {
+          if (response.ok) { const copy = response.clone(); caches.open(CACHE_NAME).then((cache) => cache.put(request, copy)); }
+          return response;
+        });
+        if (cached) { fresh.catch(() => {}); return cached; } // update quietly in the background
+        return fresh;
+      })
+    );
+    return;
+  }
+
+  if (url.origin !== self.location.origin) return; // never intercept Supabase API / Google Fonts calls
 
   // Page navigations: network-first, so a deployed update is picked up
   // immediately when online; cached shell is only a fallback when offline.

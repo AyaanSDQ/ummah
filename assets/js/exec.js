@@ -6,7 +6,7 @@ import {
 } from "./recurrence.js?v=2";
 import { setupRepeat } from "./exec-repeat.js?v=2";
 import { enhancePickers } from "./datetime-picker.js?v=5";
-import { TYPE_META, escapeHtml, formatTime, formatDateHeading, formatEventDate, localDateKey, roomLabel, cancelledBanner, animateRemove } from "./shared.js?v=25";
+import { TYPE_META, escapeHtml, formatTime, formatDateHeading, formatEventDate, localDateKey, roomLabel, cancelledBanner, animateRemove, keepPlace } from "./shared.js?v=26";
 
 const loginView = document.getElementById("login-view");
 const appView = document.getElementById("app-view");
@@ -14,6 +14,7 @@ const loginForm = document.getElementById("login-form");
 const loginError = document.getElementById("login-error");
 const loginSubmit = document.getElementById("login-submit");
 const logoutBtn = document.getElementById("logout-btn");
+const headerLogout = document.getElementById("header-logout");
 
 const newPostToggle = document.getElementById("new-post-toggle");
 const newPostChev = document.getElementById("new-post-chev");
@@ -60,6 +61,11 @@ let currentDetailUpdate = null;
 let execChannel = null;
 let detailOccDate = null; // for a repeating post: the date being looked at ("YYYY-MM-DD")
 let repeatCtl = null;
+let appShownFor = null; // the signed-in user the admin screens are currently showing
+let readerLoaded = false; // the View section reuses the Updates page code, loaded once after sign-in
+let detailId = null; // the post open on its own view
+let listScroll = 0; // where the list was scrolled to when a post was opened
+let lastRefreshAt = Date.now();
 
 
 init();
@@ -75,6 +81,9 @@ async function init() {
     openDetail(card.dataset.updateId);
   });
 
+  window.addEventListener("popstate", syncFromHistory);
+  wireStayCurrent();
+
   supabase.auth.onAuthStateChange((_event, session) => {
     renderForSession(session);
   });
@@ -85,25 +94,83 @@ async function init() {
 
 async function renderForSession(session) {
   if (!session) {
+    appShownFor = null;
     currentUserId = null;
     loginView.hidden = false;
     appView.hidden = true;
     execNav.hidden = true;
+    headerLogout.hidden = true;
     teardownRealtime();
     return;
   }
+  // Supabase reports "signed in" again whenever the app comes back to the front or the token is
+  // renewed. That must not throw away what the admin has open (a post, a half-written form).
+  if (appShownFor === session.user.id) return;
+  appShownFor = session.user.id;
+
   currentUserId = session.user.id;
   loginView.hidden = true;
   appView.hidden = false;
+  headerLogout.hidden = false;
   showListView();
   await loadEventsAndHeader();
   setupRealtime();
 
-  // Reload deep-links back into whichever post was open (exec.html#post-<id>)
-  // instead of always dropping back to the list.
+  // The address can ask for one post (exec.html#post-<id>: a reload, or a tapped notification).
+  // The list sits underneath it in the history, so Back goes to the list.
   if (location.hash.startsWith("#post-")) {
-    openDetail(location.hash.slice(6));
+    const id = location.hash.slice(6);
+    history.replaceState({ panel: "admin" }, "", location.pathname + location.search);
+    openDetail(id);
   }
+
+  // The View section is the public Updates page; it starts loading now so it is ready when opened.
+  if (!readerLoaded) {
+    readerLoaded = true;
+    import("./reader.js?v=43").catch((err) => console.error("Failed to load the preview", err));
+  }
+}
+
+// ── History: the browser's Back button steps out of whatever is open ─────
+// States: the list (nothing extra), the New post form, a post's own view, and a panel on a post
+// (Cancel / Edit / Delete). Each is one history entry on top of the one before it.
+
+function pushLayer(layer, extra = {}) {
+  const st = history.state || {};
+  history.pushState({ panel: "admin", layer, depth: (st.depth || 0) + 1, ...extra }, "", extra.url || location.href);
+}
+
+function syncFromHistory() {
+  if (!currentUserId) return;
+  const st = history.state || {};
+  if ((st.panel || "admin") !== "admin") return; // another section is showing
+
+  const wantForm = st.layer === "form";
+  if (postForm.classList.contains("open") !== wantForm) setFormOpen(wantForm);
+
+  if (st.layer === "detail") {
+    if (detailView.hidden || detailId !== st.id) openDetail(st.id, { fromHistory: true });
+    else if (!st.sub) hidePanels();
+  } else if (!detailView.hidden) {
+    showList();
+  }
+}
+
+// Back to the list (the history was already moved, or is being moved by the caller).
+function showList({ reload = true } = {}) {
+  detailId = null;
+  currentDetailUpdate = null;
+  hidePanels();
+  showListView();
+  window.scrollTo(0, listScroll);
+  if (reload) loadEventsAndHeader({ quiet: true });
+}
+
+// The "All events" button: the same as the Back button.
+function leaveDetail() {
+  const st = history.state || {};
+  if (st.layer === "detail") history.go(st.sub ? -2 : -1); // the popstate handler shows the list
+  else showList();
 }
 
 // ── Realtime ─────────────────────────────────────────────────────────────
@@ -119,8 +186,15 @@ function setupRealtime() {
     .on("postgres_changes", { event: "*", schema: "public", table: "updates" }, (payload) => {
       if (payload.new && payload.new.type !== "exec_meeting") applyExecRealtimeRow(payload.new);
     })
-    .subscribe();
+    .subscribe((status) => {
+      // After the live connection drops and returns, anything posted in the gap was missed: catch up.
+      if (status === "SUBSCRIBED") {
+        if (hadConnection) { lastRefreshAt = 0; refreshNow(); }
+        hadConnection = true;
+      }
+    });
 }
+let hadConnection = false;
 
 function teardownRealtime() {
   if (!execChannel) return;
@@ -143,7 +217,9 @@ function applyExecRealtimeRow(row) {
 
   const emptyState = listEl.querySelector(".empty-state");
   if (emptyState) listEl.innerHTML = "";
-  listEl.insertAdjacentHTML("afterbegin", html);
+  const add = () => listEl.insertAdjacentHTML("afterbegin", html);
+  if (listView.hidden || document.body.dataset.panel !== "admin") add();
+  else keepPlace(add); // a new post appears at the top without moving what the admin is looking at
   syncEventsCount();
 }
 
@@ -216,17 +292,22 @@ function wireLoginForm() {
     loginForm.reset();
   });
 
-  logoutBtn.addEventListener("click", async () => {
+  const logout = async () => {
     await supabase.auth.signOut();
-    location.href = "index.html";
-  });
+    location.replace("index.html"); // replace, so Back never returns to an admin page after signing out
+  };
+  logoutBtn.addEventListener("click", logout);
+  headerLogout.addEventListener("click", logout);
 }
 
 // ── Header + list ────────────────────────────────────────────────────────
 
-async function loadEventsAndHeader() {
-  listSkeleton.hidden = false;
-  listEl.innerHTML = "";
+async function loadEventsAndHeader({ quiet = false } = {}) {
+  if (!quiet) {
+    listSkeleton.hidden = false;
+    listEl.innerHTML = "";
+  }
+  lastRefreshAt = Date.now();
 
   // Exec meetings are no longer a post type, so any old ones stay out of the list.
   const { data: updates, error: updatesError } = await supabase
@@ -240,6 +321,7 @@ async function loadEventsAndHeader() {
   listSkeleton.hidden = true;
 
   if (updatesError) {
+    if (quiet) return; // keep what is on screen
     listEl.innerHTML = `<div class="empty-state">${icon("i-inbox", { size: 22 })}<div class="title">Couldn't load events.</div></div>`;
     return;
   }
@@ -328,14 +410,13 @@ function wireNewPostForm() {
   syncSubmitState();
 
   newPostToggle.addEventListener("click", () => {
-    const willOpen = !postForm.classList.contains("open");
-    postForm.classList.toggle("open", willOpen);
-    newPostChev.classList.toggle("collapsed", !willOpen);
+    if (postForm.classList.contains("open")) return dismissForm();
+    pushLayer("form"); // Back closes the form
+    setFormOpen(true);
   });
 
   discardBtn.addEventListener("click", () => {
-    postForm.classList.remove("open");
-    newPostChev.classList.add("collapsed");
+    dismissForm();
     formError.hidden = true;
   });
 
@@ -422,22 +503,26 @@ function wireNewPostForm() {
     typeGrid.querySelectorAll(".type-option").forEach((b) => b.classList.toggle("selected", b.dataset.type === "prayer"));
     locationLabel.textContent = "Room number";
     syncSubmitState();
-    postForm.classList.remove("open");
-    newPostChev.classList.add("collapsed");
-    loadEventsAndHeader();
+    dismissForm();
+    loadEventsAndHeader({ quiet: true });
   });
+}
+
+function setFormOpen(open) {
+  postForm.classList.toggle("open", open);
+  newPostChev.classList.toggle("collapsed", !open);
+}
+
+// Close the form the way Back would, so the history stays in step.
+function dismissForm() {
+  if (history.state?.layer === "form") history.back(); // the popstate handler closes it
+  else setFormOpen(false);
 }
 
 // ── Detail view ──────────────────────────────────────────────────────────
 
 function wireDetailView() {
-  detailBack.addEventListener("click", () => {
-    currentDetailUpdate = null;
-    history.replaceState(null, "", location.pathname + location.search);
-    closeCancelForm();
-    showListView();
-    loadEventsAndHeader();
-  });
+  detailBack.addEventListener("click", leaveDetail);
 
   detailActionbar.addEventListener("click", async (e) => {
     const btn = e.target.closest("[data-action]");
@@ -539,10 +624,9 @@ async function applyChanges(changes, action) {
   }
 
   if (action === "delete") {
-    currentDetailUpdate = null;
-    history.replaceState(null, "", location.pathname + location.search);
-    closeCancelForm();
-    showListView();
+    const st = history.state || {};
+    showList({ reload: false });
+    if (st.layer === "detail") history.go(st.sub ? -2 : -1);
     removeFromList(target.id);
     return;
   }
@@ -561,6 +645,7 @@ function openPanel(panel) {
   panels.forEach((p) => { p.hidden = p !== panel; });
   detailActionbar.hidden = true;
   detailHint.hidden = true;
+  if (!history.state?.sub) pushLayer("detail", { sub: true, id: detailId }); // Back closes the panel
 }
 
 function openCancelForm() {
@@ -579,10 +664,15 @@ function openCancelForm() {
   cancelReasonInput.focus();
 }
 
-function closeCancelForm() {
+function hidePanels() {
   panels.forEach((p) => { p.hidden = true; });
   detailActionbar.hidden = false;
   detailHint.hidden = false;
+}
+
+function closeCancelForm() {
+  hidePanels();
+  if (history.state?.sub) history.back(); // step the history out of the panel too
 }
 
 // ── Repeating posts: dates, scope and saving ────────────────────────────
@@ -777,12 +867,17 @@ async function restoreOccurrence() {
   if (await saveSeries({ occurrence_overrides: overrides }, "Couldn't restore that date. Try again.")) renderSeriesDetail();
 }
 
-async function openDetail(updateId) {
-  history.replaceState(null, "", `#post-${updateId}`);
+async function openDetail(updateId, { fromHistory = false } = {}) {
+  detailId = updateId;
+  if (!fromHistory) {
+    listScroll = window.scrollY;
+    pushLayer("detail", { id: updateId, url: `#post-${updateId}` }); // Back returns to the list
+  }
   showDetailView();
+  window.scrollTo(0, 0);
   detailSkeleton.hidden = false;
   detailContent.hidden = true;
-  closeCancelForm();
+  hidePanels();
 
   const { data: update, error } = await supabase.from("updates").select("*").eq("id", updateId).single();
 
@@ -904,4 +999,38 @@ function renderActionBar(update) {
     detailActionbar.innerHTML = `<button type="button" class="btn btn-restore-action" data-action="restore">Restore</button>`;
     detailHint.textContent = "Deleted post. Cancel and Delete are hidden.";
   }
+}
+
+// ── Staying current ──────────────────────────────────────────────────────
+// Coming back to the app (or getting the connection back) brings the screen up to date. The
+// iOS home-screen app has no pull-to-refresh, and a phone can sleep for hours with the app open.
+
+function refreshNow() {
+  if (!currentUserId || document.visibilityState !== "visible") return;
+  if (Date.now() - lastRefreshAt < 20_000) return;
+  lastRefreshAt = Date.now();
+  if (detailView.hidden) {
+    loadEventsAndHeader({ quiet: true });
+  } else if (detailId && currentDetailUpdate && panels.every((p) => p.hidden) && !notesForm.contains(document.activeElement)) {
+    refreshOpenDetail();
+  }
+}
+
+async function refreshOpenDetail() {
+  const id = detailId;
+  const { data } = await supabase.from("updates").select("*").eq("id", id).single();
+  if (!data || detailId !== id || !panels.every((p) => p.hidden)) return;
+  currentDetailUpdate = data;
+  if (isSeries(data)) return renderSeriesDetail();
+  renderDetailCard(data);
+  renderNotes(data);
+  renderActionBar(data);
+}
+
+function wireStayCurrent() {
+  document.addEventListener("visibilitychange", refreshNow);
+  window.addEventListener("focus", refreshNow);
+  window.addEventListener("online", () => { lastRefreshAt = 0; refreshNow(); });
+  window.addEventListener("pageshow", (e) => { if (e.persisted) { lastRefreshAt = 0; refreshNow(); } });
+  setInterval(() => { lastRefreshAt = 0; refreshNow(); }, 10 * 60_000);
 }

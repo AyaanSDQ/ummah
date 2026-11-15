@@ -1,6 +1,6 @@
 import { supabase } from "./supabase-client.js";
 import { icon } from "./icons.js?v=13";
-import { TYPE_META, escapeHtml, formatTime, roomLabel, emptyCardHtml, animateRemove } from "./shared.js?v=25";
+import { TYPE_META, escapeHtml, formatTime, roomLabel, emptyCardHtml, animateRemove } from "./shared.js?v=26";
 import { expandSeries, describeRule } from "./recurrence.js?v=2";
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -9,7 +9,7 @@ const BARS_PER_DAY = 3; // colour bars shown in a day cell; the last one becomes
 const GRID_SLOTS = 42; // 6 weeks x 7 days
 
 const root = document.getElementById("calendar");
-const today = new Date();
+let today = new Date();
 
 let viewYear = today.getFullYear();
 let viewMonth = today.getMonth();
@@ -24,7 +24,39 @@ const monthKey = (y, m) => `${y}-${m}`;
 const dayKey = (d) => `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
 const sameDay = (a, b) => !!a && !!b && dayKey(a) === dayKey(b);
 
-init();
+// The calendar sits in the same document as the Updates page (see nav.js), so it can load in the
+// background and be ready the moment its tab is tapped. It starts shortly after the page shows,
+// or at once if it is the section being opened.
+let started = false;
+function start() {
+  if (started) return;
+  started = true;
+  init();
+}
+document.addEventListener("panelshow", (e) => {
+  if (e.detail.name === "calendar") start();
+});
+if (document.body.dataset.panel === "calendar") start();
+else (window.requestIdleCallback ? (f) => window.requestIdleCallback(f, { timeout: 2500 }) : (f) => setTimeout(f, 900))(start);
+
+// Coming back to the app (or getting the connection back) brings the calendar up to date; the
+// phone may have been asleep for hours, and an installed app on iOS has no pull-to-refresh.
+function refresh() {
+  if (!started) return;
+  const now = new Date();
+  if (!sameDay(now, today)) {
+    today = now;
+    viewYear = today.getFullYear();
+    viewMonth = today.getMonth();
+    selected = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  }
+  cache.clear();
+  seriesRows = null;
+  loadMonth(true);
+}
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") refresh(); });
+window.addEventListener("pageshow", (e) => { if (e.persisted) refresh(); });
+window.addEventListener("online", refresh);
 
 async function init() {
   render();

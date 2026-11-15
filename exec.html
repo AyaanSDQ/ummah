@@ -4,10 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ummah — Administrative</title>
-<link rel="stylesheet" href="assets/css/app.css?v=113">
+<link rel="stylesheet" href="assets/css/app.css?v=114">
+<meta name="robots" content="noindex">
+<link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/svg+xml" href="assets/icons/logo.svg">
 <link rel="icon" href="assets/icons/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
 <meta name="theme-color" content="#5b2e91">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ummah">
 </head>
 <body>
 
@@ -17,11 +23,12 @@
 
   <header class="app-header masthead">
     <div class="app-title" aria-label="Ummah"><span class="app-name">Ummah</span></div>
+    <button type="button" id="header-logout" class="logout-pill" hidden>Log out</button>
   </header>
 
   <div id="login-view" class="login-wrap" hidden>
     <div class="login-card">
-      <a href="index.html" class="back-link"><span class="back-icon">BACK_ICON</span>Back to Updates</a>
+      <a href="index.html" class="back-link" data-replace><span class="back-icon">BACK_ICON</span>Back to Updates</a>
       <h1 class="login-title">Administrative login</h1>
       <p class="login-sub">For MSA administrators only. There is no public sign-up.</p>
       <div id="login-error" class="error-banner" hidden></div>
@@ -44,6 +51,7 @@
 
   <div id="app-view" hidden>
 
+    <section data-panel="admin" id="panel-admin">
     <div id="list-view">
       <section class="feed-section exec-section">
       <div class="section-heading exec-heading">
@@ -193,13 +201,55 @@
         <div id="detail-hint" class="form-hint" style="margin-top:9px"></div>
       </div>
     </div>
+    </section>
+
+    <!-- The administrator's preview of the public Updates page (the same page code as index.html). -->
+    <section data-panel="view" id="panel-view" hidden>
+      <div id="skeleton">
+        <div class="skeleton skeleton-hero"></div>
+        <div class="skeleton skeleton-line"></div>
+        <div class="skeleton skeleton-line"></div>
+      </div>
+      <div id="page" hidden>
+        <div id="hero"></div>
+
+        <section id="today-section" class="feed-section" hidden>
+          <div class="section-heading">
+            <div class="label">More today</div>
+            <span class="count" id="today-count">0</span>
+          </div>
+          <div id="today-posts"></div>
+        </section>
+
+        <section id="upcoming-section" class="feed-section" hidden>
+          <div class="section-heading">
+            <div class="label">Coming up</div>
+            <span class="count" id="upcoming-count">0</span>
+          </div>
+          <div id="upcoming-posts"></div>
+        </section>
+
+        <section id="history-section" class="feed-section" hidden>
+          <div class="section-heading"><div class="label">Earlier</div></div>
+          <div id="history"></div>
+          <div id="load-more-wrap" hidden>
+            <button type="button" id="load-more" class="btn load-more">Load more</button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section data-panel="calendar" id="panel-calendar" hidden>
+      <main id="calendar" class="calendar" aria-live="polite"></main>
+    </section>
 
   </div>
 
   <!-- Outside #app-view on purpose: that element's entrance animation would trap this fixed bar inside it. -->
   <nav id="exec-nav" class="bnav" hidden aria-label="Administrative sections">
-      <a href="exec.html" class="bnav-item" aria-current="page"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-case"></use></svg><span>Admins</span></a>
-      <a href="view.html" class="bnav-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-mega"></use></svg><span>View</span></a>
+      <a href="exec.html" class="bnav-item" data-panel-link="admin" aria-current="page"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-case"></use></svg><span>Admins</span></a>
+      <a href="exec.html#view" class="bnav-item" data-panel-link="view"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-mega"></use></svg><span>View</span></a>
+      <a href="exec.html#calendar" class="bnav-item" data-panel-link="calendar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-calendar"></use></svg><span>Calendar</span></a>
     </nav>
 
   <footer class="app-footer">
@@ -226,8 +276,13 @@
   });
   document.querySelectorAll(".back-icon").forEach((el) => { el.innerHTML = icon("i-back", { size: 14, stroke: 2.75 }); });
 </script>
-<script type="module" src="assets/js/exec.js?v=43"></script>
+<script type="module">
+  import { initPanels } from "./assets/js/nav.js?v=1";
+  initPanels({ home: "admin", titles: { admin: "Ummah — Administrative", view: "View — Ummah", calendar: "Calendar — Ummah" } });
+</script>
+<script type="module" src="assets/js/exec.js?v=44"></script>
+<script type="module" src="assets/js/calendar.js?v=30"></script>
 <script src="assets/js/fx.js?v=4" defer></script>
-<script src="assets/js/sw-register.js?v=1"></script>
+<script src="assets/js/sw-register.js?v=2"></script>
 </body>
 </html>

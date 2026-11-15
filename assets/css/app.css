@@ -1035,7 +1035,7 @@ html { scrollbar-gutter: stable; }
 .app { padding-bottom: calc(118px + env(safe-area-inset-bottom)); }
 .bnav {
   position: fixed; z-index: 30; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom)); transform: translateX(-50%);
-  width: min(420px, calc(100% - 32px)); display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 6px;
+  width: min(420px, calc(100% - 32px)); display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; padding: 6px;
   border-radius: 28px; background: rgba(255, 255, 255, .74); border: 1px solid rgba(255, 255, 255, .95);
   box-shadow: 0 1px 0 rgba(255, 255, 255, .85) inset, 0 20px 40px -18px rgba(45, 20, 80, .5), 0 2px 8px rgba(45, 20, 80, .08);
   -webkit-backdrop-filter: blur(22px) saturate(1.8); backdrop-filter: blur(22px) saturate(1.8);
@@ -1673,4 +1673,22 @@ body {
   .dtp-time { grid-template-columns: 1fr 1fr 1fr; }
   .dtp-time.has-date { padding: 10px 0 0; border-left: 0; border-top: 1px solid var(--line-2); }
   .dtp-time .dtp-col, .dtp-time:not(.has-date) .dtp-col { max-height: 104px; }
+}
+
+/* ══════════════ Round 15: sections in one page, status bar ══════════════ */
+
+/* Switching section (Updates / Calendar, Admins / View / Calendar): a short fade, nothing reloads */
+.panel-in { animation: panel-in .2s var(--ease); }
+@keyframes panel-in { from { opacity: 0; transform: translateY(6px); } }
+@media (prefers-reduced-motion: reduce) { .panel-in { animation: none; } }
+/* the admin section has its own Log out pill in its heading */
+body[data-panel="admin"] #header-logout { display: none; }
+
+/* iPhone / iPad home-screen app: the page draws under the status bar (apple-mobile-web-app-status-bar-style:
+   black-translucent) instead of a plain white bar. This frosted strip sits behind the clock and battery in the
+   page's own lavender, so scrolled content blurs under it the same way it does under the glass cards. */
+body::before {
+  content: ""; position: fixed; top: 0; left: 0; right: 0; height: env(safe-area-inset-top); z-index: 150; pointer-events: none;
+  background: linear-gradient(180deg, rgba(170, 125, 230, .88), rgba(192, 154, 240, .62));
+  -webkit-backdrop-filter: blur(18px) saturate(1.3); backdrop-filter: blur(18px) saturate(1.3);
 }

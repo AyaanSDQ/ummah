@@ -47,16 +47,17 @@ A fast, phone-first web app. Install it to your home screen, get a push when som
 ## Project layout
 
 ```
-index.html        Updates feed
-calendar.html     Calendar (month and list views)
-exec.html         Administrative login and posting
+index.html        Updates feed and Calendar (two sections of one page, switched without loading)
+exec.html         Administrative login and posting; also holds the View and Calendar sections
+calendar.html     Old link: redirects to index.html#calendar
+view.html         Old link: redirects to exec.html#view
 privacy.html      Privacy Policy
 terms.html        Terms of Use
 sw.js             Service worker (bump CACHE_NAME when assets change)
 manifest.json     PWA manifest
 assets/
   css/app.css     All styles and design tokens
-  js/             reader, calendar, exec, shared helpers, icons, motion
+  js/             reader, calendar, exec, nav (section switching), shared helpers, icons, motion
   icons/          Logo and app icons
   img/            Geometric pattern art
 supabase/

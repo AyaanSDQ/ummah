@@ -33,6 +33,14 @@ Builds on `msa-app-spec.md`. This document covers product behavior, not implemen
 
 ## 2. UX Flow
 
+### Sections, Back button and staying current (round 15)
+
+- **One page, several sections.** Updates and Calendar (and for admins: Admins, View, Calendar) are sections of a single document. The bottom bar only shows one and hides the others, so switching never loads anything and each section keeps its scroll position. `calendar.html` / `view.html` remain as redirects for old links.
+- **Back button.** Signed-in visitors never see the public page: it redirects to the admin page (replacing the history entry), "Administrative login" and "Log out" replace rather than push. Back closes the New post form, leaves a post's own view for the list, and closes a Cancel/Edit/Delete panel before leaving the post.
+- **No "scroll up" pill.** New posts and changes at the top of the feed apply immediately; the page scrolls by exactly the amount that was added so the reader keeps their place (Safari has no scroll anchoring).
+- **Staying current.** Returning to the app, regaining the connection, re-establishing the live connection, and every 10 minutes refresh the feed, the admin list and the open post; the service worker also checks for a new version when the app is brought forward.
+- **iOS status bar.** `black-translucent` plus a frosted lavender strip under the clock/battery. Apps already added to the home screen may need to be removed and added again to pick up the new style.
+
 ### Reader — single page, no navigation
 
 ```
