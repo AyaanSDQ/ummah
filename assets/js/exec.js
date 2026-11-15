@@ -127,7 +127,7 @@ async function renderForSession(session) {
   // The View section is the public Updates page; it starts loading now so it is ready when opened.
   if (!readerLoaded) {
     readerLoaded = true;
-    import("./reader.js?v=43").catch((err) => console.error("Failed to load the preview", err));
+    import("./reader.js?v=44").catch((err) => console.error("Failed to load the preview", err));
   }
 }
 

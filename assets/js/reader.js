@@ -533,11 +533,17 @@ function refreshRelativeTimestamps() {
   });
 }
 
+// A tapped notification opens "index.html#post-<id>". That link is used once: scroll to the post,
+// then take the "#post-<id>" off the address. Otherwise every later reload (or a return to an app
+// that was left open) would scroll to that old post again. (The admin screens keep "#post-<id>" in
+// their address on purpose, to reopen the post that is open, so this only applies on the public page.)
 function maybeScrollToAnchor() {
+  if (pageEl.closest("section[data-panel]")?.dataset.panel !== "updates") return;
   if (!location.hash.startsWith("#post-")) return;
   const id = location.hash.replace("#post-", "");
   const el = document.querySelector(`[data-update-id="${id}"]`) || document.querySelector(`[data-update-id^="${id}@"]`);
   if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+  history.replaceState(history.state, "", location.pathname + location.search);
 }
 
 // ── Realtime ─────────────────────────────────────────────────────────────
