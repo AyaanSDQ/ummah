@@ -11,7 +11,7 @@ import { buildNotification, type PostFacts } from "./message.ts";
 
 const ONESIGNAL_APP_ID = Deno.env.get("ONESIGNAL_APP_ID");
 const ONESIGNAL_REST_API_KEY = Deno.env.get("ONESIGNAL_REST_API_KEY");
-const SITE_URL = Deno.env.get("SITE_URL") ?? "https://ayaansdq.github.io/ummah/";
+const SITE_URL = Deno.env.get("SITE_URL") ?? "https://ummahnchs.web.app/";
 // Times in the notification are written in the school's time zone (the server itself runs in UTC).
 const SITE_TIMEZONE = Deno.env.get("SITE_TIMEZONE") ?? "America/Los_Angeles";
 

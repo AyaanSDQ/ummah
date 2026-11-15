@@ -1,6 +1,6 @@
 # Push notifications: where things stand and how to finish
 
-Last updated 2026-11-15. Live site: https://ayaansdq.github.io/ummah/ (GitHub Pages, branch `ummah-app`; `main` is kept in step with it).
+Last updated 2026-11-15. The site moved to Firebase Hosting at https://ummahnchs.web.app/ on 2026-11-15; the older GitHub Pages address (https://ayaansdq.github.io/ummah/) now only redirects. Addresses below that mention `ayaansdq.github.io` describe the setup at the time those notes were written.
 No secrets are recorded here. Keys live in `.env` (git-ignored), Supabase secrets and Supabase Vault.
 
 ## In one paragraph
