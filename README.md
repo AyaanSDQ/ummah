@@ -79,6 +79,8 @@ node scripts/build-site.mjs
 firebase deploy --only hosting
 ```
 
+Pushing to `main` does this automatically: `.github/workflows/firebase-hosting-merge.yml` builds `dist/` and deploys it, using the `FIREBASE_SERVICE_ACCOUNT_UMMAHNCHS` secret in the GitHub repository settings. The live site is <https://ummahnchs.web.app/>. The old GitHub Pages address serves only a redirect page, from the `legacy-redirect` branch.
+
 The service worker, the HTML pages and the manifest are sent with `Cache-Control: no-cache`, so a new version reaches installed apps quickly.
 
 ## Make it yours
