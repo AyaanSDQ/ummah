@@ -5,7 +5,6 @@ import { icon } from "./icons.js?v=14";
 const ONESIGNAL_APP_ID = "73a18eab-2f8d-4909-8005-72bb95c080e5";
 
 const banner = document.getElementById("notify-banner");
-const toggle = document.getElementById("notify-toggle"); // footer link: Turn off / Turn on notifications
 
 // Push only works on iOS when launched from the home screen icon
 // specifically (not a normal Safari tab, even post-install), and there's
@@ -44,17 +43,14 @@ async function initNotifyBanner(banner) {
 
     const subscribed = () => Notification.permission === "granted" && OneSignal.User.PushSubscription.optedIn === true;
 
-    // Show whatever fits the current state: the first-time prompt, the "blocked" note, or just the footer link.
+    // Show whatever fits the current state: the Enable prompt, the "blocked" note, or nothing once subscribed.
     function render() {
       if (Notification.permission === "denied") {
         renderBlocked(banner);
-        setToggle(null);
       } else if (subscribed()) {
         hide(banner);
-        setToggle("off");
       } else {
         renderPrompt(banner, enable); // no dismiss button: it stays until the person subscribes
-        setToggle("on");
       }
     }
 
@@ -66,32 +62,9 @@ async function initNotifyBanner(banner) {
       return subscribed();
     }
 
-    // Unsubscribe: the browser permission stays granted, so turning it back on later is one tap with no prompt.
-    async function disable() {
-      await OneSignal.User.PushSubscription.optOut();
-      render();
-    }
-
-    toggle?.addEventListener("click", async () => {
-      toggle.disabled = true;
-      try {
-        if (toggle.dataset.state === "off") await disable();
-        else await enable();
-      } finally {
-        toggle.disabled = false;
-      }
-    });
-
     OneSignal.User.PushSubscription.addEventListener("change", render);
     render();
   });
-}
-
-function setToggle(state) {
-  if (!toggle) return;
-  toggle.hidden = state === null;
-  toggle.dataset.state = state ?? "";
-  toggle.textContent = state === "off" ? "Turn off notifications" : "Turn on notifications";
 }
 
 function renderPrompt(banner, enable) {

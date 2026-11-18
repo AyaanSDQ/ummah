@@ -1345,11 +1345,13 @@ body {
 .realtime-removing.collapsing { opacity: 0; transform: translateX(-16px) scale(.97); max-height: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important; padding-top: 0 !important; padding-bottom: 0 !important; border-width: 0 !important; }
 @media (prefers-reduced-motion: reduce) { .realtime-removing { transition: none; } }
 
-/* ── Banners: one art piece per post type, same palette and line weight as the rest ── */
-.hero-media.is-pattern[data-type]::before { background-size: auto 100%; background-position: right bottom; background-repeat: no-repeat; -webkit-mask-image: linear-gradient(100deg, transparent 14%, #000 58%); mask-image: linear-gradient(100deg, transparent 14%, #000 58%); }
-.hero-media.is-pattern[data-type="prayer"]::before { background-image: url("../img/banner-prayer.svg"); }
-.hero-media.is-pattern[data-type="social"]::before { background-image: url("../img/banner-social.svg"); }
-.hero-media.is-pattern[data-type="announcement"]::before { background-image: url("../img/banner-announcement.svg"); }
+/* ── Banners: one illustration per post type, in the style of the empty-state mosque (light glow, flat lilac shapes, diamond strip) ── */
+.hero-media.is-pattern[data-type] { background: #e6daf5 right bottom / cover no-repeat; }
+.hero-media.is-pattern[data-type]::before, .hero-media.is-pattern[data-type]::after { display: none; }
+.hero-media.is-pattern[data-type="prayer"] { background-image: url("../img/banner-prayer.svg"); background-color: #e6daf5; }
+.hero-media.is-pattern[data-type="social"] { background-image: url("../img/banner-social.svg"); background-color: #f4dcec; }
+.hero-media.is-pattern[data-type="announcement"] { background-image: url("../img/banner-announcement.svg"); background-color: #e1d7f8; }
+.hero-media-icon { color: var(--c); background: rgba(255, 255, 255, .72); border: 1px solid rgba(255, 255, 255, .95); box-shadow: 0 1px 0 rgba(255, 255, 255, .9) inset, 0 8px 16px -10px color-mix(in srgb, var(--c) 60%, transparent); }
 
 /* ── Timestamps: plain text, no pills or boxes ── */
 .cal-ev-time {
@@ -1513,10 +1515,6 @@ body::before {
 }
 
 /* Footer button that looks like the footer links (Turn off / Turn on notifications) */
-.footer-link-btn { font: inherit; font-size: 13px; font-weight: 700; color: var(--brand); background: none; border: 0; padding: 0; cursor: pointer; }
-.footer-link-btn:hover { text-decoration: underline; }
-.footer-link-btn:disabled { opacity: .55; cursor: default; }
-.footer-link-btn[hidden] { display: none; }
 
 /* Room control: the usual rooms on the left, an "Other" box filling the rest of the same line */
 .room-row { display: flex; align-items: stretch; gap: 8px; }
@@ -1543,3 +1541,61 @@ body::before {
   .dtp-opt { padding: 9px 0; }
   .dtp-pop { padding: 10px; }
 }
+
+/* ══════════════ Round 16: glass calendar, glass login ══════════════ */
+
+/* Calendar: the month sits in one rounded glass panel; days are soft rounded tiles; numbers are light and quiet */
+.calendar .cal-card {
+  padding: 16px 8px 12px; margin: 0 0 8px; border-radius: 32px;
+  background: var(--glass); border: 1px solid var(--glass-edge);
+  -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .85) inset, 0 0 0 1px rgba(91, 46, 145, .06), 0 18px 36px -22px rgba(60, 30, 100, .38);
+}
+.calendar .cal-grid { gap: 3px; }
+.calendar .cal-weekday { font-size: 11px; font-weight: 600; letter-spacing: .06em; color: var(--ink-3); opacity: .8; }
+.calendar .cal-day, .calendar .cal-pad { border-radius: 22px; }
+.calendar .cal-day.has {
+  background: linear-gradient(180deg, rgba(255, 255, 255, .78), color-mix(in srgb, var(--tint, var(--brand)) 9%, rgba(255, 255, 255, .42)));
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .95) inset, 0 0 0 1px rgba(255, 255, 255, .7), 0 8px 14px -12px color-mix(in srgb, var(--tint, var(--brand)) 55%, transparent);
+}
+.calendar .cal-day .cal-num, .calendar .cal-grid .cal-num,
+.calendar .cal-day.has .cal-num { font-size: 15px; font-weight: 400; color: var(--ink-2); background: none; }
+.calendar .cal-day.today .cal-num, .calendar .cal-grid .cal-day.today:not(.selected) .cal-num {
+  background: color-mix(in srgb, var(--brand) 13%, #fff); color: var(--brand); font-weight: 500;
+}
+.calendar .cal-day.selected { background: rgba(255, 255, 255, .92); box-shadow: 0 0 0 1.5px rgba(91, 46, 145, .4) inset, 0 10px 20px -14px rgba(70, 30, 120, .5); }
+.calendar .cal-grid .cal-day.selected:not(.today) .cal-num { background: none; color: var(--brand); font-weight: 500; }
+.calendar .cal-day.today.selected .cal-num, .calendar .cal-grid .cal-day.today.selected .cal-num { background: color-mix(in srgb, var(--brand) 16%, #fff); color: var(--brand); font-weight: 500; }
+.cal-bar { height: 4px; }
+@media (max-width: 560px) { .calendar .cal-card { padding: 14px 6px 10px; border-radius: 30px; } }
+
+/* Login: a glass card with glass fields, floating over soft colour so the blur has something to show */
+.login-wrap { position: relative; isolation: isolate; }
+.login-wrap::before {
+  content: ""; position: absolute; inset: 4% -8%; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(42% 34% at 18% 26%, rgba(154, 111, 208, .5), transparent 70%),
+    radial-gradient(38% 36% at 88% 78%, rgba(207, 127, 176, .38), transparent 70%);
+  filter: blur(12px);
+}
+.login-card {
+  border-radius: 34px; padding: 28px 24px 26px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .8), rgba(255, 255, 255, .5));
+  border: 1px solid rgba(255, 255, 255, .92);
+  -webkit-backdrop-filter: blur(26px) saturate(1.8); backdrop-filter: blur(26px) saturate(1.8);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .95) inset, 0 0 0 1px rgba(91, 46, 145, .06), 0 28px 50px -26px rgba(60, 30, 100, .45);
+}
+.login-card .input {
+  border-radius: 18px; background: rgba(255, 255, 255, .6); border: 1px solid rgba(255, 255, 255, .95);
+  box-shadow: 0 0 0 1px rgba(91, 46, 145, .09), inset 0 2px 4px rgba(45, 20, 80, .07);
+}
+.login-card .input:hover { background: rgba(255, 255, 255, .72); }
+.login-card .input:focus-visible { background: rgba(255, 255, 255, .95); border-color: #fff; box-shadow: 0 0 0 1.5px rgba(91, 46, 145, .55), 0 0 0 5px rgba(91, 46, 145, .14); }
+.login-card .btn-lg {
+  border-radius: 20px; border: 0; background: linear-gradient(180deg, #7d4cc0, #5b2e91);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .4) inset, 0 16px 26px -14px rgba(76, 37, 121, .9);
+}
+.login-card .btn-lg:hover { background: linear-gradient(180deg, #7141b4, #4f2680); }
+.login-card .btn-lg:active { box-shadow: inset 0 3px 8px rgba(25, 8, 50, .45); }
+.pw-toggle { right: 8px; padding: 7px 12px; border-radius: 999px; background: rgba(91, 46, 145, .08); font-size: 12.5px; }
+.pw-toggle:hover { background: rgba(91, 46, 145, .14); }

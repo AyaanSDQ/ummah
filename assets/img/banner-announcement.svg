@@ -1,1 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 124" width="360" height="124" fill="none"><g fill="#fff"><g fill-opacity=".2"><path d="M196 66L252 38V92L196 78Z"/><rect x="170" y="62" width="30" height="20" rx="6"/><rect x="250" y="34" width="9" height="62" rx="4.5"/></g><g fill-opacity=".3"><path d="M204 80h14l5 24a4 4 0 0 1-4 5h-8a4 4 0 0 1-4-3Z"/></g><g fill-opacity=".34"><circle cx="110" cy="38" r="1.8"/><circle cx="82" cy="66" r="1.4"/><circle cx="140" cy="20" r="1.4"/><circle cx="340" cy="104" r="1.6"/><circle cx="318" cy="24" r="1.6"/></g></g><g stroke="#fff" stroke-opacity=".38" stroke-width="2.4" stroke-linecap="round"><path d="M276 52Q292 65 276 78"/><path d="M290 40Q314 65 290 90"/><path d="M304 28Q336 65 304 102"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 124" width="520" height="124" preserveAspectRatio="xMaxYMax slice">
+<defs>
+<linearGradient id="bg-announcement" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3effd"/><stop offset="1" stop-color="#e1d7f8"/></linearGradient>
+<radialGradient id="gl-announcement" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#e0d4f7"/><stop offset="1" stop-color="#e0d4f7" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="520" height="124" fill="url(#bg-announcement)"/>
+<circle cx="410" cy="62" r="92" fill="url(#gl-announcement)"/>
+<path d="M356 68L432 34V94L356 80Z" fill="#9d82e0"/>
+<rect x="328" y="62" width="34" height="24" rx="8" fill="#6a3dbd"/>
+<rect x="426" y="30" width="11" height="68" rx="5.5" fill="#6a3dbd"/>
+<path d="M342 86h17l5 22a4 4 0 0 1-4 5h-10a4 4 0 0 1-4-3z" fill="#c4b3f0"/>
+<g fill="none" stroke="#c4b3f0" stroke-width="3.4" stroke-linecap="round"><path d="M452 54Q470 66 452 78"/><path d="M466 42Q496 66 466 90"/><path d="M480 30Q522 66 480 102"/></g><g transform="translate(238 2) scale(0.78)"><path fill="#6a3dbd" d="M30.76 15.02A17 17 0 1 0 45.6 38.76A14 14 0 1 1 30.76 15.02Z"/><path fill="#9d82e0" d="M46 15l1.7 4.1 4.1 1.7-4.1 1.7L46 26.6l-1.7-4.1-4.1-1.7 4.1-1.7z"/></g><path d="M300 26.5L302.0 30.0L305.5 32L302.0 34.0L300 37.5L298.0 34.0L294.5 32L298.0 30.0Z" fill="#c4b3f0"/><path d="M160 19.5L161.6 22.4L164.5 24L161.6 25.6L160 28.5L158.4 25.6L155.5 24L158.4 22.4Z" fill="#c4b3f0"/><path d="M122 70.5L123.3 72.7L125.5 74L123.3 75.3L122 77.5L120.7 75.3L118.5 74L120.7 72.7Z" fill="#c4b3f0"/><path d="M80 37L81.1 38.9L83 40L81.1 41.1L80 43L78.9 41.1L77 40L78.9 38.9Z" fill="#c4b3f0"/><path d="M508 14L509.4 16.6L512 18L509.4 19.4L508 22L506.6 19.4L504 18L506.6 16.6Z" fill="#c4b3f0"/><path d="M276 74.5L277.3 76.7L279.5 78L277.3 79.3L276 81.5L274.7 79.3L272.5 78L274.7 76.7Z" fill="#c4b3f0"/>
+<path d="M0 110h520v14H0z" fill="#7a4bd0"/>
+<path d="M6 117l4-4 4 4-4 4zM30 117l4-4 4 4-4 4zM54 117l4-4 4 4-4 4zM78 117l4-4 4 4-4 4zM102 117l4-4 4 4-4 4zM126 117l4-4 4 4-4 4zM150 117l4-4 4 4-4 4zM174 117l4-4 4 4-4 4zM198 117l4-4 4 4-4 4zM222 117l4-4 4 4-4 4zM246 117l4-4 4 4-4 4zM270 117l4-4 4 4-4 4zM294 117l4-4 4 4-4 4zM318 117l4-4 4 4-4 4zM342 117l4-4 4 4-4 4zM366 117l4-4 4 4-4 4zM390 117l4-4 4 4-4 4zM414 117l4-4 4 4-4 4zM438 117l4-4 4 4-4 4zM462 117l4-4 4 4-4 4zM486 117l4-4 4 4-4 4zM510 117l4-4 4 4-4 4z" fill="#c4b3f0" opacity=".75"/>
+</svg>

@@ -312,7 +312,8 @@ One consistent card shell, differentiated by colored accent, not a different lay
 - [ ] Decide FCM vs. OneSignal.
 - [ ] Pre-create the 6 executive accounts (username + placeholder address, see `supabase/ADMIN-ACCOUNTS.md`) and populate the `executives` table.
 - [ ] Build onboarding screens: Android install prompt, iOS manual walkthrough, in-app-browser redirect message.
-- [ ] Set up the GitHub Actions Supabase keep-alive workflow.
+- [x] Set up the GitHub Actions Supabase keep-alive workflow (`.github/workflows/supabase-keep-alive.yml`).
+- [ ] A teammate designs a better notifications turn-off control. The footer "Turn off notifications" link was removed on 2026-11-17; until then people turn notifications off in their device or browser settings.
 - [ ] Draft reader page, exec list+form, and event detail page in Claude Design; hand off to Claude Code.
 
 ## 18. Out of Scope (Future Consideration)
