@@ -9,7 +9,7 @@ importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
 
 // Bump CACHE_NAME whenever the precache list below changes, so the old
 // cache gets cleaned up on activate instead of accumulating stale entries.
-const CACHE_NAME = "msa-shell-v175";
+const CACHE_NAME = "msa-shell-v176";
 
 const PRECACHE_URLS = [
   "index.html",
@@ -19,7 +19,7 @@ const PRECACHE_URLS = [
   "calendar.html",
   "terms.html",
   "manifest.json",
-  "assets/css/app.css?v=150",
+  "assets/css/app.css?v=151",
   "assets/js/reader.js?v=48",
   "assets/js/exec.js?v=52",
   "assets/js/install.js?v=12",
