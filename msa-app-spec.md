@@ -50,7 +50,7 @@ The MSA currently pushes prayer-time/location and event updates via Instagram, S
 [Supabase]
    - Postgres DB (updates, executives, feedback tables)
    - Row Level Security (RLS) enforces read/write rules
-   - Supabase Auth (email/password) for exec login
+   - Supabase Auth (username + password) for exec login; no real email address is collected
    - Realtime replication (WebSocket) pushes DB changes to open clients
    - Edge Function: triggered by DB webhook on new/changed update -> calls push provider
 
@@ -70,7 +70,7 @@ No backend server is run by us. GitHub Pages serves static files only; all dynam
 | Backend / DB | Supabase (free tier), own account (not Lovable Cloud) | Postgres + Auth + Realtime + Edge Functions, all free at this scale; own account preserves direct dashboard control. |
 | Live updates | Supabase Realtime (Postgres change stream over WebSocket) | Replaces a manual "reload" button — static hosting does not prevent dynamic, real-time client behavior. |
 | Push notifications | Firebase Cloud Messaging (FCM) or OneSignal | Free; abstracts VAPID key management and per-platform quirks. Triggered from a Supabase Edge Function, not built by hand. |
-| Auth | Supabase Auth, email/password (NOT Google OAuth) | Avoids Google Workspace for Education's "admin needs to review this app" OAuth block on school-managed student accounts — a Supabase email/password call never touches Google's consent flow. |
+| Auth | Supabase Auth, username + password (NOT Google OAuth, no real email) | Avoids Google Workspace for Education's "admin needs to review this app" OAuth block on school-managed student accounts — a Supabase password call never touches Google's consent flow. Supabase Auth only accepts an email-shaped identifier, so each username maps to a placeholder address (see §8); no real email address is ever collected. |
 | UI drafting | Claude Design → handoff bundle | Draft/compare the reader page, exec list+form, and event detail page; hand off directly to Claude Code rather than screenshotting. |
 | Implementation | Claude Code | Builds from this spec + the Claude Design handoff bundle. |
 
@@ -96,6 +96,7 @@ create table updates (
 -- Allowlist of who is permitted to write, independent of any Google identity
 create table executives (
   user_id uuid primary key references auth.users(id),
+  username text not null unique,          -- what the exec types at login: ^[a-z0-9][a-z0-9._-]{1,30}$
   display_name text,
   active boolean default true
 );
@@ -122,9 +123,9 @@ Deletion is a **soft delete** (`status = 'deleted'`), not a real `DELETE FROM` �
 ## 8. Authentication & Authorization
 
 - **Readers:** no login. RLS grants `SELECT` on `updates` to the `anon` role (excluding exec-meeting and deleted rows) and `INSERT` on `feedback`.
-- **Executives:** Supabase Auth email/password. Accounts are **pre-created by Ayaan** after execs send their name/email — no public self-signup, no in-app roster management screen (infrequent turnover doesn't justify building one; also doubles as a personal check-in with each new exec).
+- **Executives:** sign in with a **username and password**. No email address is collected, stored or used. Supabase Auth can only sign in with an email-shaped identifier, so each account has a generated placeholder, `<username>@ummah.example.com` (`example.com` is a reserved domain that can never receive mail, and nothing is ever sent to it). The login screen builds the placeholder from the username; a real email address typed into it is rejected before it reaches Supabase. Accounts are **pre-created by Ayaan** after execs choose a username — no public self-signup (Supabase's "Allow new users to sign up" stays off), no in-app roster management screen (infrequent turnover doesn't justify building one; also doubles as a personal check-in with each new exec). Setup steps are in `supabase/ADMIN-ACCOUNTS.md`.
 - Authorization for writes is enforced at the database layer via RLS checking membership in the `executives` table, not by any client-side check — a client-only gate is not a real security boundary, since the anon key and all client code are visible via browser dev tools.
-- OAuth (Google Sign-In) was considered and rejected for exec login specifically because Google Workspace for Education blocks unconfigured third-party OAuth apps for under-18 managed accounts by default ("Access blocked: your institution's admin needs to review [app]"). This is a Google Admin Console policy, separate from Lightspeed, and would require an IT approval step Supabase email/password avoids entirely.
+- OAuth (Google Sign-In) was considered and rejected for exec login specifically because Google Workspace for Education blocks unconfigured third-party OAuth apps for under-18 managed accounts by default ("Access blocked: your institution's admin needs to review [app]"). This is a Google Admin Console policy, separate from Lightspeed, and would require an IT approval step Supabase username/password avoids entirely.
 
 ## 9. PWA / Install Strategy
 
@@ -295,7 +296,7 @@ One consistent card shell, differentiated by colored accent, not a different lay
 | Risk | Mitigation / Status |
 |---|---|
 | School's Lightspeed filter or network policy blocks the GitHub Pages / Supabase domain | Test on an actual school Chromebook early; escalate to IT if blocked. |
-| Google Workspace Admin blocks any future OAuth-based feature for student accounts | Avoided by using Supabase email/password instead of Google Sign-In. |
+| Google Workspace Admin blocks any future OAuth-based feature for student accounts | Avoided by using Supabase username/password instead of Google Sign-In. |
 | iOS push reliability gaps | Documented, accepted limitation; keep Instagram as a redundant channel initially. |
 | Stale service worker cache after deploys | `skipWaiting()`/`clients.claim()` in service worker. |
 | Supabase free project auto-pause | GitHub Actions heartbeat every 3 days performing a real query. |
@@ -309,7 +310,7 @@ One consistent card shell, differentiated by colored accent, not a different lay
 - [ ] Confirm with school IT whether the target domain(s) are reachable through Lightspeed on Chromebooks.
 - [ ] Design and export proper 192x192 / 512x512 (+ maskable) app icons.
 - [ ] Decide FCM vs. OneSignal.
-- [ ] Pre-create the 6 executive accounts in Supabase Auth and populate the `executives` table.
+- [ ] Pre-create the 6 executive accounts (username + placeholder address, see `supabase/ADMIN-ACCOUNTS.md`) and populate the `executives` table.
 - [ ] Build onboarding screens: Android install prompt, iOS manual walkthrough, in-app-browser redirect message.
 - [ ] Set up the GitHub Actions Supabase keep-alive workflow.
 - [ ] Draft reader page, exec list+form, and event detail page in Claude Design; hand off to Claude Code.
