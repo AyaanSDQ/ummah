@@ -21,7 +21,6 @@
 // All dates are local calendar dates written "YYYY-MM-DD"; times are local "HH:MM".
 
 export const WEEKDAY_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-export const WEEKDAY_LONG = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const MAX_STEPS = 20000; // hard stop for runaway rules
 
 const pad = (n) => String(n).padStart(2, "0");
@@ -133,11 +132,6 @@ export function expandSeries(row, from, to) {
 // The next occurrence on or after `from` that is not cancelled.
 export function nextActive(row, from, { days = 400 } = {}) {
   return expandSeries(row, from, addDays(from, days)).find((o) => o.status === "active") || null;
-}
-
-export function splitOccurrenceId(id) {
-  const i = String(id).indexOf("@");
-  return i === -1 ? { seriesId: id, date: null } : { seriesId: id.slice(0, i), date: id.slice(i + 1) };
 }
 
 // ── Describing a rule ───────────────────────────────────────────────────

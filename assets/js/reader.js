@@ -1,13 +1,11 @@
 import { supabase } from "./supabase-client.js";
-import { icon } from "./icons.js?v=13";
+import { icon } from "./icons.js?v=14";
 import {
   TYPE_META,
-  typeBanner,
   escapeHtml,
   formatTime,
   formatEventDate,
   formatDateHeading,
-  isSameLocalDay,
   localDateKey,
   effectiveTime,
   bucketOf,
@@ -21,8 +19,8 @@ import {
   emptyCardHtml,
   animateRemove,
   keepPlace,
-} from "./shared.js?v=27";
-import { expandSeries, nextActive, describeRule, parseKey, addDays, startOfDay } from "./recurrence.js?v=2";
+} from "./shared.js?v=28";
+import { expandSeries, nextActive, describeRule, parseKey, addDays, startOfDay } from "./recurrence.js?v=3";
 
 const PAGE_SIZE = 20;
 const heroEl = document.getElementById("hero");
@@ -387,7 +385,6 @@ function renderHistoryBatch(rows, { append = false } = {}) {
   historyCount += rows.length;
   historySection.hidden = false;
 
-  let currentGroup = null;
   let groupWrap = null;
   const lastKey = historyEl.dataset.lastGroupKey || null;
   let activeKey = lastKey;

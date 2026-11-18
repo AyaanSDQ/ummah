@@ -9,7 +9,7 @@ importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
 
 // Bump CACHE_NAME whenever the precache list below changes, so the old
 // cache gets cleaned up on activate instead of accumulating stale entries.
-const CACHE_NAME = "msa-shell-v143";
+const CACHE_NAME = "msa-shell-v144";
 
 const PRECACHE_URLS = [
   "index.html",
@@ -19,21 +19,21 @@ const PRECACHE_URLS = [
   "calendar.html",
   "terms.html",
   "manifest.json",
-  "assets/css/app.css?v=118",
-  "assets/js/reader.js?v=45",
-  "assets/js/exec.js?v=49",
-  "assets/js/install.js?v=8",
-  "assets/js/notify.js?v=7",
+  "assets/css/app.css?v=119",
+  "assets/js/reader.js?v=46",
+  "assets/js/exec.js?v=50",
+  "assets/js/install.js?v=9",
+  "assets/js/notify.js?v=8",
   "assets/js/sw-register.js?v=3",
-  "assets/js/icons.js?v=13",
-  "assets/js/recurrence.js?v=2",
+  "assets/js/icons.js?v=14",
+  "assets/js/recurrence.js?v=3",
   "assets/js/nav.js?v=1",
-  "assets/js/exec-repeat.js?v=2",
+  "assets/js/exec-repeat.js?v=3",
   "assets/js/exec-room.js?v=1",
-  "assets/js/datetime-picker.js?v=6",
-  "assets/js/calendar.js?v=31",
+  "assets/js/datetime-picker.js?v=7",
+  "assets/js/calendar.js?v=32",
   "assets/js/fx.js?v=4",
-  "assets/js/shared.js?v=27",
+  "assets/js/shared.js?v=28",
   "assets/js/config.js",
   "assets/js/supabase-client.js",
   "assets/icons/logo.svg",

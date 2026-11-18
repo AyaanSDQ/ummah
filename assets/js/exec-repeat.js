@@ -2,7 +2,7 @@
 // entered above it, so there is nothing to type twice, and turns the choices into
 // a recurrence rule (see recurrence.js).
 
-import { parseKey, summaryLine, validateRule } from "./recurrence.js?v=2";
+import { parseKey, summaryLine, validateRule } from "./recurrence.js?v=3";
 
 export function setupRepeat(form) {
   const $ = (id) => form.querySelector(`#${id}`);

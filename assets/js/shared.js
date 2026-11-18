@@ -1,4 +1,4 @@
-import { icon } from "./icons.js?v=13";
+import { icon } from "./icons.js?v=14";
 
 // Per-type presentation, matching design-reference §15 accent table.
 export const TYPE_META = {
@@ -6,14 +6,6 @@ export const TYPE_META = {
   social: { label: "Social", iconId: "i-users" },
   announcement: { label: "Announcement", iconId: "i-mega" },
 };
-
-export function typeBanner(type) {
-  if (type === "announcement") {
-    return `<img src="assets/images/announcement-banner.png" alt="Megaphone facing a crowd of silhouetted students">`;
-  }
-  const symbolId = type === "social" ? "banner-social" : "banner-mosque";
-  return `<svg viewBox="0 0 400 132" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><use href="#${symbolId}"></use></svg>`;
-}
 
 // Smoothly removes a card: it fades and slides, then the gap closes. Honours
 // "reduce motion". onDone runs once the element is gone from the page.
@@ -75,10 +67,6 @@ export function formatEventDate(ts, now = new Date()) {
   if (diff === -1) return "Yesterday";
   if (diff >= 2 && diff <= 6) return d.toLocaleDateString(undefined, { weekday: "long" });
   return d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
-}
-
-export function isSameLocalDay(a, b) {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 }
 
 // The moment a post is "about": the time set on it, or (for untimed posts like

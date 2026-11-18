@@ -8,7 +8,7 @@
 // same format ("2026-11-17T19:00", "2026-11-17", "19:00"), so forms, validation and
 // `input` / `change` listeners keep working exactly as before.
 
-import { icon } from "./icons.js?v=13";
+import { icon } from "./icons.js?v=14";
 
 const pad = (n) => String(n).padStart(2, "0");
 const keyOf = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;

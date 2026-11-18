@@ -1,13 +1,13 @@
 import { supabase } from "./supabase-client.js";
-import { icon } from "./icons.js?v=13";
+import { icon } from "./icons.js?v=14";
 import {
   describeRule, describeEnds, expandSeries, nextActive, effectiveFields, endBefore, withChange, firstOccurrence,
-  isFirstOccurrence, overrideCount, parseKey, dateKey, addDays, startOfDay,
-} from "./recurrence.js?v=2";
-import { setupRepeat } from "./exec-repeat.js?v=2";
-import { enhancePickers } from "./datetime-picker.js?v=6";
+  isFirstOccurrence, overrideCount, parseKey, addDays, startOfDay,
+} from "./recurrence.js?v=3";
+import { setupRepeat } from "./exec-repeat.js?v=3";
+import { enhancePickers } from "./datetime-picker.js?v=7";
 import { setupRooms, setRoom } from "./exec-room.js?v=1";
-import { TYPE_META, escapeHtml, formatTime, formatDateHeading, formatEventDate, localDateKey, roomLabel, cancelledBanner, animateRemove, keepPlace } from "./shared.js?v=27";
+import { TYPE_META, escapeHtml, formatTime, formatDateHeading, formatEventDate, localDateKey, roomLabel, cancelledBanner, animateRemove, keepPlace } from "./shared.js?v=28";
 
 const loginView = document.getElementById("login-view");
 const appView = document.getElementById("app-view");
@@ -127,7 +127,7 @@ async function renderForSession(session) {
   // The View section is the public Updates page; it starts loading now so it is ready when opened.
   if (!readerLoaded) {
     readerLoaded = true;
-    import("./reader.js?v=45").catch((err) => console.error("Failed to load the preview", err));
+    import("./reader.js?v=46").catch((err) => console.error("Failed to load the preview", err));
   }
 }
 

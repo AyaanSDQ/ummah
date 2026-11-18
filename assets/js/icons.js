@@ -5,7 +5,6 @@ export const ICON_SPRITE = `
 <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
 <symbol id="i-mega" viewBox="0 0 24 24"><path d="M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M6 14a12 12 0 0 0 2.4 7.5.5.5 0 0 0 .8.1l1.4-.9a.5.5 0 0 0 .2-.7A8 8 0 0 1 10 14"/><path d="M8 6v8"/></symbol>
 <symbol id="i-case" viewBox="0 0 24 24"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></symbol>
-<symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></symbol>
 <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m5.6 5.6 12.8 12.8"/></symbol>
 <symbol id="i-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></symbol>
 <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
@@ -18,28 +17,11 @@ export const ICON_SPRITE = `
 <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
 <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v12"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></symbol>
 <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
-<symbol id="i-msg" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
-<symbol id="banner-mosque" viewBox="0 0 400 132" preserveAspectRatio="xMidYMax slice"><g fill="currentColor" stroke="none"><path d="M0 122h400v10H0z"/><path d="M64 104h272v18H64z"/><path d="M162 122V86c0-20 14-32 38-46 24 14 38 26 38 46v36z"/><path d="M197 40V26h6v14z"/><circle cx="200" cy="21" r="5"/><path d="M128 122v-22c0-10 6-16 15-22 9 6 15 12 15 22v22z"/><path d="M242 122v-22c0-10 6-16 15-22 9 6 15 12 15 22v22z"/><path d="M92 122V62h18v60z"/><path d="M88 74h26v6H88z"/><path d="M92 62c0-10 4-16 9-22 5 6 9 12 9 22z"/><path d="M99 40V28h4v12z"/><path d="M290 122V62h18v60z"/><path d="M286 74h26v6h-26z"/><path d="M290 62c0-10 4-16 9-22 5 6 9 12 9 22z"/><path d="M297 40V28h4v12z"/><path d="M44 122V88h14v34z"/><path d="M44 88c0-8 3-13 7-18 4 5 7 10 7 18z"/><path d="M342 122V88h14v34z"/><path d="M342 88c0-8 3-13 7-18 4 5 7 10 7 18z"/></g></symbol>
-<symbol id="banner-social" viewBox="0 0 400 132" preserveAspectRatio="xMidYMax slice"><g fill="currentColor" stroke="none">
-<path d="M0 110h400v22H0z"/><ellipse cx="200" cy="112" rx="210" ry="9"/>
-<g id="bs-half">
-<path d="M34 112V44h9v68z"/><circle cx="38" cy="36" r="23"/><circle cx="16" cy="48" r="15"/><circle cx="60" cy="46" r="16"/><circle cx="38" cy="58" r="14"/>
-<circle cx="86" cy="64" r="9"/><path d="M86 72c6 0 10 5 11 11l4 29H71l4-29c1-6 5-11 11-11z"/>
-<circle cx="112" cy="58" r="10"/><path d="M112 67c7 0 11 5 12 12l4 33h-32l4-33c1-7 5-12 12-12z"/>
-<circle cx="138" cy="54" r="10"/><path d="M128 112V76a10 10 0 0 1 20 0v36z"/><path d="M148 80h7v24h-7z"/>
-</g>
-<use href="#bs-half" transform="translate(400,0) scale(-1,1)"/>
-<path d="M158 84h84v5h-84z"/><path d="M164 89h5v21h-5zM231 89h5v21h-5z"/><path d="M152 96h96v4h-96z"/>
-<circle cx="178" cy="68" r="9"/><path d="M170 96V82a8 8 0 0 1 16 0v14z"/><path d="M170 96h16v12h-4v-6h-8v6h-4z"/>
-<circle cx="222" cy="68" r="9"/><path d="M214 96V82a8 8 0 0 1 16 0v14z"/><path d="M214 96h16v12h-4v-6h-8v6h-4z"/>
-<circle cx="200" cy="60" r="9"/><path d="M191 112V78a9 9 0 0 1 18 0v34z"/>
-</g></symbol>
 <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
 <symbol id="i-pushpin" viewBox="0 0 24 24"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></symbol>
 <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21l1.2-6.9-5-4.9 6.9-1z"/></symbol>
 <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></symbol>
 <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
-<symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="currentColor" stroke="none"/></symbol>
 </defs></svg>`;
 
 export function icon(id, { size = 18, stroke = 2.8, filled = false } = {}) {
