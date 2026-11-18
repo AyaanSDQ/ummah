@@ -1346,9 +1346,9 @@ body {
 /* ── Banners: one illustration per post type, in the style of the empty-state mosque (light glow, flat lilac shapes, diamond strip) ── */
 .hero-media.is-pattern[data-type] { background: #e6daf5 right bottom / cover no-repeat; }
 .hero-media.is-pattern[data-type]::before, .hero-media.is-pattern[data-type]::after { display: none; }
-.hero-media.is-pattern[data-type="prayer"] { background-image: url("../img/banner-prayer.svg?v=4"); background-color: #e6daf5; }
-.hero-media.is-pattern[data-type="social"] { background-image: url("../img/banner-social.svg?v=4"); background-color: #f4dcec; }
-.hero-media.is-pattern[data-type="announcement"] { background-image: url("../img/banner-announcement.svg?v=4"); background-color: #e1d7f8; }
+.hero-media.is-pattern[data-type="prayer"] { background-image: url("../img/banner-prayer.svg?v=5"); background-color: #e6daf5; }
+.hero-media.is-pattern[data-type="social"] { background-image: url("../img/banner-social.svg?v=5"); background-color: #f4dcec; }
+.hero-media.is-pattern[data-type="announcement"] { background-image: url("../img/banner-announcement.svg?v=5"); background-color: #e1d7f8; }
 .hero-media-icon { color: var(--c); background: rgba(255, 255, 255, .72); border: 1px solid rgba(255, 255, 255, .95); box-shadow: 0 1px 0 rgba(255, 255, 255, .9) inset, 0 8px 16px -10px color-mix(in srgb, var(--c) 60%, transparent); }
 
 /* ── Timestamps: plain text, no pills or boxes ── */
@@ -1814,37 +1814,37 @@ body[data-panel="calendar"] .app-header, #calendar ~ .app-header { margin-bottom
 
 /* ══════════════ Round 16: glass calendar, glass login ══════════════ */
 
-/* Calendar: the month sits in one rounded glass panel; days are soft rounded tiles; numbers are light and quiet */
-#calendar .cal-card {
-  padding: 16px 8px 12px; margin: 0 0 8px; border-radius: 32px;
-  background: var(--glass); border: 1px solid var(--glass-edge);
-  -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, .85) inset, 0 0 0 1px rgba(91, 46, 145, .06), 0 18px 36px -22px rgba(60, 30, 100, .38);
+/* Calendar, iOS month view: full-width rows split by hairlines, centred numerals, thin colour bars for events,
+   weekends in grey, today a filled circle, and the month controls in one glass capsule */
+#calendar { --cal-line: rgba(27, 22, 38, .13); }
+#calendar .cal-card { margin: 0 -18px; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+#calendar .cal-grid { gap: 0; border: 0; border-radius: 0; overflow: visible; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+#calendar .cal-weekday { padding: 6px 0 8px; border: 0; background: none; font-size: 11px; font-weight: 600; letter-spacing: .04em; color: var(--ink-3); opacity: 1; }
+#calendar .cal-day, #calendar .cal-pad, #calendar .cal-day:hover, #calendar .cal-day:active, #calendar .cal-day.has, #calendar .cal-day.has:hover,
+#calendar .cal-day.selected, #calendar .cal-day.selected:hover, #calendar .cal-day.selected:active, #calendar .cal-pad:hover {
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 4px;
+  min-height: 70px; padding: 7px 0 6px; border: 0; border-top: 1px solid var(--cal-line); border-radius: 0; background: none; box-shadow: none;
 }
-#calendar .cal-grid { gap: 3px; border: 0; border-radius: 0; overflow: visible; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
-#calendar .cal-weekday { padding: 2px 0 8px; border: 0; background: none; font-size: 11px; font-weight: 600; letter-spacing: .06em; color: var(--ink-3); opacity: .8; }
-#calendar .cal-day, #calendar .cal-pad { border: 0; border-radius: 22px; }
-#calendar .cal-pad, #calendar .cal-pad:hover { background: none; }
-#calendar .cal-day.has, #calendar .cal-day.has:hover {
-  background: linear-gradient(180deg, rgba(255, 255, 255, .78), color-mix(in srgb, var(--tint, var(--brand)) 9%, rgba(255, 255, 255, .42)));
-  box-shadow: 0 1px 0 rgba(255, 255, 255, .95) inset, 0 0 0 1px rgba(255, 255, 255, .7), 0 8px 14px -12px color-mix(in srgb, var(--tint, var(--brand)) 55%, transparent);
+#calendar .cal-grid > :nth-child(n+8):nth-child(-n+14) { border-top-color: rgba(27, 22, 38, .22); }
+#calendar .cal-day:active { background: rgba(27, 22, 38, .05); }
+#calendar .cal-day .cal-num, #calendar .cal-grid .cal-num, #calendar .cal-day.has .cal-num {
+  min-width: 32px; height: 32px; padding: 0 4px; display: grid; place-items: center; border-radius: 999px;
+  font-size: 19px; font-weight: 500; color: var(--ink); background: none; letter-spacing: -0.01em;
 }
-#calendar .cal-day:not(.has):hover { background: rgba(255, 255, 255, .5); border-radius: 22px; }
-#calendar .cal-day .cal-num, #calendar .cal-grid .cal-num, #calendar .cal-day.has .cal-num { font-size: 15px; font-weight: 400; color: var(--ink-2); background: none; }
-#calendar .cal-day.today .cal-num, #calendar .cal-grid .cal-day.today:not(.selected) .cal-num {
-  background: color-mix(in srgb, var(--brand) 13%, #fff); color: var(--brand); font-weight: 500;
+#calendar .cal-grid > :nth-child(7n+1) .cal-num, #calendar .cal-grid > :nth-child(7n) .cal-num { color: var(--ink-3); }
+#calendar .cal-day.today .cal-num, #calendar .cal-grid .cal-day.today:not(.selected) .cal-num,
+#calendar .cal-day.today.selected .cal-num, #calendar .cal-grid .cal-day.today.selected .cal-num { background: var(--brand); color: #fff; font-weight: 600; }
+#calendar .cal-day.selected:not(.today) .cal-num, #calendar .cal-grid .cal-day.selected:not(.today) .cal-num { background: var(--ink); color: #fff; font-weight: 600; }
+#calendar .cal-bars { width: calc(100% - 8px); min-height: 0; align-self: center; gap: 3px; }
+#calendar .cal-bar { height: 5px; background: color-mix(in srgb, var(--c) 62%, #fff); }
+#calendar .cal-bar.is-cancelled { background: none; box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--c) 62%, #fff) inset; opacity: .8; }
+#calendar .cal-bars .cal-more { font-size: 10.5px; font-weight: 600; color: var(--ink-3); }
+#calendar .cal-legend { margin: 12px 18px 0; padding: 12px 0 0; border-top: 1px solid var(--cal-line); }
+#calendar .cal-nav { display: flex; align-items: center; gap: 0; padding: 3px; border-radius: 999px; background: var(--glass-strong); border: 1px solid var(--glass-edge); box-shadow: var(--elev-1), 0 10px 18px -14px rgba(60, 30, 100, .45); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); }
+#calendar .cal-nav .btn.cal-arrow, #calendar .cal-nav .btn.cal-view, #calendar .cal-nav .btn.cal-arrow:hover, #calendar .cal-nav .btn.cal-view:hover {
+  width: 42px; min-width: 42px; height: 40px; padding: 0; border: 0; border-radius: 999px; background: none; box-shadow: none; color: var(--brand);
 }
-#calendar .cal-day.selected, #calendar .cal-day.selected:hover, #calendar .cal-day.selected:active {
-  border-radius: 22px; background: rgba(255, 255, 255, .92);
-  box-shadow: 0 0 0 1.5px rgba(91, 46, 145, .4) inset, 0 10px 20px -14px rgba(70, 30, 120, .5);
-}
-#calendar .cal-grid .cal-day.selected:not(.today) .cal-num { background: none; color: var(--brand); font-weight: 500; }
-#calendar .cal-day.today.selected .cal-num, #calendar .cal-grid .cal-day.today.selected .cal-num { background: color-mix(in srgb, var(--brand) 16%, #fff); color: var(--brand); font-weight: 500; }
-@media (max-width: 560px) {
-  #calendar .cal-card { padding: 14px 6px 10px; border-radius: 30px; }
-  #calendar .cal-weekday { padding: 2px 0 8px; font-size: 11px; }
-  #calendar .cal-day .cal-num, #calendar .cal-grid .cal-num { min-width: 30px; height: 30px; font-size: 15px; }
-}
+#calendar .cal-nav .btn.cal-arrow:active, #calendar .cal-nav .btn.cal-view:active { background: rgba(91, 46, 145, .12); }
 
 /* Login: a glass card with glass fields, floating over soft colour so the blur has something to show */
 .login-wrap { position: relative; isolation: isolate; }
