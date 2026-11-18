@@ -51,7 +51,7 @@ exec posts an update
 | Edge Function `notify-post` | Builds the heading and message, calls OneSignal, sets the tap link. Deployed, ACTIVE, `verify_jwt: true`. | `supabase/functions/notify-post/index.ts` |
 | Function secrets | `ONESIGNAL_APP_ID`, `ONESIGNAL_REST_API_KEY`, `SITE_URL`. | Supabase, Edge Functions, Secrets |
 | OneSignal app | Push provider, Web Push, custom-code integration, SDK v16. App ID `73a18eab-2f8d-4909-8005-72bb95c080e5` (public, safe in client code). | OneSignal dashboard |
-| `notify.js` | The "Enable notifications" banner. Initialises OneSignal and subscribes the device. **Runs only in an installed PWA (standalone display mode) on a push-capable browser.** Dismissal is remembered in `localStorage` key `msa-notify-dismissed`. | `assets/js/notify.js`, loaded by `index.html` only |
+| `notify.js` | The "Enable notifications" banner. Initialises OneSignal and subscribes the device. **Runs only in an installed PWA (standalone display mode) on a push-capable browser.** The banner has no dismiss button: it shows whenever the device is not subscribed. | `assets/js/notify.js`, loaded by `index.html` only |
 | `sw.js` | App-shell worker. Also pulls in OneSignal's worker with `importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js")`, so one worker does caching and push. | `sw.js` |
 | `sw-register.js` | Registers `sw.js` on every page. Its default scope is the folder the worker sits in, so `/ummah/`. | `assets/js/sw-register.js` |
 | PWA install | Needed for iOS push, and it gates the prompt. | `manifest.json`, `install.js` |
@@ -100,7 +100,7 @@ All unverified. They are hypotheses to test, not findings.
 2. **OneSignal dashboard:** set the Site URL to `https://ayaansdq.github.io/ummah/` (Settings, Web Push configuration). This is a dashboard change only you can make.
 3. **`SITE_URL` secret:** `npx supabase secrets set SITE_URL=https://ayaansdq.github.io/ummah/` (needs `--yes` from the agent).
 4. **`index.ts`:** change the fallback on line 12 to the `/ummah/` address and redeploy: `npx supabase functions deploy notify-post`.
-5. **Test device:** uninstall any old copy, then install the PWA fresh from `/ummah/`. On an iPhone this needs iOS 16.4 or newer and the home-screen icon. Desktop Chrome can install it too, which is the quickest place to test. Clear `msa-notify-dismissed` from `localStorage` if the banner was dismissed.
+5. **Test device:** uninstall any old copy, then install the PWA fresh from `/ummah/`. On an iPhone this needs iOS 16.4 or newer and the home-screen icon. Desktop Chrome can install it too, which is the quickest place to test.
 6. **Confirm a subscriber:** open the installed app, tap Enable, accept the prompt, and check the OneSignal dashboard (Audience, Subscriptions) for 1 subscriber. If none appears, open the browser console on the installed app and read the `OneSignal.init` error. That error will say which of the suspects above is real.
 7. **Test with one post:** make a single real post, then watch `net._http_response` and the device.
 

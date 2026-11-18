@@ -3,7 +3,6 @@ import { icon } from "./icons.js?v=13";
 // Public OneSignal App ID — a public identifier meant to ship in client
 // code (same trust model as the Supabase anon key), not a secret.
 const ONESIGNAL_APP_ID = "73a18eab-2f8d-4909-8005-72bb95c080e5";
-const DISMISS_KEY = "msa-notify-dismissed";
 
 const banner = document.getElementById("notify-banner");
 const toggle = document.getElementById("notify-toggle"); // footer link: Turn off / Turn on notifications
@@ -54,8 +53,7 @@ async function initNotifyBanner(banner) {
         hide(banner);
         setToggle("off");
       } else {
-        if (wasDismissed()) hide(banner);
-        else renderPrompt(banner, enable);
+        renderPrompt(banner, enable); // no dismiss button: it stays until the person subscribes
         setToggle("on");
       }
     }
@@ -71,7 +69,6 @@ async function initNotifyBanner(banner) {
     // Unsubscribe: the browser permission stays granted, so turning it back on later is one tap with no prompt.
     async function disable() {
       await OneSignal.User.PushSubscription.optOut();
-      clearDismissed(); // the Enable notifications prompt comes back
       render();
     }
 
@@ -130,39 +127,11 @@ function renderBlocked(banner) {
 }
 
 function show(banner, html) {
-  banner.innerHTML = `${html}<button type="button" class="install-dismiss" id="notify-dismiss" aria-label="Dismiss">${icon("i-close", { size: 14, stroke: 2.75 })}</button>`;
+  banner.innerHTML = html;
   banner.hidden = false;
-  document.getElementById("notify-dismiss").addEventListener("click", () => {
-    dismiss();
-    hide(banner);
-  });
 }
 
 function hide(banner) {
   banner.hidden = true;
   banner.innerHTML = "";
-}
-
-function wasDismissed() {
-  try {
-    return localStorage.getItem(DISMISS_KEY) === "1";
-  } catch {
-    return false;
-  }
-}
-
-function clearDismissed() {
-  try {
-    localStorage.removeItem(DISMISS_KEY);
-  } catch {
-    // storage blocked — nothing to clear
-  }
-}
-
-function dismiss() {
-  try {
-    localStorage.setItem(DISMISS_KEY, "1");
-  } catch {
-    // private browsing / storage blocked — fine, just won't be remembered
-  }
 }
