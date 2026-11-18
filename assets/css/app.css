@@ -1346,9 +1346,9 @@ body {
 /* ── Banners: one illustration per post type, in the style of the empty-state mosque (light glow, flat lilac shapes, diamond strip) ── */
 .hero-media.is-pattern[data-type] { background: #e6daf5 right bottom / cover no-repeat; }
 .hero-media.is-pattern[data-type]::before, .hero-media.is-pattern[data-type]::after { display: none; }
-.hero-media.is-pattern[data-type="prayer"] { background-image: url("../img/banner-prayer.svg?v=6"); background-color: #e6daf5; }
-.hero-media.is-pattern[data-type="social"] { background-image: url("../img/banner-social.svg?v=6"); background-color: #f4dcec; }
-.hero-media.is-pattern[data-type="announcement"] { background-image: url("../img/banner-announcement.svg?v=6"); background-color: #e1d7f8; }
+.hero-media.is-pattern[data-type="prayer"] { background-image: url("../img/banner-prayer.svg?v=7"); background-color: #e6daf5; }
+.hero-media.is-pattern[data-type="social"] { background-image: url("../img/banner-social.svg?v=7"); background-color: #f4dcec; }
+.hero-media.is-pattern[data-type="announcement"] { background-image: url("../img/banner-announcement.svg?v=7"); background-color: #e1d7f8; }
 .hero-media-icon { color: var(--c); background: rgba(255, 255, 255, .72); border: 1px solid rgba(255, 255, 255, .95); box-shadow: 0 1px 0 rgba(255, 255, 255, .9) inset, 0 8px 16px -10px color-mix(in srgb, var(--c) 60%, transparent); }
 
 /* ── Timestamps: plain text, no pills or boxes ── */
