@@ -1,13 +1,13 @@
 import { supabase } from "./supabase-client.js";
-import { icon } from "./icons.js?v=14";
+import { icon } from "./icons.js?v=15";
 import {
   describeRule, describeEnds, expandSeries, nextActive, effectiveFields, endBefore, withChange, firstOccurrence,
   isFirstOccurrence, overrideCount, parseKey, addDays, startOfDay,
 } from "./recurrence.js?v=3";
 import { setupRepeat } from "./exec-repeat.js?v=3";
 import { enhancePickers } from "./datetime-picker.js?v=7";
-import { setupRooms, setRoom } from "./exec-room.js?v=1";
-import { TYPE_META, escapeHtml, formatTime, formatDateHeading, formatEventDate, localDateKey, roomLabel, cancelledBanner, animateRemove, keepPlace } from "./shared.js?v=28";
+import { setupRooms, setRoom } from "./exec-room.js?v=2";
+import { TYPE_META, escapeHtml, formatTime, formatDateHeading, formatEventDate, localDateKey, roomLabel, cancelledBanner, animateRemove, keepPlace } from "./shared.js?v=30";
 
 const loginView = document.getElementById("login-view");
 const appView = document.getElementById("app-view");
@@ -127,7 +127,7 @@ async function renderForSession(session) {
   // The View section is the public Updates page; it starts loading now so it is ready when opened.
   if (!readerLoaded) {
     readerLoaded = true;
-    import("./reader.js?v=46").catch((err) => console.error("Failed to load the preview", err));
+    import("./reader.js?v=48").catch((err) => console.error("Failed to load the preview", err));
   }
 }
 
@@ -364,12 +364,11 @@ function execCardHtml(update) {
 // A repeating post is one row in the list: its rule and the next date, not one row per date.
 function seriesCardHtml(update, meta) {
   const pinned = update.pinned ? `<span class="kicker-badges"><span class="badge badge-pin">${icon("i-pushpin", { size: 13 })}Pinned</span></span>` : "";
-  const next = nextActive(update, startOfDay(new Date()));
-  const when = next
-    ? `Next ${execMetaLine(next)}`
-    : "Ended";
+  // The rule itself ("Weekly · Wed") lives in the edit view; the card only says when it happens next.
+  const next = nextUpcoming(update);
+  const when = next ? seriesWhen(next.event_time) : "Ended";
   const changes = overrideCount(update);
-  const meta2 = [describeRule(update.recurrence), when, changes ? `${changes} ${changes === 1 ? "change" : "changes"}` : ""].filter(Boolean).join(" · ");
+  const meta2 = [when, changes ? `${changes} ${changes === 1 ? "change" : "changes"}` : ""].filter(Boolean).join(" · ");
   return `<div class="list-card exec-item is-series" style="background:var(--type-${update.type}-list)" data-update-id="${update.id}">
     <div class="list-icon" style="color:var(--type-${update.type}-icon)">${icon(meta.iconId, { size: 22 })}</div>
     <div class="list-body">
@@ -379,6 +378,23 @@ function seriesCardHtml(update, meta) {
     </div>
     ${icon("i-chev", { size: 15 })}
   </div>`;
+}
+
+// First active occurrence that has not started yet (an earlier one today is already stale).
+function nextUpcoming(row) {
+  const now = Date.now();
+  const from = startOfDay(new Date());
+  return expandSeries(row, from, addDays(from, 400)).find((o) => o.status === "active" && new Date(o.event_time).getTime() >= now) || null;
+}
+
+// "Today · 1:00 PM", "Wed · 1:00 PM", or "Wed, Nov 25 · 1:00 PM" when it is more than a week out.
+function seriesWhen(ts) {
+  const d = new Date(ts);
+  const days = Math.round((startOfDay(d) - startOfDay(new Date())) / 86400000);
+  const day = days === 0
+    ? "Today"
+    : d.toLocaleDateString(undefined, days < 7 ? { weekday: "short" } : { weekday: "short", month: "short", day: "numeric" });
+  return `${day} · ${formatTime(ts)}`;
 }
 
 function execMetaLine(update) {
@@ -476,10 +492,7 @@ function wireNewPostForm() {
       payload.recurrence = repeat.rule;
     }
     // Optional presentation fields are only sent when used.
-    const priority = postForm.priority.value;
     const pinned = postForm.pinned.checked;
-    const usesExtras = priority !== "normal" || pinned;
-    if (priority !== "normal") payload.priority = priority;
     if (pinned) payload.pinned = true;
 
     const { error } = await supabase.from("updates").insert(payload);
@@ -490,8 +503,8 @@ function wireNewPostForm() {
       console.error("Post failed", error);
       formError.textContent = repeat.rule
         ? "Couldn't post the repeating post. Make sure the latest database migration (recurring posts) has been applied."
-        : usesExtras
-        ? "Couldn't post. If you used a priority or pin, make sure the latest database migration has been applied."
+        : pinned
+        ? "Couldn't post. If you used a pin, make sure the latest database migration has been applied."
         : "Couldn't post — check the required fields and try again.";
       formError.hidden = false;
       return;

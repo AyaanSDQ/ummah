@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ummah — Administrative</title>
-<link rel="stylesheet" href="assets/css/app.css?v=119">
+<link rel="stylesheet" href="assets/css/app.css?v=148">
 <meta name="robots" content="noindex">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/svg+xml" href="assets/icons/logo.svg">
@@ -30,7 +30,7 @@
     <div class="login-card">
       <a href="index.html" class="back-link" data-replace><span class="back-icon">BACK_ICON</span>Back to Updates</a>
       <h1 class="login-title">Administrative login</h1>
-      <p class="login-sub">For MSA administrators only. There is no public sign-up.</p>
+      <p class="login-sub">For Muslim Student Association administrators only. There is no public sign-up.</p>
       <div id="login-error" class="error-banner" hidden></div>
       <form id="login-form">
         <div class="field">
@@ -81,7 +81,7 @@
               <label id="location-label">Room</label>
               <div class="room-row" data-room>
                 <div class="room-defaults" role="group" aria-label="Usual rooms"></div>
-                <input class="input room-other" type="text" placeholder="Other" aria-label="Other room" autocomplete="off">
+                <input class="input room-other" type="text" placeholder="Room number" aria-label="Room number" autocomplete="off">
               </div>
               <input type="hidden" name="location">
             </div>
@@ -117,14 +117,6 @@
               </div>
             </div>
             <div class="field"><label>Notes</label><textarea class="input" name="notes"></textarea></div>
-            <div class="field">
-              <label>Priority</label>
-              <select class="input" name="priority">
-                <option value="normal">Normal</option>
-                <option value="important">Important</option>
-                <option value="urgent">Urgent</option>
-              </select>
-            </div>
             <label class="toggle-row">
               <input type="checkbox" name="pinned">
               <span class="toggle-track"><span class="toggle-thumb"></span></span>
@@ -176,7 +168,7 @@
           <label id="edit-location-label">Room</label>
           <div class="room-row" data-room>
             <div class="room-defaults" role="group" aria-label="Usual rooms"></div>
-            <input class="input room-other" type="text" placeholder="Other" aria-label="Other room" autocomplete="off">
+            <input class="input room-other" type="text" placeholder="Room number" aria-label="Room number" autocomplete="off">
           </div>
           <input type="hidden" name="location">
           </div>
@@ -271,7 +263,7 @@
 </div>
 
 <script type="module">
-  import { ICON_SPRITE, icon } from "./assets/js/icons.js?v=14";
+  import { ICON_SPRITE, icon } from "./assets/js/icons.js?v=15";
   document.getElementById("icon-sprite").innerHTML = ICON_SPRITE;
   document.querySelector(".plus-icon").innerHTML = icon("i-plus", { size: 16, stroke: 2.75 });
   document.getElementById("new-post-chev").innerHTML = icon("i-chev", { size: 15, stroke: 2.75 });
@@ -288,7 +280,7 @@
   import { initPanels } from "./assets/js/nav.js?v=1";
   initPanels({ home: "admin", titles: { admin: "Ummah — Administrative", view: "View — Ummah" } });
 </script>
-<script type="module" src="assets/js/exec.js?v=50"></script>
+<script type="module" src="assets/js/exec.js?v=52"></script>
 <script src="assets/js/fx.js?v=4" defer></script>
 <script src="assets/js/sw-register.js?v=3"></script>
 </body>

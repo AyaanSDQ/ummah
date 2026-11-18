@@ -1,5 +1,5 @@
 import { supabase } from "./supabase-client.js";
-import { icon } from "./icons.js?v=14";
+import { icon } from "./icons.js?v=15";
 import {
   TYPE_META,
   escapeHtml,
@@ -12,14 +12,13 @@ import {
   formatRelative,
   cancelledBanner,
   roomLabel,
-  priorityOf,
   isEventPost,
   badgesHtml,
   dateTileHtml,
   emptyCardHtml,
   animateRemove,
   keepPlace,
-} from "./shared.js?v=28";
+} from "./shared.js?v=30";
 import { expandSeries, nextActive, describeRule, parseKey, addDays, startOfDay } from "./recurrence.js?v=3";
 
 const PAGE_SIZE = 20;
@@ -158,7 +157,7 @@ function sortCancelled(rows) {
 }
 
 function sortPinned(rows) {
-  return [...rows].sort((a, b) => postWeight(b) - postWeight(a) || new Date(b.created_at) - new Date(a.created_at));
+  return [...rows].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 }
 
 // ── Repeating posts ─────────────────────────────────────────────────────
@@ -289,27 +288,23 @@ function updateLoadMoreVisibility() {
   loadMoreWrap.hidden = historyDone;
 }
 
-// Post types that normally qualify as the featured "today" card (besides Important/Urgent posts).
+// Post types that normally qualify as the featured "today" card.
 const HERO_TYPES = new Set(["prayer"]);
 
 // ── Hero selection ──────────────────────────────────────────────────────
 // "Today" means the time set on the post is today (untimed posts: posted
-// today). Among today's active prayers (and Important/Urgent posts): prefer the soonest still-upcoming event_time
+// today). Among today's active prayers: prefer the soonest still-upcoming event_time
 // ("up next"); if everything scheduled today has already passed, fall back
 // to whichever happened most recently; if nothing has a time at all, fall
 // back to the most recently posted. Cancelled posts never become the hero
 // (spec §12) but still render in "today's other posts" with their badge.
-// By default only prayers, or posts flagged Important/Urgent, can be the featured
+// By default only prayers can be the featured
 // card; social events and ordinary announcements are listed under "More today".
 // With anyType (the page would otherwise have no hero card at all) any active post
 // from today can step in.
 function pickHero(todayRows, now, anyType = false) {
-  const eligible = todayRows.filter((r) => r.status === "active" && (anyType || HERO_TYPES.has(r.type) || postWeight(r) > 0));
+  const eligible = todayRows.filter((r) => r.status === "active" && (anyType || HERO_TYPES.has(r.type)));
   if (eligible.length === 0) return null;
-
-  // High-priority posts take the featured spot (pinned posts are shown above).
-  const flagged = eligible.filter((r) => postWeight(r) > 0).sort((a, b) => postWeight(b) - postWeight(a) || new Date(b.created_at) - new Date(a.created_at));
-  if (flagged.length) return flagged[0];
 
   const withTime = eligible.filter((r) => r.event_time);
   const upcoming = withTime
@@ -331,19 +326,15 @@ function tiebreak(a, b) {
   return rank(a) - rank(b) || new Date(b.created_at) - new Date(a.created_at);
 }
 
-function postWeight(r) {
-  return priorityOf(r) === "urgent" ? 3 : priorityOf(r) === "important" ? 2 : 0;
-}
-
 function renderToday(now) {
   // The soonest post of any type only steps in when nothing else would be a hero
-  // card (no pinned, no cancelled, no prayer or flagged post), so there is always
+  // card (no pinned, no cancelled, no prayer post), so there is always
   // at least one when anything is happening today.
   let hero = pickHero(todayRows, now);
   if (!hero && pinnedRows.length === 0 && cancelledRows.length === 0) hero = pickHero(todayRows, now, true);
   const rest = todayRows
     .filter((r) => r !== hero)
-    .sort((a, b) => postWeight(b) - postWeight(a) || new Date(effectiveTime(a)) - new Date(effectiveTime(b)) || tiebreak(a, b));
+    .sort((a, b) => new Date(effectiveTime(a)) - new Date(effectiveTime(b)) || tiebreak(a, b));
 
   heroEl.innerHTML =
     sortCancelled(cancelledRows).map(cancelHeroHtml).join("") +
@@ -368,7 +359,7 @@ function syncEmptyState() {
 
   if (!hasHero) {
     if (!hasAnything) {
-      heroEl.innerHTML = emptyCardHtml("today", "Welcome to Ummah", "Announcements, events and updates from the MSA show up here the moment they're posted.", { cta: { href: "index.html#calendar", panel: "calendar", label: "Open the calendar" } });
+      heroEl.innerHTML = emptyCardHtml("today", "Welcome to Ummah", "Announcements, events and updates from the Muslim Student Association show up here the moment they're posted.", { cta: { href: "index.html#calendar", panel: "calendar", label: "Open the calendar" } });
     } else if (!hasToday) {
       heroEl.innerHTML = emptyCardHtml("today", "Nothing new today", "You're all caught up. See what's coming up on the calendar.", { compact: true, cta: { href: "index.html#calendar", panel: "calendar", label: "Open the calendar" } });
     }
@@ -468,7 +459,6 @@ function chipsHtml(update) {
 function listCardHtml(update) {
   const meta = TYPE_META[update.type];
   const event = isEventPost(update);
-  const pr = priorityOf(update);
   const lead = event
     ? dateTileHtml(update.event_time, update.type)
     : `<div class="list-icon" style="color:var(--type-${update.type}-icon)">${icon(meta.iconId, { size: 22 })}</div>`;
@@ -484,7 +474,7 @@ function listCardHtml(update) {
         <span class="updated-text">${formatRelative(update.created_at)}</span>
       </div>
     </div>`;
-  const cls = `list-card ${event ? "card-event" : "card-announcement"}${pr !== "normal" ? ` is-${pr}` : ""}`;
+  const cls = `list-card ${event ? "card-event" : "card-announcement"}`;
   if (update.status === "cancelled") {
     return `<div class="hist-card" data-update-id="${update.id}" style="background:var(--type-${update.type}-list)">
       ${cancelledBanner(update.cancel_reason)}

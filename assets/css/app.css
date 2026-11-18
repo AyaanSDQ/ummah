@@ -1,5 +1,5 @@
 /* Ummah — styles */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap');
 
 :root {
   --ink: #1b1626;
@@ -234,7 +234,7 @@ textarea.input { min-height: 96px; resize: vertical; }
 
 /* ══════════════ PWA banners ══════════════ */
 
-.install-banner { position: relative; display: flex; align-items: flex-start; gap: 12px; background: var(--brand-50); border: 1px solid var(--brand-100); border-radius: var(--r-md); padding: 14px 40px 14px 14px; margin-bottom: 18px; color: var(--ink); }
+.install-banner { position: relative; display: flex; align-items: flex-start; gap: 12px; background: var(--brand-50); border: 1px solid var(--brand-100); border-radius: var(--r-md); padding: 14px; margin-bottom: 18px; color: var(--ink); }
 .install-banner > svg { flex: none; margin-top: 2px; color: var(--brand); }
 .install-copy { flex: 1; min-width: 0; }
 .install-title { font-weight: 600; font-size: 14px; }
@@ -243,8 +243,6 @@ textarea.input { min-height: 96px; resize: vertical; }
 .install-steps { margin: 6px 0 0; padding-left: 18px; }
 .install-steps li { margin-bottom: 3px; }
 .install-steps svg { vertical-align: -2px; }
-.install-dismiss { position: absolute; top: 10px; right: 10px; background: none; border: 0; color: var(--ink-3); cursor: pointer; padding: 4px; line-height: 0; }
-.install-dismiss:hover { color: var(--ink); }
 
 /* ══════════════ Footer ══════════════ */
 
@@ -527,10 +525,10 @@ body { overflow-x: clip; }
 /* ═══════════════ Polish: type, icons, login, motion (phone-first) ═══════════════ */
 
 :root {
-  --font-body: "Plus Jakarta Sans", -apple-system, "SF Pro Text", system-ui, "Segoe UI", sans-serif;
+  --font-body: "Inter", -apple-system, "SF Pro Text", system-ui, "Segoe UI", sans-serif;
 }
 html { -webkit-tap-highlight-color: transparent; }
-body { font-feature-settings: "ss01", "cv11"; letter-spacing: -0.005em; }
+body { font-feature-settings: "calt", "kern", "cv05"; letter-spacing: -0.006em; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 button, a, .cal-day, .input { touch-action: manipulation; }
 h1, h2, h3, .hero-title, .list-title, .cal-month, .cal-panel-title, .login-title { font-weight: 750; }
 
@@ -554,7 +552,7 @@ h1, h2, h3, .hero-title, .list-title, .cal-month, .cal-panel-title, .login-title
 .hist-icon svg { width: 19px; height: 19px; }
 .empty-state > svg, .install-banner > svg { padding: 10px; width: 24px; height: 24px; margin-top: 0; stroke-width: 2.8; color: var(--brand); }
 .hero-card .chip svg, .list-meta svg { stroke-width: 2.9; }
-.back-link svg, .install-dismiss svg { stroke-width: 2.9; }
+.back-link svg { stroke-width: 2.9; }
 
 /* ── administrative login: one centred column, everything on the same grid ── */
 .login-card { display: flex; flex-direction: column; align-items: stretch; text-align: center; padding: 28px 26px 30px; gap: 0; }
@@ -856,7 +854,7 @@ html { scrollbar-gutter: stable; }
 /* top bar: just the brand and today's date, no panel */
 .app-header.masthead {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  margin: calc(14px + env(safe-area-inset-top)) 0 16px; padding: 0 2px;
+  margin: calc(30px + env(safe-area-inset-top)) 0 16px; padding: 0 2px;
   background: none; border: 0; box-shadow: none; border-radius: 0; overflow: visible;
   -webkit-backdrop-filter: none; backdrop-filter: none;
 }
@@ -1270,7 +1268,7 @@ body {
 .btn-secondary, .btn-restore-action { box-shadow: 0 1px 2px rgba(45, 20, 80, .08), 0 4px 10px -6px rgba(60, 30, 100, .3); }
 .btn-pin-action { box-shadow: 0 1px 2px rgba(45, 20, 80, .08), 0 4px 10px -6px rgba(91, 46, 145, .35); }
 .btn-cancel-action { box-shadow: 0 1px 2px rgba(45, 20, 80, .08), 0 4px 10px -6px color-mix(in srgb, var(--danger) 45%, transparent); }
-.btn-delete-action { background: var(--danger); box-shadow: 0 6px 14px -6px color-mix(in srgb, var(--danger) 60%, transparent); }
+.btn-delete-action { background: var(--danger); box-shadow: 0 1px 2px rgba(45, 20, 80, .1), 0 4px 10px -6px rgba(45, 20, 80, .35); }
 .btn-delete-action:hover { background: color-mix(in srgb, var(--danger) 88%, #000); }
 .new-post-toggle .plus-icon { background: var(--brand); box-shadow: 0 5px 12px -5px rgba(91, 46, 145, .6); }
 .logout-pill { box-shadow: 0 1px 2px rgba(45, 20, 80, .08), 0 4px 10px -6px rgba(60, 30, 100, .3); }
@@ -1347,9 +1345,9 @@ body {
 
 /* ── Banners: one art piece per post type, same palette and line weight as the rest ── */
 .hero-media.is-pattern[data-type]::before { background-size: auto 100%; background-position: right bottom; background-repeat: no-repeat; -webkit-mask-image: linear-gradient(100deg, transparent 14%, #000 58%); mask-image: linear-gradient(100deg, transparent 14%, #000 58%); }
-.hero-media.is-pattern[data-type="prayer"]::before { background-image: url("../img/banner-prayer.svg"); }
-.hero-media.is-pattern[data-type="social"]::before { background-image: url("../img/banner-social.svg"); }
-.hero-media.is-pattern[data-type="announcement"]::before { background-image: url("../img/banner-announcement.svg"); }
+.hero-media.is-pattern[data-type="prayer"]::before { background-image: url("../img/banner-prayer.svg?v=3"); }
+.hero-media.is-pattern[data-type="social"]::before { background-image: url("../img/banner-social.svg?v=3"); }
+.hero-media.is-pattern[data-type="announcement"]::before { background-image: url("../img/banner-announcement.svg?v=3"); }
 
 /* ── Timestamps: plain text, no pills or boxes ── */
 .cal-ev-time {
@@ -1494,7 +1492,7 @@ body {
 
 /* Switching section (Updates / Calendar, Admins / View / Calendar): a short fade, nothing reloads */
 .panel-in { animation: panel-in .2s var(--ease); }
-@keyframes panel-in { from { opacity: 0; transform: translateY(6px); } }
+@keyframes panel-in { from { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .panel-in { animation: none; } }
 
 /* ── The page background ──
@@ -1543,3 +1541,275 @@ body::before {
   .dtp-opt { padding: 9px 0; }
   .dtp-pop { padding: 10px; }
 }
+
+/* Toggle: the track is 38x22 with a 1px border, so its inside is 36x20. A 16px knob sits 2px
+   from every edge, centred vertically in both states. */
+.toggle-thumb { top: 2px; left: 2px; }
+.toggle-row input:checked + .toggle-track .toggle-thumb { left: 18px; }
+
+/* Calendar empty messages: the same card as the empty Updates page (art, title, line of copy),
+   instead of a bare line of grey text. The loading placeholder uses the same card. */
+.calendar .empty-card.empty-calendar,
+.calendar .empty-card.empty-calendar.compact {
+  align-items: center; text-align: center; margin: 0 0 14px; padding: 14px 16px 16px; border-radius: 24px;
+  background: var(--glass); border: 1px solid var(--glass-edge); box-shadow: var(--elev-2);
+  -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+}
+.calendar .empty-calendar .empty-art { display: block; }
+.calendar .empty-calendar .empty-title { margin: 6px auto 0; font-size: 16px; font-weight: 750; color: var(--ink); }
+.calendar .empty-calendar .empty-copy { max-width: 32ch; margin: 6px auto 0; font-size: 14px; color: var(--ink-2); }
+.calendar .cal-loading-msg .empty-copy { color: transparent; }
+
+/* Long words and links (a pasted URL, a hyphenated title) wrap onto the next line instead of
+   stretching their card, and the whole page, wider than a narrow phone. */
+.app { overflow-wrap: break-word; }
+.list-body, .hist-body, .cal-ev-body, .install-copy { min-width: 0; }
+
+/* ══════════════ Round 12: banner, calendar states and footer links, one consistent pass ══════════════ */
+
+/* "Add to Home Screen" banner: compact single row, one centre line for icon, copy and button */
+.install-banner { align-items: center; gap: 12px; padding: 10px 12px; margin-bottom: 14px; border-radius: 18px; }
+.install-banner > svg { margin: 0; width: 18px; height: 18px; padding: 9px; border-radius: 12px; stroke-width: 2.6; }
+.install-copy { display: flex; flex-direction: column; justify-content: center; gap: 1px; }
+.install-title { font-size: 14px; line-height: 1.25; }
+.install-sub { margin-top: 0; font-size: 12.5px; line-height: 1.4; color: var(--ink-3); font-weight: 500; }
+.install-steps { margin: 3px 0 0; padding-left: 16px; }
+.install-banner .btn-primary { align-self: center; min-width: 0; padding: 0 16px; height: 34px; font-size: 13px; border-radius: 999px; }
+
+/* Calendar: days stay in the frosted-glass language. A selected day is a soft tinted pane with a
+   brand ring, never a solid white tile, so tapping a date or changing month does not flash white. */
+.calendar .cal-day { transition: background-color .18s var(--ease), box-shadow .18s var(--ease), scale var(--t-fast) var(--ease); }
+.calendar .cal-day.has { background: color-mix(in srgb, var(--tint, var(--brand)) 9%, transparent); }
+.calendar .cal-day:hover { background: color-mix(in srgb, var(--brand) 8%, transparent); }
+.calendar .cal-day.has:hover { background: color-mix(in srgb, var(--tint, var(--brand)) 15%, transparent); }
+.calendar .cal-day:active { background: color-mix(in srgb, var(--brand) 14%, transparent); }
+.calendar .cal-day.selected,
+.calendar .cal-day.selected:hover,
+.calendar .cal-day.selected:active {
+  background: color-mix(in srgb, var(--brand) 13%, rgba(255, 255, 255, .22));
+  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--brand) 70%, transparent) inset, 0 8px 16px -12px rgba(70, 30, 120, .45);
+}
+.cal-pad, .cal-pad:hover { background: none; }
+
+/* Footer links: one row, one baseline, equal gaps; wraps evenly (centred) only when it must */
+.footer-links { align-items: center; justify-content: center; gap: 4px 22px; }
+.footer-links a, .footer-link-btn { display: inline-flex; align-items: center; min-height: 32px; font-size: 13px; line-height: 1.2; white-space: nowrap; }
+@media (max-width: 360px) { .footer-links { gap: 2px 14px; } }
+
+/* Footer: one centred stack, links then tagline then copyright, with steady gaps */
+.app-footer { display: flex; flex-direction: column; align-items: center; padding-top: 24px; }
+.footer-links { margin: 0 0 14px; }
+.footer-note { margin: 0 0 4px; line-height: 1.4; }
+.footer-copy { line-height: 1.4; }
+
+/* Event rows in the calendar: title first, then clearly labelled time and place, then notes */
+.cal-ev { display: block; padding: 16px; border-radius: 20px; }
+.cal-ev-body { padding: 0; }
+.cal-ev-title { margin: 4px 0 0; font-size: 18px; line-height: 1.25; }
+.cal-ev-cancel { margin-top: 10px; }
+.cal-ev-rows { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+.cal-ev-row { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.cal-ev-ico { flex: none; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 11px; color: color-mix(in srgb, var(--c) 85%, #1b1626); background: color-mix(in srgb, var(--c) 10%, rgba(255, 255, 255, .5)); border: 1px solid color-mix(in srgb, var(--c) 14%, rgba(255, 255, 255, .8)); }
+.cal-ev-ico svg { stroke-width: 2.6; }
+.cal-ev-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.cal-ev-txt b { font-size: 15px; font-weight: 700; line-height: 1.25; color: var(--ink); font-variant-numeric: tabular-nums lining-nums; overflow-wrap: anywhere; }
+.cal-ev-txt small { font-size: 12.5px; font-weight: 600; line-height: 1.3; color: var(--ink-3); }
+.cal-ev-notes { margin: 14px 0 0; padding-top: 12px; border-top: 1px solid rgba(91, 46, 145, .1); font-size: 14px; line-height: 1.5; color: var(--ink-2); }
+.cal-ev.is-cancelled .cal-ev-rows { opacity: .65; }
+@media (max-width: 480px) { .cal-ev { padding: 14px; } .cal-ev-title { font-size: 17px; } }
+
+/* Interaction states stay frosted, never solid white */
+.back-link:hover, .logout-pill:hover { background: color-mix(in srgb, var(--brand) 9%, rgba(255, 255, 255, .6)); }
+.login-sub { max-width: 34ch; }
+
+/* Event card, distributed: identity on the left, time on the right, place and notes full width below */
+.cal-ev-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.cal-ev-id { flex: 1; min-width: 0; }
+.cal-ev-when { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right; padding: 7px 12px; border-radius: 14px; background: color-mix(in srgb, var(--c) 9%, rgba(255, 255, 255, .5)); border: 1px solid color-mix(in srgb, var(--c) 14%, rgba(255, 255, 255, .8)); }
+.cal-ev-when b { font-size: 15px; font-weight: 750; line-height: 1.2; white-space: nowrap; color: color-mix(in srgb, var(--c) 80%, #1b1626); font-variant-numeric: tabular-nums lining-nums; }
+.cal-ev-when small { font-size: 12px; font-weight: 600; line-height: 1.2; white-space: nowrap; color: var(--ink-3); }
+.cal-ev-place { display: flex; align-items: center; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(91, 46, 145, .1); font-size: 14px; font-weight: 650; color: var(--ink); }
+.cal-ev-place svg { flex: none; color: color-mix(in srgb, var(--c) 85%, #1b1626); stroke-width: 2.6; }
+.cal-ev-place span { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; min-width: 0; }
+.cal-ev-place small { font-size: 12.5px; font-weight: 600; color: var(--ink-3); }
+.cal-ev-rows { display: none; }
+.cal-ev-place + .cal-ev-notes { margin-top: 10px; padding-top: 0; border-top: 0; }
+.cal-ev.is-cancelled .cal-ev-when, .cal-ev.is-cancelled .cal-ev-place { opacity: .65; }
+@media (max-width: 480px) { .cal-ev-top { gap: 12px; } .cal-ev-when { padding: 6px 10px; } }
+
+/* Flat event card: one surface, no boxes inside it. Time is plain right-aligned text. */
+.cal-ev-when { padding: 0; background: none; border: 0; border-radius: 0; box-shadow: none; gap: 3px; }
+.cal-ev-when b { font-size: 16px; }
+.cal-ev-top { align-items: center; }
+.cal-panel-heading .count, .cal-panel-head .count { background: none; border: 0; box-shadow: none; padding: 0; font-size: 13px; font-weight: 600; color: var(--ink-3); }
+.cal-panel-head .cal-count { background: none; border: 0; box-shadow: none; padding: 0; font-size: 13px; font-weight: 600; color: var(--ink-3); }
+
+/* Event card type: even tracking and real word spaces so "Wed, Nov 18" and "1:00 PM" read cleanly */
+.cal-ev, .cal-panel-head { letter-spacing: 0; word-spacing: .1em; font-feature-settings: normal; }
+.cal-ev-title { font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
+.cal-ev-when b { font-weight: 700; font-size: 16px; letter-spacing: 0; }
+.cal-ev-when small, .cal-ev-place small { font-weight: 500; letter-spacing: .01em; }
+.cal-ev-kicker { font-weight: 700; letter-spacing: .07em; }
+.cal-ev-notes { font-weight: 450; letter-spacing: .005em; }
+.cal-panel-title { font-weight: 750; letter-spacing: -0.015em; }
+
+/* Inter runs a little wider than the previous face: trim the heaviest weights so the hierarchy stays crisp */
+h1, h2, h3, .hero-title, .list-title, .cal-month, .cal-panel-title, .login-title { font-weight: 700; letter-spacing: -0.02em; }
+.cal-ev-title { font-weight: 650; }
+.cal-ev-when b { font-weight: 650; }
+.cal-ev, .cal-panel-head { word-spacing: 0; }
+.cal-ev-kicker { letter-spacing: .06em; }
+.footer-copy { word-spacing: .05em; letter-spacing: 0; }
+
+/* Calendar key: three evenly spaced entries, each a short bar in the type colour (same mark as the day cells) */
+.calendar .cal-legend, .cal-legend { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 16px 2px 8px; padding: 14px 0 0; border-top: 1px solid rgba(91, 46, 145, .1); }
+.cal-legend span { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; font-weight: 600; letter-spacing: 0; color: var(--ink-2); white-space: nowrap; }
+.cal-legend i { flex: none; width: 16px; height: 5px; border-radius: 999px; }
+.cal-legend span:first-child { justify-content: flex-start; }
+.cal-legend span:last-child { justify-content: flex-end; }
+@media (max-width: 360px) { .cal-legend span { font-size: 12px; gap: 6px; } .cal-legend i { width: 12px; } }
+
+/* Calendar heading: clear air under the logo, a real gap between year and month, steady space before the grid */
+body[data-panel="calendar"] .app-header, #calendar ~ .app-header { margin-bottom: 0; }
+#calendar .cal-head { margin-top: 28px; margin-bottom: 22px; }
+#calendar .cal-month { gap: 4px; }
+#calendar .cal-month .cal-year { line-height: 1; letter-spacing: .04em; }
+#calendar .cal-month .cal-name { line-height: 1.05; }
+#calendar .cal-weekday { padding-bottom: 10px; }
+
+/* Calendar key: all three types together on the left, tight to the grid */
+.calendar .cal-legend, .cal-legend { justify-content: flex-start; gap: 6px 20px; margin: 10px 2px 6px; padding-top: 12px; }
+.cal-legend span, .cal-legend span:first-child, .cal-legend span:last-child { flex: none; justify-content: flex-start; }
+#calendar .cal-head { margin-bottom: 16px; }
+#calendar .cal-weekday { padding-bottom: 6px; }
+
+/* Empty day: one quiet line of text, then the next event as a single flat row */
+#calendar .cal-empty { display: flex; flex-direction: column; gap: 2px; padding: 4px 2px 14px; }
+#calendar .cal-empty b { font-size: 15px; font-weight: 650; color: var(--ink); }
+#calendar .cal-empty span { font-size: 13.5px; color: var(--ink-3); }
+#calendar .cal-next-hint { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; margin: 0; padding: 14px 16px; white-space: normal; text-align: left; font-size: 14px; color: var(--ink); border: 1px solid rgba(255, 255, 255, .85); border-radius: 18px; background: var(--glass); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); box-shadow: var(--glass-shadow); overflow: visible; }
+#calendar .cal-next-hint:hover { background: color-mix(in srgb, var(--brand) 7%, rgba(255, 255, 255, .6)); }
+#calendar .cal-next-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+#calendar .cal-next-text small { font-size: 11.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-3); }
+#calendar .cal-next-text b { font-size: 16px; font-weight: 650; color: var(--ink); overflow-wrap: anywhere; }
+#calendar .cal-next-when { flex: none; display: flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600; color: var(--brand); white-space: nowrap; }
+#calendar .cal-next-when svg { transform: rotate(-90deg); stroke-width: 3; }
+
+/* Calendar lining: a hairline under the weekday row and between each week, none under the last */
+#calendar .cal-grid { gap: 0; }
+#calendar .cal-weekday { border-bottom: 1px solid rgba(91, 46, 145, .16); padding-bottom: 8px; }
+#calendar .cal-day, #calendar .cal-pad { border-radius: 0; border-bottom: 1px solid rgba(91, 46, 145, .09); min-height: 64px; }
+#calendar .cal-grid > :nth-last-child(-n+7) { border-bottom-color: transparent; }
+#calendar .cal-day.has { background: color-mix(in srgb, var(--tint, var(--brand)) 7%, transparent); }
+#calendar .cal-day.selected, #calendar .cal-day.selected:hover, #calendar .cal-day.selected:active { border-radius: 12px; border-bottom-color: transparent; }
+
+/* Calendar days: no filled blocks. Event days are marked only by their bars; the selected day is a soft rounded wash. */
+#calendar .cal-day.has, #calendar .cal-day.has:hover { background: none; }
+#calendar .cal-day:hover { background: color-mix(in srgb, var(--brand) 6%, transparent); border-radius: 14px; }
+#calendar .cal-day.selected, #calendar .cal-day.selected:hover, #calendar .cal-day.selected:active {
+  background: color-mix(in srgb, var(--brand) 9%, transparent);
+  box-shadow: none; border-radius: 14px; border-bottom-color: transparent;
+}
+#calendar .cal-day.selected:not(.today) .cal-num { color: var(--brand); }
+
+/* Calendar lining: every day sits in its own ruled cell inside one softly rounded frame */
+#calendar .cal-grid { border: 1px solid rgba(91, 46, 145, .16); border-radius: 18px; overflow: hidden; background: rgba(255, 255, 255, .28); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); }
+#calendar .cal-weekday { padding: 9px 0 8px; border-bottom: 1px solid rgba(91, 46, 145, .16); background: rgba(91, 46, 145, .04); }
+#calendar .cal-day, #calendar .cal-pad { border-radius: 0; border-right: 1px solid rgba(91, 46, 145, .1); border-bottom: 1px solid rgba(91, 46, 145, .1); }
+#calendar .cal-grid > :nth-child(7n) { border-right-color: transparent; }
+#calendar .cal-grid > :nth-last-child(-n+7) { border-bottom-color: transparent; }
+#calendar .cal-day:hover, #calendar .cal-day.selected, #calendar .cal-day.selected:hover, #calendar .cal-day.selected:active { border-radius: 0; }
+#calendar .cal-day.selected { background: color-mix(in srgb, var(--brand) 11%, transparent); }
+#calendar .cal-pad { background: rgba(91, 46, 145, .025); }
+
+/* Breathing room between the last card on a page and the footer */
+.app-footer { margin-top: 88px; }
+#calendar { padding-bottom: 8px; }
+
+/* Event card weights: one bold line (the title), everything else regular or medium */
+.cal-ev-kicker { font-weight: 600; letter-spacing: .06em; font-size: 11px; }
+.cal-ev-title { font-weight: 600; letter-spacing: -0.015em; }
+.cal-ev-when b { font-weight: 600; }
+.cal-ev-when small, .cal-ev-place small { font-weight: 400; }
+.cal-ev-place { font-weight: 500; }
+.cal-ev-notes { font-weight: 400; }
+
+/* Footer rhythm: links, then tagline, then copyright, each with its own steady gap */
+.app-footer { padding-top: 28px; padding-bottom: 8px; }
+.footer-links { gap: 6px 26px; margin: 0 0 20px; }
+.footer-links a, .footer-link-btn { min-height: 28px; font-weight: 600; }
+.footer-note { margin: 0 0 6px; font-size: 12.5px; line-height: 1.5; }
+.footer-copy { font-size: 12px; line-height: 1.5; }
+
+/* Calendar controls: three matching glass buttons, same size, weight and state treatment */
+#calendar .cal-nav { gap: 8px; }
+#calendar .cal-nav .btn.cal-arrow, #calendar .cal-nav .btn.cal-view,
+#calendar .cal-nav .btn.cal-arrow:hover, #calendar .cal-nav .btn.cal-view:hover {
+  width: 40px; height: 40px; min-width: 40px; border-radius: 50%;
+  background: var(--glass-strong); color: var(--brand);
+  border: 1px solid rgba(255, 255, 255, .85);
+  box-shadow: 0 1px 2px rgba(45, 20, 80, .08), 0 4px 10px -6px rgba(60, 30, 100, .3);
+  -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+  transition: background-color .18s var(--ease), box-shadow .18s var(--ease), scale .15s var(--ease);
+}
+#calendar .cal-nav .btn.cal-arrow:hover, #calendar .cal-nav .btn.cal-view:hover { background: color-mix(in srgb, var(--brand) 10%, rgba(255, 255, 255, .7)); }
+#calendar .cal-nav .btn.cal-arrow:active, #calendar .cal-nav .btn.cal-view:active { background: color-mix(in srgb, var(--brand) 16%, rgba(255, 255, 255, .6)); scale: .95; }
+#calendar .cal-nav .btn:focus-visible { outline: 0; box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 28%, transparent); }
+#calendar .cal-nav .cal-arrow svg, #calendar .cal-nav .cal-view svg { width: 18px; height: 18px; stroke-width: 2.6; }
+.footer-links { gap: 6px 18px; }
+@media (min-width: 420px) { .footer-links { gap: 6px 26px; } }
+
+/* Tighten: less air between sections, shorter week rows, smaller footer gaps */
+.app-footer { margin-top: 40px; padding-top: 20px; }
+.footer-links { margin-bottom: 12px; }
+.footer-note { margin-bottom: 2px; }
+#calendar .cal-day, #calendar .cal-pad { min-height: 54px; }
+#calendar .cal-head { margin-top: 20px; margin-bottom: 14px; }
+.cal-legend, .calendar .cal-legend { margin: 8px 2px 4px; padding-top: 10px; }
+.cal-panel-head { margin: 10px 0 8px; }
+
+/* Footer rhythm, even steps: card > rule (36) > links (20) > tagline (14) > copyright (4) */
+.app-footer { margin-top: 28px; padding-top: 20px; }
+.footer-links { margin-bottom: 14px; }
+.footer-note { margin-bottom: 4px; }
+
+/* Calendar buttons: high contrast. Arrows are near-white with a deep purple icon; the view toggle is solid brand with a white icon. */
+#calendar .cal-nav .btn.cal-arrow, #calendar .cal-nav .btn.cal-arrow:hover {
+  background: rgba(255, 255, 255, .92); color: #4a2580;
+  border: 1px solid rgba(91, 46, 145, .28);
+  box-shadow: 0 1px 2px rgba(45, 20, 80, .1), 0 4px 10px -6px rgba(60, 30, 100, .35);
+}
+#calendar .cal-nav .btn.cal-arrow:hover { background: #fff; border-color: rgba(91, 46, 145, .45); }
+#calendar .cal-nav .btn.cal-arrow:active { background: color-mix(in srgb, var(--brand) 14%, #fff); }
+#calendar .cal-nav .btn.cal-view, #calendar .cal-nav .btn.cal-view:hover {
+  background: linear-gradient(150deg, #7a49b8, #5b2e91); color: #fff; border-color: transparent;
+  box-shadow: 0 6px 14px -8px rgba(76, 37, 121, .9);
+}
+#calendar .cal-nav .btn.cal-view:active { background: #4f2680; }
+#calendar .cal-nav .cal-arrow svg, #calendar .cal-nav .cal-view svg { stroke-width: 2.9; }
+
+/* Phone calendar: roomier cells and larger numbers so nothing feels squeezed */
+@media (max-width: 560px) {
+  #calendar .cal-head { margin-top: 24px; margin-bottom: 18px; align-items: flex-end; }
+  #calendar .cal-month .cal-name { font-size: 34px; }
+  #calendar .cal-month .cal-year { font-size: 13px; }
+  #calendar .cal-nav .btn.cal-arrow, #calendar .cal-nav .btn.cal-view, #calendar .cal-nav .btn.cal-arrow:hover, #calendar .cal-nav .btn.cal-view:hover { width: 42px; height: 42px; min-width: 42px; }
+  #calendar .cal-grid { border-radius: 20px; }
+  #calendar .cal-weekday { padding: 12px 0 10px; font-size: 12px; letter-spacing: .06em; }
+  #calendar .cal-day, #calendar .cal-pad { min-height: 66px; padding: 9px 2px 8px; gap: 6px; }
+  #calendar .cal-day .cal-num, #calendar .cal-grid .cal-num { min-width: 32px; height: 32px; font-size: 16px; }
+  #calendar .cal-bars { gap: 3px; min-height: 8px; width: 70%; align-self: center; }
+  #calendar .cal-bar { height: 4px; }
+  .cal-legend, .calendar .cal-legend { margin: 14px 4px 6px; padding-top: 14px; }
+  .cal-panel-head { margin: 14px 0 12px; }
+}
+
+/* Login: the back link is a plain text link whose arrow sits exactly on the form's left edge */
+.login-card .back-link, .login-card .back-link:hover, .login-card .back-link:active {
+  align-self: flex-start; margin: 0 0 22px; padding: 4px 0; height: auto; min-height: 32px; gap: 8px;
+  background: none; border: 0; border-radius: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none;
+  font-size: 14px; font-weight: 600; line-height: 1; color: var(--brand);
+}
+.login-card .back-link:hover { color: #4a2580; }
+.login-card .back-link svg { width: 16px; height: 16px; margin-left: -1px; stroke-width: 2.8; }
+.login-card .field > label { margin-left: 0; }

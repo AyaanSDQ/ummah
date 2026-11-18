@@ -1,7 +1,7 @@
 {
   "name": "Ummah",
   "short_name": "Ummah",
-  "description": "Prayer times, locations, and event updates for the MSA.",
+  "description": "Prayer times, locations, and event updates for the Muslim Student Association.",
   "start_url": "index.html",
   "scope": ".",
   "id": "/index.html",

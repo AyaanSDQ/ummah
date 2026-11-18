@@ -1,12 +1,11 @@
 import { supabase } from "./supabase-client.js";
-import { icon } from "./icons.js?v=14";
-import { TYPE_META, escapeHtml, formatTime, roomLabel, emptyCardHtml, animateRemove } from "./shared.js?v=28";
+import { icon } from "./icons.js?v=15";
+import { TYPE_META, escapeHtml, formatTime, roomLabel, buildingFor, emptyCardHtml, animateRemove } from "./shared.js?v=30";
 import { expandSeries, describeRule } from "./recurrence.js?v=3";
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const WEEKDAYS = ["S", "M", "T", "W", "T", "F", "S"];
 const BARS_PER_DAY = 3; // colour bars shown in a day cell; the last one becomes "+N" when there are more
-const GRID_SLOTS = 42; // 6 weeks x 7 days
 
 const root = document.getElementById("calendar");
 let today = new Date();
@@ -27,6 +26,7 @@ const sameDay = (a, b) => !!a && !!b && dayKey(a) === dayKey(b);
 // The calendar sits in the same document as the Updates page (see nav.js), so it can load in the
 // background and be ready the moment its tab is tapped. It starts shortly after the page shows,
 // or at once if it is the section being opened.
+const DAY_EMPTY = ["Nothing planned", "No events on this day."];
 let started = false;
 function start() {
   if (started) return;
@@ -180,8 +180,7 @@ function monthHtml(byDay) {
   const first = new Date(viewYear, viewMonth, 1);
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
 
-  // Always 6 weeks (42 slots), with a faint dot under every slot including the
-  // empty ones, so every month is the same height and the page never shifts.
+  // Whole weeks only (4-6 rows), with a faint dot under every slot including the empty ones.
   const pad = `<span class="cal-day cal-pad" aria-hidden="true"><span class="cal-num"></span><span class="cal-bars"></span></span>`;
   const cells = [];
   for (let i = 0; i < first.getDay(); i++) cells.push(pad);
@@ -194,7 +193,7 @@ function monthHtml(byDay) {
     const label = `${MONTHS[viewMonth]} ${day}` + (events.length ? `, ${events.map((u) => `${u.title} at ${formatTime(u.event_time)}`).join("; ")}` : ", no events");
     cells.push(`<button type="button" class="${cls}"${tint} data-day="${day}" aria-label="${escapeHtml(label)}" ${sameDay(date, selected) ? 'aria-pressed="true"' : ""}><span class="cal-num">${day}</span>${barsHtml(events)}</button>`);
   }
-  while (cells.length < GRID_SLOTS) cells.push(pad);
+  while (cells.length % 7 !== 0) cells.push(pad); // whole weeks only: no empty trailing row
 
   return `
     <div class="cal-card">
@@ -207,19 +206,22 @@ function monthHtml(byDay) {
     ${dayPanel(byDay)}`;
 }
 
+function dayEmptyHtml() {
+  return `<div class="cal-empty"><b>${DAY_EMPTY[0]}</b><span>${DAY_EMPTY[1]}</span></div>`;
+}
+
 function dayPanel(byDay) {
   if (!selected) return monthPanel(byDay);
   const events = byDay.get(dayKey(selected)) || [];
   const title = selected.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
   const body = loading
-    ? loadingMessage("Nothing planned")
+    ? `<div class="cal-loading-msg" aria-hidden="true">${dayEmptyHtml()}</div>`
     : events.length
       ? events.map(eventCard).join("")
-      : `${emptyCardHtml("calendar", "Nothing planned", "", { compact: true })}${nextEventHint(byDay)}`;
+      : `${dayEmptyHtml()}${nextEventHint(byDay)}`;
   return `<section class="cal-panel">
     <div class="cal-panel-head">
       <div class="cal-panel-title">${escapeHtml(title)}</div>
-      ${!loading && events.length ? `<span class="cal-count">${events.length} ${events.length === 1 ? "event" : "events"}</span>` : ""}
     </div>
     ${body}
   </section>`;
@@ -227,9 +229,12 @@ function dayPanel(byDay) {
 
 // Loading placeholder: the real empty-message card with its text made invisible
 // (shimmer instead), so it is exactly as tall as the message that replaces it.
-function loadingMessage(text) {
-  return `<div class="cal-loading-msg" aria-hidden="true">${emptyCardHtml("calendar", text, "", { compact: true })}</div>`;
+function loadingMessage(text, copy = "") {
+  return `<div class="cal-loading-msg" aria-hidden="true">${emptyCardHtml("calendar", text, copy, { compact: true })}</div>`;
 }
+
+// The empty-message cards under the calendar (same card as the empty Updates page).
+const monthEmpty = () => [`Nothing in ${MONTHS[viewMonth]} yet`, "New events show up here as soon as they're posted."];
 
 // Shown when no day is selected (e.g. after changing month): everything in the month.
 function monthPanel(byDay) {
@@ -237,8 +242,8 @@ function monthPanel(byDay) {
     .map(([key, list]) => { const [y, m, d] = key.split("-").map(Number); return { date: new Date(y, m, d), list }; })
     .sort((a, b) => a.date - b.date);
   let body;
-  if (loading) body = loadingMessage(`Nothing in ${MONTHS[viewMonth]} yet`);
-  else if (!days.length) body = emptyCardHtml("calendar", `Nothing in ${MONTHS[viewMonth]} yet`, "", { compact: true });
+  if (loading) body = loadingMessage(...monthEmpty());
+  else if (!days.length) body = emptyCardHtml("calendar", ...monthEmpty(), { compact: true });
   else body = days.map(({ date, list }) => {
     const label = date.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
     return `<div class="cal-panel-label">${escapeHtml(label)}</div>${list.map(eventCard).join("")}`;
@@ -258,7 +263,7 @@ function agendaHtml(byDay) {
     .map(([k, list]) => { const [y, m, d] = k.split("-").map(Number); return { date: new Date(y, m, d), list }; })
     .sort((a, b) => a.date - b.date);
   if (!days.length) {
-    return `${legendHtml()}${emptyCardHtml("calendar", `Nothing in ${MONTHS[viewMonth]} yet`, "", { compact: true })}`;
+    return `${legendHtml()}${emptyCardHtml("calendar", ...monthEmpty(), { compact: true })}`;
   }
   return `${legendHtml()}${days.map(({ date, list }) => {
     const title = date.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
@@ -276,8 +281,12 @@ function nextEventHint(byDay) {
     if (t > sel && (!best || t < best.t)) best = { t, y, m, d, list };
   }
   if (!best) return "";
-  const label = new Date(best.y, best.m, best.d).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
-  return `<button type="button" class="cal-next-hint" data-goto-day="${best.d}">Next: <strong>${label}</strong> · ${escapeHtml(best.list[0].title)}</button>`;
+  const first = best.list[0];
+  const when = `${new Date(best.y, best.m, best.d).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" })} · ${formatTime(first.event_time)}`;
+  return `<button type="button" class="cal-next-hint" data-goto-day="${best.d}">
+    <span class="cal-next-text"><small>Next up</small><b>${escapeHtml(first.title)}</b></span>
+    <span class="cal-next-when">${escapeHtml(when)}${icon("i-chev", { size: 14 })}</span>
+  </button>`;
 }
 
 function eventCard(u) {
@@ -285,14 +294,16 @@ function eventCard(u) {
   if (!meta) return "";
   const cancelled = u.status === "cancelled";
   return `<article class="cal-ev${cancelled ? " is-cancelled" : ""}" style="--c:var(--type-${u.type}-hero)" data-update-id="${u.id}">
-    <div class="cal-ev-time">${escapeHtml(formatTime(u.event_time))}</div>
-    <div class="cal-ev-body">
-      <div class="cal-ev-kicker"><i></i>${meta.label}${u.is_occurrence ? `<span class="rec-mark" title="${escapeHtml(describeRule(u.recurrence))}">${icon("i-repeat", { size: 12 })}${escapeHtml(describeRule(u.recurrence).split(" · ")[0])}</span>` : ""}</div>
-      <h3 class="cal-ev-title">${escapeHtml(u.title)}</h3>
-      ${u.location ? `<div class="cal-ev-meta">${icon("i-pin", { size: 13 })}${escapeHtml(roomLabel(u.location))}</div>` : ""}
-      ${u.body ? `<p class="cal-ev-notes">${escapeHtml(u.body)}</p>` : ""}
-      ${cancelled ? `<div class="cal-ev-cancel">Cancelled${u.cancel_reason ? `: ${escapeHtml(u.cancel_reason)}` : ""}</div>` : ""}
+    <div class="cal-ev-top">
+      <div class="cal-ev-id">
+        <div class="cal-ev-kicker"><i></i>${meta.label}${u.is_occurrence ? `<span class="rec-mark" title="${escapeHtml(describeRule(u.recurrence))}">${icon("i-repeat", { size: 12 })}${escapeHtml(describeRule(u.recurrence).split(" · ")[0])}</span>` : ""}</div>
+        <h3 class="cal-ev-title">${escapeHtml(u.title)}</h3>
+      </div>
+      <div class="cal-ev-when"><b>${escapeHtml(formatTime(u.event_time))}</b><small>${escapeHtml(new Date(u.event_time).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" }))}</small></div>
     </div>
+    ${cancelled ? `<div class="cal-ev-cancel">Cancelled${u.cancel_reason ? `: ${escapeHtml(u.cancel_reason)}` : ""}</div>` : ""}
+    ${u.location ? `<div class="cal-ev-place">${icon("i-pin", { size: 15 })}<span>${escapeHtml(u.location)}${buildingFor(u.location) ? `<small>Building ${buildingFor(u.location)}</small>` : ""}</span></div>` : ""}
+    ${u.body ? `<p class="cal-ev-notes">${escapeHtml(u.body)}</p>` : ""}
   </article>`;
 }
 

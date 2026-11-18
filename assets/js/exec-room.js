@@ -2,8 +2,9 @@
 // other room in the box next to them. The form still reads one plain value from the hidden
 // input named "location", so the rest of the admin code does not change.
 
-// The usual rooms. To change them, edit this list (nothing else needs to change).
-export const ROOM_DEFAULTS = ["2105"];
+// The usual rooms, shown as quick-pick buttons beside the box. Empty for now: admins type the
+// room. To bring buttons back, list rooms here, e.g. ["1204", "A101"] (nothing else changes).
+export const ROOM_DEFAULTS = [];
 
 const apply = new WeakMap(); // hidden input -> function that shows a given value
 

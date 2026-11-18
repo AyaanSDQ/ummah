@@ -1,4 +1,4 @@
-import { icon } from "./icons.js?v=14";
+import { icon } from "./icons.js?v=15";
 
 // Per-type presentation, matching design-reference §15 accent table.
 export const TYPE_META = {
@@ -48,8 +48,8 @@ export function formatTime(ts) {
 }
 
 export function formatDateHeading(date) {
-  const weekday = date.toLocaleDateString(undefined, { weekday: "short" }).toUpperCase();
-  const month = date.toLocaleDateString(undefined, { month: "short" }).toUpperCase();
+  const weekday = date.toLocaleDateString(undefined, { weekday: "short" });
+  const month = date.toLocaleDateString(undefined, { month: "short" });
   return `${weekday} · ${month} ${date.getDate()}`;
 }
 
@@ -111,7 +111,7 @@ export function cancelledBanner(reason = "") {
 
 // ── Room labels ──────────────────────────────────────────────────────────
 // North Creek has Buildings 1, 2, 3 and A.
-// A room number starting with 1, 2 or 3 is in Building 1, 2 or 3 (2105 is in Building 2).
+// A room number starting with 1, 2 or 3 is in Building 1, 2 or 3 (2140 is in Building 2).
 // A room starting with the letter A followed by a number (A101, A-12) is in Building A.
 export function buildingFor(location) {
   const loc = location || "";
@@ -126,22 +126,15 @@ export function roomLabel(location) {
   return b ? `${location} · Building ${b}` : location;
 }
 
-// ── Post presentation helpers (priority, pinned, event tiles) ────────────
+// ── Post presentation helpers (pinned, event tiles) ──────────────────────
 
-export function priorityOf(update) {
-  return update.priority === "urgent" || update.priority === "important" ? update.priority : "normal";
-}
-
-// Events with a date (prayers and socials) get a calendar-style tile.
+// Any post with a date (prayers, socials, dated announcements) gets a calendar-style tile.
 export function isEventPost(update) {
-  return !!update.event_time && update.type !== "announcement";
+  return !!update.event_time;
 }
 
 export function badgesHtml(update) {
   const out = [];
-  const pr = priorityOf(update);
-  if (pr === "urgent") out.push(`<span class="badge badge-urgent">${icon("i-alert", { size: 13 })}Urgent</span>`);
-  else if (pr === "important") out.push(`<span class="badge badge-important">${icon("i-star", { size: 13 })}Important</span>`);
   if (update.pinned) out.push(`<span class="badge badge-pin">${icon("i-pushpin", { size: 13 })}Pinned</span>`);
   return out.join("");
 }
