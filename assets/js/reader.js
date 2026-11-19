@@ -1,5 +1,5 @@
 import { supabase } from "./supabase-client.js";
-import { icon } from "./icons.js?v=15";
+import { icon } from "./icons.js?v=16";
 import {
   TYPE_META,
   escapeHtml,
@@ -18,7 +18,7 @@ import {
   emptyCardHtml,
   animateRemove,
   keepPlace,
-} from "./shared.js?v=30";
+} from "./shared.js?v=35";
 import { expandSeries, nextActive, describeRule, parseKey, addDays, startOfDay } from "./recurrence.js?v=3";
 
 const PAGE_SIZE = 20;
@@ -448,10 +448,17 @@ function cancelHeroHtml(update) {
 function chipsHtml(update) {
   const chips = [];
   if (update.event_time) {
-    chips.push(`<span class="chip">${icon("i-calendar", { size: 14 })}${formatEventDate(update.event_time)}</span>`);
-    chips.push(`<span class="chip">${icon("i-clock", { size: 14 })}${formatTime(update.event_time)}</span>`);
+    const d = new Date(update.event_time);
+    const date = d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+    const rel = formatEventDate(update.event_time);
+    const label = rel === "Today" || rel === "Tomorrow" ? `${rel}, ${date.replace(/^\w+, /, "")}` : date;
+    chips.push(`<span class="chip">${icon("i-calendar", { size: 15 })}${escapeHtml(label)}</span>`);
+    chips.push(`<span class="chip">${icon("i-clock", { size: 15 })}${formatTime(update.event_time)}</span>`);
+  } else if (update.created_at) {
+    const posted = new Date(update.created_at).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+    chips.push(`<span class="chip chip-posted">${icon("i-calendar", { size: 15 })}Posted ${escapeHtml(posted)}</span>`);
   }
-  if (update.location) chips.push(`<span class="chip">${icon("i-pin", { size: 14 })}${escapeHtml(roomLabel(update.location))}</span>`);
+  if (update.location) chips.push(`<span class="chip chip-place">${icon("i-pin", { size: 15 })}${escapeHtml(roomLabel(update.location))}</span>`);
   return chips.length ? `<div class="hero-chips">${chips.join("")}</div>` : "";
 }
 
@@ -466,7 +473,7 @@ function listCardHtml(update) {
   const body = `
     ${lead}
     <div class="list-body">
-      <div class="list-kicker" style="color:var(--type-${update.type}-icon)"><i></i>${meta.label}${recMark(update)}${badges ? `<span class="kicker-badges">${badges}</span>` : ""}</div>
+      <div class="list-kicker" style="--c:var(--type-${update.type}-hero)"><span class="type-pill"><i></i>${meta.label}</span>${recMark(update)}${badges ? `<span class="kicker-badges">${badges}</span>` : ""}</div>
       <div class="list-title">${escapeHtml(update.title)}</div>
       <div class="list-meta">${metaLine(update, { skipDate: event })}</div>
       ${update.body ? `<p class="list-notes">${escapeHtml(update.body)}</p>` : ""}
@@ -481,7 +488,7 @@ function listCardHtml(update) {
       <div class="${cls}" style="box-shadow:none;margin-bottom:0">${body}</div>
     </div>`;
   }
-  return `<div class="${cls}" style="background:var(--type-${update.type}-list)" data-update-id="${update.id}">${body}</div>`;
+  return `<div class="${cls}" style="--c:var(--type-${update.type}-hero)" data-update-id="${update.id}">${body}</div>`;
 }
 
 function histCardHtml(update) {
@@ -505,6 +512,9 @@ function metaLine(update, { skipDate = false } = {}) {
   if (update.event_time) {
     if (!skipDate) parts.push(formatEventDate(update.event_time));
     parts.push(formatTime(update.event_time));
+  }
+  else if (update.created_at) {
+    parts.push(`Posted ${new Date(update.created_at).toLocaleDateString(undefined, { month: "short", day: "numeric" })}`);
   }
   if (update.location) parts.push(escapeHtml(roomLabel(update.location)));
   return parts.join(" · ");

@@ -1,4 +1,4 @@
-import { icon } from "./icons.js?v=15";
+import { icon } from "./icons.js?v=16";
 
 // The banner cannot be dismissed: everyone on the public page who is not using the installed
 // app sees it every time. (Admins never reach this page; they are sent to exec.html.)

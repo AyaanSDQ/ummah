@@ -1,5 +1,5 @@
 import { supabase } from "./supabase-client.js";
-import { icon } from "./icons.js?v=15";
+import { icon } from "./icons.js?v=16";
 import {
   describeRule, describeEnds, expandSeries, nextActive, effectiveFields, endBefore, withChange, firstOccurrence,
   isFirstOccurrence, overrideCount, parseKey, addDays, startOfDay,
@@ -7,7 +7,7 @@ import {
 import { setupRepeat } from "./exec-repeat.js?v=3";
 import { enhancePickers } from "./datetime-picker.js?v=7";
 import { setupRooms, setRoom } from "./exec-room.js?v=2";
-import { TYPE_META, escapeHtml, formatTime, formatDateHeading, formatEventDate, localDateKey, roomLabel, cancelledBanner, animateRemove, keepPlace } from "./shared.js?v=30";
+import { TYPE_META, escapeHtml, formatTime, formatDateHeading, formatEventDate, localDateKey, roomLabel, cancelledBanner, animateRemove, keepPlace } from "./shared.js?v=35";
 
 const loginView = document.getElementById("login-view");
 const appView = document.getElementById("app-view");
@@ -127,7 +127,7 @@ async function renderForSession(session) {
   // The View section is the public Updates page; it starts loading now so it is ready when opened.
   if (!readerLoaded) {
     readerLoaded = true;
-    import("./reader.js?v=48").catch((err) => console.error("Failed to load the preview", err));
+    import("./reader.js?v=52").catch((err) => console.error("Failed to load the preview", err));
   }
 }
 
@@ -237,7 +237,8 @@ function removeFromList(id) {
 }
 
 function syncEventsCount() {
-  eventsCount.textContent = String(listEl.querySelectorAll("[data-update-id]:not(.deleted)").length);
+  const rows = listEl.querySelectorAll("[data-update-id]:not(.deleted)");
+  eventsCount.textContent = String(rows.length);
 }
 
 // ── View toggle (list ↔ detail) ─────────────────────────────────────────
@@ -342,41 +343,43 @@ function execCardHtml(update) {
 
   if (update.recurrence) return seriesCardHtml(update, meta);
 
-  const pinned = update.pinned ? `<span class="kicker-badges"><span class="badge badge-pin">${icon("i-pushpin", { size: 13 })}Pinned</span></span>` : "";
+  const pinned = update.pinned ? `<span class="pin-badge" title="Pinned" aria-label="Pinned">${icon("i-pushpin", { size: 14 })}</span>` : "";
   const body = `
+    ${pinned}
     <div class="list-icon" style="color:var(--type-${update.type}-icon)">${icon(meta.iconId, { size: 22 })}</div>
     <div class="list-body">
-      <div class="list-kicker" style="color:var(--type-${update.type}-icon);--c:var(--type-${update.type}-hero)"><i></i>${meta.label}${pinned}</div>
+      <div class="list-kicker" style="--c:var(--type-${update.type}-hero)"><span class="type-pill"><i></i>${meta.label}</span></div>
       <div class="list-title">${escapeHtml(update.title)}</div>
       <div class="list-meta">${execMetaLine(update)}</div>
     </div>
-    ${icon("i-chev", { size: 15 })}`;
+    <span class="go-btn" aria-hidden="true">${icon("i-chev", { size: 15 })}</span>`;
 
   if (update.status === "cancelled") {
-    return `<div class="hist-card exec-item" data-update-id="${update.id}" style="background:var(--type-${update.type}-list)">
+    return `<div class="hist-card exec-item" data-update-id="${update.id}" style="--c:var(--type-${update.type}-hero)">
       ${cancelledBanner(update.cancel_reason)}
       <div class="list-card" style="box-shadow:none;margin-bottom:0">${body}</div>
     </div>`;
   }
-  return `<div class="list-card exec-item" style="background:var(--type-${update.type}-list)" data-update-id="${update.id}">${body}</div>`;
+  return `<div class="list-card exec-item" style="--c:var(--type-${update.type}-hero)" data-update-id="${update.id}">${body}</div>`;
 }
 
 // A repeating post is one row in the list: its rule and the next date, not one row per date.
 function seriesCardHtml(update, meta) {
-  const pinned = update.pinned ? `<span class="kicker-badges"><span class="badge badge-pin">${icon("i-pushpin", { size: 13 })}Pinned</span></span>` : "";
+  const pinned = update.pinned ? `<span class="pin-badge" title="Pinned" aria-label="Pinned">${icon("i-pushpin", { size: 14 })}</span>` : "";
   // The rule itself ("Weekly · Wed") lives in the edit view; the card only says when it happens next.
   const next = nextUpcoming(update);
   const when = next ? seriesWhen(next.event_time) : "Ended";
   const changes = overrideCount(update);
   const meta2 = [when, changes ? `${changes} ${changes === 1 ? "change" : "changes"}` : ""].filter(Boolean).join(" · ");
-  return `<div class="list-card exec-item is-series" style="background:var(--type-${update.type}-list)" data-update-id="${update.id}">
+  return `<div class="list-card exec-item is-series" style="--c:var(--type-${update.type}-hero)" data-update-id="${update.id}">
+    ${pinned}
     <div class="list-icon" style="color:var(--type-${update.type}-icon)">${icon(meta.iconId, { size: 22 })}</div>
     <div class="list-body">
-      <div class="list-kicker" style="color:var(--type-${update.type}-icon);--c:var(--type-${update.type}-hero)"><i></i>${meta.label}<span class="rec-mark">${icon("i-repeat", { size: 12 })}Repeats</span>${pinned}</div>
+      <div class="list-kicker" style="--c:var(--type-${update.type}-hero)"><span class="type-pill"><i></i>${meta.label}</span></div>
       <div class="list-title">${escapeHtml(update.title)}</div>
-      <div class="list-meta">${escapeHtml(meta2)}</div>
+      <div class="list-meta"><span>${escapeHtml(meta2)}</span><span class="rec-mark">${icon("i-repeat", { size: 13 })}Repeats</span></div>
     </div>
-    ${icon("i-chev", { size: 15 })}
+    <span class="go-btn" aria-hidden="true">${icon("i-chev", { size: 15 })}</span>
   </div>`;
 }
 

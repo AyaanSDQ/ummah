@@ -25,7 +25,7 @@
 
   --type-prayer-hero: #5b2e91;       --type-prayer-chip: #e2d6f2;       --type-prayer-icon: #5b2e91;
   --type-social-hero: #a0357f;       --type-social-chip: #f3d6ea;       --type-social-icon: #a0357f;
-  --type-announcement-hero: #7a4bd0; --type-announcement-chip: #e6dcf8; --type-announcement-icon: #6a3dbd;
+  --type-announcement-hero: #2f6fd0; --type-announcement-chip: #d9e7fb; --type-announcement-icon: #2a5fb8;
   --type-exec_meeting-hero: #34205c; --type-exec_meeting-chip: #d8cfe8; --type-exec_meeting-icon: #34205c;
   --type-prayer-list: var(--surface);
   --type-social-list: var(--surface);
@@ -1348,7 +1348,7 @@ body {
 .hero-media.is-pattern[data-type]::before, .hero-media.is-pattern[data-type]::after { display: none; }
 .hero-media.is-pattern[data-type="prayer"] { background-image: url("../img/banner-prayer.svg?v=7"); background-color: #e6daf5; }
 .hero-media.is-pattern[data-type="social"] { background-image: url("../img/banner-social.svg?v=7"); background-color: #f4dcec; }
-.hero-media.is-pattern[data-type="announcement"] { background-image: url("../img/banner-announcement.svg?v=7"); background-color: #e1d7f8; }
+.hero-media.is-pattern[data-type="announcement"] { background-image: url("../img/banner-announcement.svg?v=8"); background-color: #d3e3fa; }
 .hero-media-icon { color: var(--c); background: rgba(255, 255, 255, .72); border: 1px solid rgba(255, 255, 255, .95); box-shadow: 0 1px 0 rgba(255, 255, 255, .9) inset, 0 8px 16px -10px color-mix(in srgb, var(--c) 60%, transparent); }
 
 /* ── Timestamps: plain text, no pills or boxes ── */
@@ -1876,3 +1876,738 @@ body[data-panel="calendar"] .app-header, #calendar ~ .app-header { margin-bottom
 .login-card .btn-lg:active { box-shadow: inset 0 3px 8px rgba(25, 8, 50, .45); }
 .pw-toggle { right: 8px; padding: 7px 12px; border-radius: 999px; background: rgba(91, 46, 145, .08); font-size: 12.5px; }
 .pw-toggle:hover { background: rgba(91, 46, 145, .14); }
+
+/* ═══════════ Final polish: header, empty states, legend (keep last) ═══════════ */
+.app-header.masthead { margin: calc(8px + env(safe-area-inset-top)) 0 14px; padding: 0 2px; }
+body[data-panel="calendar"] .app-header.masthead { margin-bottom: 4px; }
+#calendar .cal-head { margin-top: 12px; margin-bottom: 14px; }
+
+.empty-card, .empty-card.compact, .empty-card.empty-calendar, .calendar .empty-card.empty-calendar, .calendar .empty-card.empty-calendar.compact {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  margin: 0 0 16px; padding: 32px 24px 30px; border-radius: 24px;
+  background: rgba(255, 255, 255, .72); border: 1px solid rgba(255, 255, 255, .95); box-shadow: var(--elev-1);
+}
+.empty-card.compact, .calendar .empty-card.empty-calendar.compact { padding: 28px 22px 26px; margin: 6px 0 0; }
+.empty-art, .calendar .empty-calendar .empty-art { display: block; line-height: 0; margin: 0 0 14px; }
+.empty-art svg, .empty-card.compact .empty-art svg { width: 56px; height: 56px; }
+.empty-card .empty-title, .calendar .empty-calendar .empty-title { margin: 0; font-size: 19px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
+.empty-card.compact .empty-title { font-size: 17px; }
+.empty-card .empty-copy, .calendar .empty-calendar .empty-copy { max-width: 30ch; margin: 8px auto 0; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
+.empty-card .empty-cta { margin-top: 20px; padding: 11px 22px; border-radius: 999px; background: var(--brand); color: #fff; border-color: transparent; font-weight: 650; }
+.empty-card .empty-cta:hover { background: var(--brand-600); }
+
+.calendar .cal-legend, .cal-legend { display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap; gap: 8px 22px; margin: 14px 0 12px; padding: 14px 0 0; }
+.cal-legend span, .cal-legend span:first-child, .cal-legend span:last-child { flex: none; justify-content: flex-start; gap: 8px; font-size: 13px; }
+
+/* Settings panel */
+.settings { padding-top: 6px; }
+.settings-title { margin: 8px 2px 16px; font-size: 34px; font-weight: 800; letter-spacing: -0.03em; }
+.settings-group { border-radius: 20px; overflow: hidden; background: rgba(255, 255, 255, .78); border: 1px solid rgba(255, 255, 255, .95); box-shadow: var(--elev-1); }
+.settings-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px; font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none; }
+.settings-row + .settings-row { border-top: 1px solid rgba(91, 46, 145, .1); }
+.settings-row svg { color: var(--ink-3); flex: none; }
+.settings-row:active { background: var(--brand-50); }
+.settings-note { margin: 22px 0 0; text-align: center; font-size: 13px; line-height: 1.6; color: var(--ink-3); }
+body[data-panel="settings"] .app-footer { display: none; }
+
+.settings-label { margin: 24px 4px 8px; font-size: 12.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+.settings-switch-row { cursor: default; }
+.settings-row-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.settings-row-text small { font-size: 13px; font-weight: 500; line-height: 1.35; color: var(--ink-3); }
+.switch { position: relative; flex: none; display: inline-block; width: 52px; height: 32px; }
+.switch input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; z-index: 1; }
+.switch-track { position: absolute; inset: 0; border-radius: 999px; background: #d3cbe0; transition: background-color .2s var(--ease); }
+.switch-track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 50%; background: #fff; box-shadow: 0 2px 4px rgba(30, 10, 60, .3); transition: transform .2s var(--ease); }
+.switch input:checked + .switch-track { background: var(--brand); }
+.switch input:checked + .switch-track::after { transform: translateX(20px); }
+.switch input:disabled { cursor: not-allowed; }
+.switch input:disabled + .switch-track { opacity: .5; }
+.settings-swatches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 10px; }
+.swatch { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 4px 10px; border: 0; border-radius: 14px; background: none; font: inherit; font-size: 13px; font-weight: 600; color: var(--ink-2); cursor: pointer; }
+.swatch i { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(40, 20, 70, .14); box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .55); }
+.swatch[aria-checked="true"] { background: var(--brand-50); color: var(--brand); }
+.swatch[aria-checked="true"] { box-shadow: inset 0 0 0 2px var(--brand); }
+
+/* background colour choices */
+
+/* ═══════════ Colour themes: accent follows the chosen background ═══════════ */
+:root { --accent-2: #7a49b8; }
+
+/* logo takes the accent colour: tile in the accent, crescent and star on top */
+.masthead .app-title::before {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23fff' d='M30.76 15.02A17 17 0 1 0 45.6 38.76A14 14 0 1 1 30.76 15.02Z'/%3E%3Cpath fill='%23e9e9f0' fill-opacity='.85' d='M46 15l1.7 4.1 4.1 1.7-4.1 1.7L46 26.6l-1.7-4.1-4.1-1.7 4.1-1.7z'/%3E%3C/svg%3E") center / 100% 100% no-repeat, var(--brand);
+  border-radius: 25%;
+}
+.bnav-item[aria-current="page"] { background: linear-gradient(150deg, var(--accent-2), var(--brand)); }
+#calendar .cal-nav .btn.cal-view, #calendar .cal-nav .btn.cal-view:hover { background: linear-gradient(150deg, var(--accent-2), var(--brand)); }
+.cal-day.today .cal-num, .cal-day.selected .cal-num { background-color: var(--brand); }
+
+/* turn-off button */
+.settings-off { display: block; width: 100%; margin-top: 10px; padding: 13px 16px; border: 1px solid var(--brand-100); border-radius: 16px; background: rgba(255, 255, 255, .78); font: inherit; font-size: 15px; font-weight: 650; color: #c0334a; cursor: pointer; }
+.settings-off[hidden] { display: none; }
+.settings-off:active { background: #fbe9ec; }
+
+/* Colour themes: the whole page (background, cards, banners, images, logo) is rotated to the chosen hue */
+html[data-bg="sky"]  { filter: hue-rotate(-68deg); }
+html[data-bg="mint"] { filter: hue-rotate(-123deg); }
+html[data-bg="rose"] { filter: hue-rotate(62deg); }
+html[data-bg="sand"] { filter: hue-rotate(127deg) saturate(.85); }
+html[data-bg="white"] { filter: grayscale(.92); }
+/* swatches show the true colour: cancel the page rotation on them */
+html[data-bg="sky"] .swatch i  { filter: hue-rotate(68deg); }
+html[data-bg="mint"] .swatch i { filter: hue-rotate(123deg); }
+html[data-bg="rose"] .swatch i { filter: hue-rotate(-62deg); }
+html[data-bg="sand"] .swatch i { filter: saturate(1.18) hue-rotate(-127deg); }
+
+/* Footer: one calm, evenly spaced block (keep last) */
+.app-footer { display: flex; flex-direction: column; align-items: center; margin-top: 36px; padding: 24px 0 8px; border-top: 1px solid rgba(91, 46, 145, .12); text-align: center; }
+.footer-links { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 24px; margin: 0 0 16px; }
+.footer-links a { display: inline-flex; align-items: center; min-height: 32px; padding: 0; font-size: 14px; font-weight: 600; line-height: 1; white-space: nowrap; }
+.footer-note { margin: 0 0 6px; font-size: 13px; line-height: 1.4; color: var(--ink-3); }
+.footer-copy { margin: 0; font-size: 12.5px; line-height: 1.4; letter-spacing: 0; word-spacing: 0; color: var(--ink-3); }
+
+/* ═══════════ Round: banner blur, calendar buttons and spacing, Next up hierarchy ═══════════ */
+
+/* banners: the illustration sits on its own layer with a very slight blur; the icon and badges stay sharp */
+.hero-media.is-pattern[data-type] { position: relative; overflow: hidden; isolation: isolate; background-image: none !important; }
+.hero-media.is-pattern[data-type]::before { display: block; content: ""; position: absolute; inset: -4px; z-index: -1; background: right bottom / cover no-repeat; }
+.hero-media.is-pattern[data-type="prayer"]::before { background-image: url("../img/banner-prayer.svg?v=7"); }
+.hero-media.is-pattern[data-type="social"]::before { background-image: url("../img/banner-social.svg?v=7"); }
+.hero-media.is-pattern[data-type="announcement"]::before { background-image: url("../img/banner-announcement.svg?v=8"); }
+
+/* calendar top-right buttons: solid, clearly visible in every colour */
+#calendar .cal-head { margin-top: 30px; margin-bottom: 18px; }
+#calendar .cal-nav .btn.cal-arrow, #calendar .cal-nav .btn.cal-arrow:hover {
+  background: var(--brand-100); color: var(--brand-600); border: 1.5px solid color-mix(in srgb, var(--brand) 45%, transparent);
+  box-shadow: 0 6px 12px -8px color-mix(in srgb, var(--brand) 70%, transparent);
+}
+#calendar .cal-nav .btn.cal-arrow:active { background: color-mix(in srgb, var(--brand) 28%, #fff); }
+#calendar .cal-nav .btn.cal-view, #calendar .cal-nav .btn.cal-view:hover { background: var(--brand); color: #fff; border: 1.5px solid var(--brand); box-shadow: 0 8px 14px -8px color-mix(in srgb, var(--brand) 85%, transparent); }
+#calendar .cal-nav .cal-arrow svg, #calendar .cal-nav .cal-view svg { stroke-width: 3; }
+
+/* Next up: label, then title, then date and time, with a chevron on the right */
+#calendar .cal-next-hint { align-items: center; gap: 12px; padding: 14px 16px; }
+#calendar .cal-next-text { flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; min-width: 0; text-align: left; }
+#calendar .cal-next-text small { font-size: 11.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--brand); }
+#calendar .cal-next-text b { font-size: 17px; font-weight: 700; line-height: 1.25; letter-spacing: -0.01em; color: var(--ink); }
+#calendar .cal-next-hint .cal-next-when { display: block; margin: 0; font-size: 13.5px; font-weight: 500; color: var(--ink-3); white-space: normal; }
+#calendar .cal-next-hint > svg { flex: none; color: var(--ink-3); transform: rotate(-90deg); stroke-width: 3; }
+
+/* ═══════════ Calendar top-right buttons: separate round glass buttons, no white backing ═══════════ */
+#calendar .cal-nav { gap: 10px; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+#calendar .cal-nav .btn.cal-arrow, #calendar .cal-nav .btn.cal-arrow:hover, #calendar .cal-nav .btn.cal-view, #calendar .cal-nav .btn.cal-view:hover {
+  width: 44px; height: 44px; min-width: 44px; padding: 0; border-radius: 50%; display: grid; place-items: center;
+  border: 1px solid rgba(255, 255, 255, .7);
+  -webkit-backdrop-filter: blur(16px) saturate(1.9); backdrop-filter: blur(16px) saturate(1.9);
+}
+#calendar .cal-nav .btn.cal-arrow, #calendar .cal-nav .btn.cal-arrow:hover {
+  color: var(--brand-600);
+  background: linear-gradient(160deg, rgba(255, 255, 255, .5), rgba(255, 255, 255, .14));
+  box-shadow: 0 1px 1px rgba(255, 255, 255, .9) inset, 0 -8px 12px -6px rgba(255, 255, 255, .45) inset, 0 10px 18px -10px rgba(45, 20, 80, .4), 0 2px 4px rgba(45, 20, 80, .08);
+}
+#calendar .cal-nav .btn.cal-view, #calendar .cal-nav .btn.cal-view:hover {
+  color: #fff; border-color: rgba(255, 255, 255, .45);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--accent-2) 88%, transparent), color-mix(in srgb, var(--brand) 92%, transparent));
+  box-shadow: 0 1px 1px rgba(255, 255, 255, .55) inset, 0 -8px 12px -6px rgba(255, 255, 255, .25) inset, 0 12px 20px -10px color-mix(in srgb, var(--brand) 80%, transparent);
+}
+#calendar .cal-nav .btn.cal-arrow:active { background: linear-gradient(160deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, .3)); }
+@media (max-width: 560px) {
+  #calendar .cal-nav .btn.cal-arrow, #calendar .cal-nav .btn.cal-view, #calendar .cal-nav .btn.cal-arrow:hover, #calendar .cal-nav .btn.cal-view:hover { width: 44px; height: 44px; min-width: 44px; }
+}
+
+/* ═══════════ One glass system for every screen (keep last) ═══════════ */
+:root {
+  --g-bg: linear-gradient(155deg, rgba(255, 255, 255, .74), rgba(255, 255, 255, .36));
+  --g-bg-soft: linear-gradient(155deg, rgba(255, 255, 255, .6), rgba(255, 255, 255, .26));
+  --g-edge: rgba(255, 255, 255, .8);
+  --g-shadow: 0 1px 1px rgba(255, 255, 255, .95) inset, 0 -14px 22px -16px rgba(255, 255, 255, .55) inset, 0 20px 40px -22px rgba(45, 20, 90, .38), 0 2px 6px rgba(45, 20, 90, .05);
+  --g-blur: blur(22px) saturate(1.8);
+}
+
+/* every card-like surface */
+.hero-card, .list-card, .hist-card, .empty-state, .empty-card, .empty-card.compact, .install-banner,
+.settings-group, .cal-ev, #calendar .cal-next-hint, .new-post-box, .login-card, .exec-item.list-card {
+  background: var(--g-bg) !important;
+  border: 1px solid var(--g-edge) !important;
+  box-shadow: var(--g-shadow) !important;
+  -webkit-backdrop-filter: var(--g-blur); backdrop-filter: var(--g-blur);
+}
+.hero-card { border-radius: 28px; }
+.hero-card::before { display: none; }
+.hist-card .list-card { background: none !important; border: 0 !important; box-shadow: none !important; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.hist-card .list-card + .list-card { border-top: 1px solid rgba(255, 255, 255, .6) !important; }
+.cal-day.selected { background: var(--g-bg) !important; border: 1px solid var(--g-edge); box-shadow: var(--g-shadow); }
+.settings-row + .settings-row { border-top-color: rgba(255, 255, 255, .7); box-shadow: 0 -1px 0 rgba(91, 46, 145, .06); }
+
+/* hero banner stays flat (it has its own illustration); only the text panel is glass */
+.hero-card .hero-media { border-radius: 0; }
+
+/* inputs and secondary buttons */
+.input, .btn-secondary, .load-more {
+  background: var(--g-bg-soft); border: 1px solid var(--g-edge);
+  box-shadow: 0 1px 1px rgba(255, 255, 255, .9) inset, 0 6px 14px -10px rgba(45, 20, 90, .3);
+  -webkit-backdrop-filter: var(--g-blur); backdrop-filter: var(--g-blur);
+}
+
+/* bottom bar */
+.bnav {
+  background: var(--g-bg); border: 1px solid var(--g-edge); box-shadow: var(--g-shadow);
+  -webkit-backdrop-filter: var(--g-blur); backdrop-filter: var(--g-blur);
+}
+.bnav-item[aria-current="page"] {
+  background: linear-gradient(160deg, color-mix(in srgb, var(--accent-2) 90%, transparent), color-mix(in srgb, var(--brand) 94%, transparent));
+  box-shadow: 0 1px 1px rgba(255, 255, 255, .5) inset, 0 12px 22px -12px color-mix(in srgb, var(--brand) 85%, transparent);
+}
+
+/* swatch tiles and settings spacing */
+.settings-swatches { padding: 12px; gap: 6px; }
+.swatch[aria-checked="true"] { background: rgba(255, 255, 255, .55); box-shadow: inset 0 0 0 2px var(--brand), 0 6px 14px -8px color-mix(in srgb, var(--brand) 60%, transparent); }
+.settings-label { margin: 26px 6px 10px; }
+
+/* ═══════════ Updates card: shorter, clearer order, colour coded by type ═══════════ */
+.hero-media { height: 84px; }
+.hero-media-icon { left: 16px; bottom: 14px; width: 42px; height: 42px; border-radius: 14px; }
+.hero-card .hero-body { padding: 18px 22px 16px; }
+.hero-card .hero-eyebrow { margin-bottom: 6px; }
+.hero-card .hero-type { color: var(--c); font-size: 12px; }
+.hero-card .hero-type i { background: var(--c); }
+.hero-card .hero-title { margin: 0 0 12px; font-size: 28px; line-height: 1.12; }
+.hero-card .hero-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; margin: 0; }
+.hero-card .hero-chips .chip { font-size: 15px; font-weight: 700; color: var(--ink); }
+.hero-card .hero-chips .chip.chip-place { flex-basis: 100%; font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.hero-card .hero-chips .chip.chip-posted { font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.hero-card .hero-notes { margin-top: 12px; font-size: 14.5px; line-height: 1.5; }
+.hero-card .hero-footer { margin-top: 12px; padding-top: 0; border: 0; }
+.hero-card .hero-footer .updated-text { font-size: 12px; color: var(--ink-3); }
+.hero-card { box-shadow: var(--g-shadow), 0 0 0 1px color-mix(in srgb, var(--c) 18%, transparent) !important; }
+.hero-badges { left: auto; right: 12px; top: 12px; justify-content: flex-end; }
+.hero-media-icon { top: 50%; bottom: auto; transform: translateY(-50%); }
+
+
+/* Page background: the existing fixed layer (reaches past the screen so overscroll never shows white),
+   with soft colour glows added inside the screen area so the glass cards have something to blur. */
+body::before {
+  background:
+    radial-gradient(70% 38vh at 8% calc(100vh + 2vh), rgba(165, 115, 230, .40), transparent 70%),
+    radial-gradient(60% 34vh at 100% calc(100vh + 22vh), rgba(120, 150, 240, .24), transparent 70%),
+    radial-gradient(70% 40vh at 0% calc(100vh + 72vh), rgba(205, 140, 225, .28), transparent 70%),
+    radial-gradient(60% 36vh at 100% calc(100vh + 100vh), rgba(150, 100, 215, .32), transparent 70%),
+    linear-gradient(180deg, #f4eefb 0, #f4eefb 100vh, #efe7f9 calc(100vh + 55vh), #ebe1f7 calc(100vh + 100vh), #ebe1f7 100%);
+}
+
+/* List cards (More today, Coming up): type label, title, when and where, notes, then "Updated" last */
+.list-card .list-body { display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
+.list-card .list-kicker { margin: 0 0 4px; font-size: 11px; font-weight: 750; letter-spacing: .08em; }
+.list-card .list-title { margin: 0; font-size: 18px; font-weight: 700; line-height: 1.22; letter-spacing: -0.02em; color: var(--ink); }
+.list-card .list-meta { margin: 6px 0 0; font-size: 14px; font-weight: 600; line-height: 1.35; color: var(--ink-2); }
+.list-card .list-meta:empty { display: none; }
+.list-card .list-notes { margin: 8px 0 0; font-size: 14px; line-height: 1.45; color: var(--ink-2); }
+.list-card .list-updated { margin: 10px 0 0; font-size: 12px; font-weight: 500; color: var(--ink-3); }
+.list-card { padding: 16px 18px; gap: 14px; }
+
+/* Calendar event card: type, title, then the time (largest) with its date, then the place */
+.cal-ev { display: flex; flex-direction: column; align-items: flex-start; gap: 0; padding: 16px 18px; }
+.cal-ev .cal-ev-kicker { display: flex; align-items: center; justify-content: space-between; width: 100%; margin: 0 0 6px; font-size: 11px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; color: var(--c); }
+.cal-ev .cal-ev-kicker i { display: inline-block; width: 6px; height: 6px; margin-right: 6px; border-radius: 50%; background: var(--c); }
+.cal-ev .cal-ev-kicker .rec-mark { margin-left: auto; font-size: 12px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--ink-3); }
+.cal-ev .cal-ev-title { margin: 0; font-size: 19px; font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; color: var(--ink); }
+.cal-ev .cal-ev-when { display: flex; flex-direction: row; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; margin: 10px 0 0; text-align: left; }
+.cal-ev .cal-ev-when b { font-size: 30px; font-weight: 800; line-height: 1; letter-spacing: -0.03em; color: var(--c); }
+.cal-ev .cal-ev-when small { font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.cal-ev .cal-ev-place { margin: 12px 0 0; padding-top: 12px; width: 100%; border-top: 1px solid rgba(91, 46, 145, .1); font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.cal-ev .cal-ev-notes { margin: 10px 0 0; font-size: 14px; line-height: 1.45; color: var(--ink-2); }
+
+/* ═══════════ Distributed layouts: content spread across the card width ═══════════ */
+
+/* Calendar event card: title and place on the left, time and date on the right */
+.cal-ev { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "kicker kicker" "title when" "place when" "cancel cancel" "notes notes"; column-gap: 16px; align-items: start; }
+.cal-ev .cal-ev-kicker { grid-area: kicker; margin-bottom: 10px; }
+.cal-ev .cal-ev-title { grid-area: title; align-self: start; }
+.cal-ev .cal-ev-when { grid-area: when; flex-direction: column; align-items: flex-end; gap: 4px; margin: 0; text-align: right; }
+.cal-ev .cal-ev-when b { font-size: 32px; }
+.cal-ev .cal-ev-when small { font-size: 13.5px; }
+.cal-ev .cal-ev-place { grid-area: place; align-self: end; width: auto; margin: 8px 0 0; padding: 0; border: 0; font-size: 14px; }
+.cal-ev .cal-ev-cancel { grid-area: cancel; margin-top: 10px; }
+.cal-ev .cal-ev-notes { grid-area: notes; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(91, 46, 145, .1); }
+
+/* "More today" / "Coming up" cards: details on the left, "Updated" on the right of the same row */
+.list-card .list-body { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; align-items: end; }
+.list-card .list-kicker { grid-column: 1 / -1; grid-row: 1; align-self: start; }
+.list-card .list-title { grid-column: 1 / -1; grid-row: 2; align-self: start; }
+.list-card .list-meta { grid-column: 1; grid-row: 3; margin-top: 8px; }
+.list-card .list-updated { grid-column: 2; grid-row: 3; margin: 8px 0 0; text-align: right; white-space: nowrap; }
+.list-card .list-notes { grid-column: 1 / -1; grid-row: 4; margin-top: 10px; }
+.list-card .list-meta:empty { display: block; min-height: 0; margin: 0; }
+
+/* ═══════════ Time size, and one selection style (the filled accent circle) everywhere ═══════════ */
+
+/* event card: time is the lead detail but no longer oversized */
+.cal-ev .cal-ev-when b { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+.cal-ev .cal-ev-when small { font-size: 13px; }
+.cal-ev .cal-ev-title { font-size: 20px; }
+
+/* calendar days: the selected day is a filled accent circle in a softly rounded glass tile; today is the same circle, lighter */
+#calendar .cal-day.selected, .cal-day.selected {
+  border-radius: 18px; border: 1px solid rgba(255, 255, 255, .85) !important;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, .3)) !important;
+  box-shadow: 0 1px 1px rgba(255, 255, 255, .9) inset, 0 10px 18px -12px color-mix(in srgb, var(--brand) 55%, transparent);
+}
+#calendar .cal-day.selected .cal-num, #calendar .cal-grid .cal-day.selected .cal-num,
+#calendar .cal-day.selected:not(.today) .cal-num, #calendar .cal-grid .cal-day.selected:not(.today) .cal-num,
+#calendar .cal-day.today.selected .cal-num, #calendar .cal-grid .cal-day.today.selected .cal-num {
+  background: linear-gradient(160deg, var(--accent-2), var(--brand)); color: #fff; font-weight: 700;
+  box-shadow: 0 6px 12px -6px color-mix(in srgb, var(--brand) 80%, transparent);
+}
+#calendar .cal-day.today:not(.selected) .cal-num, #calendar .cal-grid .cal-day.today:not(.selected) .cal-num {
+  background: color-mix(in srgb, var(--brand) 16%, #fff); color: var(--brand-600); font-weight: 700;
+}
+
+/* ═══════════ Calendar as one glass card; no lines across the days; instant, clean selection ═══════════ */
+#calendar .cal-card {
+  margin: 0 0 16px; padding: 10px 6px 4px; border-radius: 28px; overflow: hidden;
+  background: var(--g-bg); border: 1px solid var(--g-edge); box-shadow: var(--g-shadow);
+  -webkit-backdrop-filter: var(--g-blur); backdrop-filter: var(--g-blur);
+}
+#calendar .cal-grid { border: 0; }
+#calendar .cal-weekday, #calendar .cal-day, #calendar .cal-pad,
+#calendar .cal-grid > *, #calendar .cal-grid > :nth-child(n+8):nth-child(-n+14), #calendar .cal-grid > :nth-last-child(-n+7) {
+  border: 0 !important; border-radius: 18px;
+}
+#calendar .cal-day {
+  transition: background-color .1s ease-out, box-shadow .1s ease-out, scale .12s var(--ease);
+}
+#calendar .cal-day.selected, .cal-day.selected {
+  border: 0 !important; border-radius: 18px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .9) inset, 0 1px 1px rgba(255, 255, 255, .9) inset, 0 8px 16px -10px color-mix(in srgb, var(--brand) 55%, transparent);
+}
+#calendar .cal-legend { margin: 6px 12px 10px; padding-top: 12px; border-top: 1px solid rgba(91, 46, 145, .1); }
+
+/* Background swatches: the chosen colour is unmistakable (dark ring, check badge, bold label); the rest stay quiet */
+.swatch { position: relative; transition: background-color .12s ease-out, color .12s ease-out; }
+.swatch i { position: relative; transition: box-shadow .12s ease-out; }
+.swatch[aria-checked="false"] { opacity: .85; }
+.swatch[aria-checked="true"] { opacity: 1; background: rgba(255, 255, 255, .7); box-shadow: 0 0 0 1px rgba(255, 255, 255, .9) inset, 0 8px 16px -10px rgba(45, 20, 90, .35); color: var(--ink); font-weight: 800; }
+.swatch[aria-checked="true"] i { box-shadow: inset 0 0 0 3px #fff, 0 0 0 3px var(--sw); border-color: transparent; }
+.swatch[aria-checked="true"] i::after {
+  content: ""; position: absolute; right: -5px; bottom: -5px; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--sw) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 12.5 4 4 8-9'/%3E%3C/svg%3E") center / 14px no-repeat;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+.swatch i { border: 0; box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .35), 0 4px 10px -4px rgba(45, 20, 90, .35); }
+.swatch[aria-checked="true"] i { box-shadow: inset 0 0 0 3px #fff, 0 0 0 3px var(--sw), 0 6px 12px -4px rgba(45, 20, 90, .4); }
+
+/* ═══════════ Updates: liquid-glass cards (clear body, bright rim, soft sheen) ═══════════ */
+#panel-updates .hero-card, #panel-updates .list-card, #panel-updates .hist-card, #panel-updates .install-banner, #panel-updates .empty-card,
+#panel-view .hero-card, #panel-view .list-card, #panel-view .hist-card, #panel-view .empty-card {
+  position: relative;
+  background: linear-gradient(140deg, rgba(255, 255, 255, .62) 0%, rgba(255, 255, 255, .28) 55%, rgba(255, 255, 255, .42) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, .7) !important;
+  box-shadow:
+    inset 1.5px 1.5px 1px rgba(255, 255, 255, .95),
+    inset -1px -1px 1px rgba(255, 255, 255, .35),
+    inset 0 -18px 28px -18px rgba(255, 255, 255, .5),
+    0 22px 44px -24px rgba(45, 20, 90, .42),
+    0 3px 8px rgba(45, 20, 90, .06) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(2); backdrop-filter: blur(26px) saturate(2);
+}
+/* soft diagonal sheen across the top-left of each glass card */
+#panel-updates .hero-card::after, #panel-updates .list-card::after, #panel-updates .install-banner::after,
+#panel-view .hero-card::after, #panel-view .list-card::after {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; border-radius: inherit;
+  background: linear-gradient(125deg, rgba(255, 255, 255, .38) 0%, rgba(255, 255, 255, .08) 28%, transparent 48%);
+}
+#panel-updates .hist-card .list-card, #panel-view .hist-card .list-card { background: none !important; box-shadow: none !important; -webkit-backdrop-filter: none; backdrop-filter: none; }
+#panel-updates .hist-card .list-card::after, #panel-view .hist-card .list-card::after { display: none; }
+
+/* banner strip on hero cards: glass over the pattern instead of a flat block */
+#panel-updates .hero-media, #panel-view .hero-media { border-bottom: 1px solid rgba(255, 255, 255, .55); }
+#panel-updates .hero-media-icon, #panel-view .hero-media-icon {
+  background: rgba(255, 255, 255, .5); border: 1px solid rgba(255, 255, 255, .85);
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .9), 0 8px 16px -8px rgba(45, 20, 90, .35);
+  -webkit-backdrop-filter: blur(14px) saturate(1.8); backdrop-filter: blur(14px) saturate(1.8);
+}
+#panel-updates .badge, #panel-view .badge {
+  background: rgba(255, 255, 255, .55); border: 1px solid rgba(255, 255, 255, .85); color: var(--ink-2);
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .9);
+  -webkit-backdrop-filter: blur(12px) saturate(1.8); backdrop-filter: blur(12px) saturate(1.8);
+}
+
+/* section headings and buttons */
+#panel-updates .section-heading .count, #panel-view .section-heading .count {
+  background: rgba(255, 255, 255, .55); border: 1px solid rgba(255, 255, 255, .85); box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .9);
+}
+#panel-updates .load-more, #panel-view .load-more {
+  background: linear-gradient(140deg, rgba(255, 255, 255, .62), rgba(255, 255, 255, .3)); border: 1px solid rgba(255, 255, 255, .75);
+  box-shadow: inset 1.5px 1.5px 1px rgba(255, 255, 255, .95), 0 10px 20px -12px rgba(45, 20, 90, .35);
+}
+/* date tile on event rows */
+#panel-updates .date-tile { background: rgba(255, 255, 255, .6); box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95), 0 6px 12px -8px rgba(45, 20, 90, .35); }
+
+/* ═══════════ Consistent type: one scale, same font everywhere (including the Ummah wordmark) ═══════════
+   800 = wordmark and screen titles · 700 = card titles, labels, buttons · 600 = details · 500 = secondary text */
+body, button, input, select, textarea { font-family: var(--font-body); }
+.app-name, .settings-title, .cal-month .cal-name, .login-title { font-weight: 800; letter-spacing: -0.03em; }
+.app-name { font-size: 24px; }
+.hero-card .hero-title { font-weight: 800; letter-spacing: -0.03em; }
+.list-card .list-title, .cal-ev .cal-ev-title, .install-title, .section-heading .label, .cal-panel-title { font-weight: 700; letter-spacing: -0.02em; }
+.section-heading .label { font-size: 16px; }
+.hero-card .hero-chips .chip, .list-card .list-meta, .cal-ev .cal-ev-place, .settings-row, .footer-links a { font-weight: 600; letter-spacing: -0.01em; }
+.updated-text, .list-updated, .hero-card .hero-footer .updated-text, .install-sub, .settings-row-text small, .footer-note, .footer-copy, .cal-ev .cal-ev-when small { font-weight: 500; letter-spacing: 0; }
+.btn, .bnav-item, .load-more, .swatch { font-weight: 700; letter-spacing: 0; }
+.bnav-item { font-size: 12.5px; }
+.badge { font-weight: 700; letter-spacing: 0; }
+
+/* ═══════════ Type label as a glass pill ═══════════ */
+.type-pill, .hero-card .hero-type {
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; line-height: 1;
+  color: color-mix(in srgb, var(--c) 82%, #1b1626);
+  background: color-mix(in srgb, var(--c) 13%, rgba(255, 255, 255, .6));
+  border: 1px solid rgba(255, 255, 255, .85);
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95), 0 4px 10px -6px color-mix(in srgb, var(--c) 55%, transparent);
+  -webkit-backdrop-filter: blur(12px) saturate(1.8); backdrop-filter: blur(12px) saturate(1.8);
+}
+.type-pill i, .hero-card .hero-type i { display: block; width: 6px; height: 6px; margin: 0; border-radius: 50%; background: var(--c); }
+.list-card .list-kicker, .cal-ev .cal-ev-kicker { display: flex; align-items: center; flex-wrap: nowrap; gap: 8px; width: 100%; margin: 0 0 8px; color: inherit; letter-spacing: 0; text-transform: none; }
+.list-card .list-kicker .rec-mark, .cal-ev .cal-ev-kicker .rec-mark { margin-left: auto; font-size: 12.5px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--ink-3); }
+.hero-card .hero-eyebrow { margin-bottom: 10px; }
+
+/* ═══════════ Pinned: one clean glass pill, same in every card ═══════════ */
+.badge-pin {
+  display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 999px;
+  font-size: 11.5px; font-weight: 700; line-height: 1; color: color-mix(in srgb, var(--c, var(--brand)) 85%, #1b1626);
+  background: rgba(255, 255, 255, .62); border: 1px solid rgba(255, 255, 255, .9);
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95), 0 4px 10px -6px rgba(45, 20, 90, .35);
+  -webkit-backdrop-filter: blur(12px) saturate(1.8); backdrop-filter: blur(12px) saturate(1.8);
+}
+.badge-pin svg { width: 13px; height: 13px; stroke-width: 2.8; }
+.list-card .kicker-badges { margin-left: auto; }
+.list-card .kicker-badges .badge-pin { background: rgba(255, 255, 255, .62); }
+
+/* ═══════════ Same liquid glass on Calendar, Settings and the bottom bar ═══════════ */
+#calendar .cal-card, .cal-ev, #calendar .cal-next-hint, .settings-group, .bnav, .login-card {
+  position: relative;
+  background: linear-gradient(140deg, rgba(255, 255, 255, .62) 0%, rgba(255, 255, 255, .28) 55%, rgba(255, 255, 255, .42) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, .7) !important;
+  box-shadow: inset 1.5px 1.5px 1px rgba(255, 255, 255, .95), inset -1px -1px 1px rgba(255, 255, 255, .35), inset 0 -18px 28px -18px rgba(255, 255, 255, .5), 0 22px 44px -24px rgba(45, 20, 90, .42), 0 3px 8px rgba(45, 20, 90, .06) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(2); backdrop-filter: blur(26px) saturate(2);
+}
+.bnav { position: fixed; }
+#calendar .cal-card::after, .cal-ev::after, #calendar .cal-next-hint::after, .settings-group::after, .bnav::after, .login-card::after {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; border-radius: inherit;
+  background: linear-gradient(125deg, rgba(255, 255, 255, .38) 0%, rgba(255, 255, 255, .08) 28%, transparent 48%);
+}
+.bnav-item { position: relative; z-index: 1; }
+.swatch[aria-checked="true"] { background: rgba(255, 255, 255, .6); box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95), 0 8px 16px -10px rgba(45, 20, 90, .35); }
+
+/* ═══════════ Administrative login ═══════════ */
+.login-wrap { margin: 12px 0 0; padding: 0; }
+.login-card { padding: 26px 22px 24px; border-radius: 30px; text-align: left; overflow: hidden; }
+.login-card > * { position: relative; z-index: 1; }
+.login-card .back-link { margin: 0 0 18px; }
+.login-card .login-title { margin: 0 0 8px; font-size: 28px; line-height: 1.1; text-align: left; color: var(--ink); }
+.login-card .login-sub { max-width: none; margin: 0 0 22px; font-size: 14.5px; line-height: 1.5; text-align: left; text-wrap: pretty; color: var(--ink-2); }
+.login-card .field { margin: 0 0 16px; }
+.login-card .field > label { margin: 0 0 7px 2px; font-size: 13px; font-weight: 700; color: var(--ink-2); }
+.login-card .input {
+  height: 52px; padding: 0 16px; border-radius: 16px; font-size: 16px; font-weight: 500; color: var(--ink);
+  background: rgba(255, 255, 255, .7) !important; border: 1px solid rgba(91, 46, 145, .22) !important;
+  box-shadow: inset 0 1px 2px rgba(45, 20, 90, .08) !important;
+}
+.login-card .input:focus { border-color: var(--brand) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 22%, transparent) !important; }
+.login-card .btn-primary { width: 100%; height: 52px; margin-top: 6px; border-radius: 999px; font-size: 16px; background: linear-gradient(160deg, var(--accent-2), var(--brand)); box-shadow: inset 0 1px 1px rgba(255, 255, 255, .35), 0 14px 24px -12px color-mix(in srgb, var(--brand) 80%, transparent); }
+.login-wrap { min-height: 0; justify-content: flex-start; margin-top: 16px; }
+
+/* the sheen sits behind the content so text is never washed out */
+#panel-updates .hero-card > *, #panel-updates .list-card > *, #panel-updates .install-banner > *,
+#panel-view .hero-card > *, #panel-view .list-card > *,
+#calendar .cal-card > *, .cal-ev > *, #calendar .cal-next-hint > *, .settings-group > *, .login-card > * { position: relative; z-index: 1; }
+.hero-media { position: relative; }
+#panel-updates .hero-card::after, #panel-updates .list-card::after, #panel-updates .install-banner::after, #panel-view .hero-card::after, #panel-view .list-card::after { z-index: 0; }
+
+/* ═══════════ Privacy Policy and Terms of Use: centred glass page, same fonts as the app ═══════════ */
+.app-header:not(.masthead) { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: calc(8px + env(safe-area-inset-top)) 0 16px; padding: 0 2px; }
+.app-header:not(.masthead) .back-link {
+  margin: 0; padding: 10px 16px; border-radius: 999px; font-size: 13.5px; font-weight: 700; color: var(--brand); text-decoration: none;
+  background: linear-gradient(140deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, .35)); border: 1px solid rgba(255, 255, 255, .8);
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95), 0 10px 18px -12px rgba(45, 20, 90, .4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.9); backdrop-filter: blur(18px) saturate(1.9);
+}
+main.legal {
+  position: relative; margin: 0 0 8px; padding: 26px 22px 20px; border-radius: 30px; overflow: hidden;
+  background: linear-gradient(140deg, rgba(255, 255, 255, .62) 0%, rgba(255, 255, 255, .28) 55%, rgba(255, 255, 255, .42) 100%);
+  border: 1px solid rgba(255, 255, 255, .7);
+  box-shadow: inset 1.5px 1.5px 1px rgba(255, 255, 255, .95), inset -1px -1px 1px rgba(255, 255, 255, .35), 0 22px 44px -24px rgba(45, 20, 90, .42), 0 3px 8px rgba(45, 20, 90, .06);
+  -webkit-backdrop-filter: blur(26px) saturate(2); backdrop-filter: blur(26px) saturate(2);
+}
+main.legal::after { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; border-radius: inherit; background: linear-gradient(125deg, rgba(255, 255, 255, .38) 0%, rgba(255, 255, 255, .08) 28%, transparent 48%); }
+main.legal > * { position: relative; z-index: 1; }
+.legal h1 { margin: 0 0 6px; font-size: 30px; font-weight: 800; letter-spacing: -0.03em; text-align: center; color: var(--ink); }
+.legal .legal-meta { margin: 0 0 20px; font-size: 13px; font-weight: 500; text-align: center; color: var(--ink-3); }
+.legal .legal-lede { margin: 0 0 6px; padding: 16px 18px; font-size: 15.5px; font-weight: 500; line-height: 1.55; text-align: center; color: var(--ink-2);
+  background: color-mix(in srgb, var(--brand) 8%, rgba(255, 255, 255, .55)); border: 1px solid rgba(255, 255, 255, .85); border-radius: 20px; box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .9); }
+.legal h2 { margin: 28px 0 8px; font-size: 18px; font-weight: 700; letter-spacing: -0.02em; text-align: left; color: var(--ink); }
+.legal p, .legal li { font-size: 15px; font-weight: 400; line-height: 1.6; color: var(--ink-2); }
+.legal strong { font-weight: 700; color: var(--ink); }
+.legal a { font-weight: 600; }
+.legal table { margin: 10px 0 14px; border-collapse: separate; border-spacing: 0; overflow: hidden; border-radius: 18px; border: 1px solid rgba(255, 255, 255, .85); background: rgba(255, 255, 255, .45); }
+.legal th, .legal td { padding: 12px 14px; border: 0; border-bottom: 1px solid rgba(91, 46, 145, .1); background: none; }
+.legal tr:last-child td { border-bottom: 0; }
+.legal th { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); background: rgba(255, 255, 255, .4); }
+.legal td { font-size: 14px; font-weight: 400; }
+.legal td::before { font-weight: 700; letter-spacing: .06em; color: var(--ink-3); }
+
+/* footer text: the same three sizes on every page */
+.app-footer .footer-links a { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; color: var(--brand); }
+.app-footer .footer-note { font-size: 13px; font-weight: 500; letter-spacing: 0; color: var(--ink-3); }
+.app-footer .footer-copy { font-size: 12.5px; font-weight: 500; letter-spacing: 0; word-spacing: 0; color: var(--ink-3); }
+
+/* Login alignment: logo, card, and every line inside the card share the same left edge */
+.app-header.masthead, .app-header:not(.masthead) { padding-left: 0; padding-right: 0; }
+.login-card .field > label { margin-left: 0; }
+.login-card .back-link svg { margin-left: 0; }
+.login-card .pw-toggle { right: 8px; }
+.login-card .error-banner { margin: 0 0 16px; }
+
+/* Login page: the card sits in the middle of the space between the logo and the footer */
+.login-wrap { display: flex; align-items: center; justify-content: center; min-height: calc(100svh - 270px); margin: 0; padding: 12px 0; }
+.login-wrap .login-card { width: 100%; margin: 0 auto; }
+
+/* ═══════════ Admin: same glass, same type scale, aligned ═══════════ */
+.exec-heading { align-items: center; margin: 4px 0 16px; }
+.exec-heading .label { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; color: var(--ink); text-transform: none; }
+.exec-heading .count { font-size: 13px; font-weight: 700; }
+.logout-pill {
+  padding: 10px 16px; border-radius: 999px; font-size: 13.5px; font-weight: 700; color: var(--brand); cursor: pointer;
+  background: linear-gradient(140deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, .35)); border: 1px solid rgba(255, 255, 255, .8);
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95), 0 10px 18px -12px rgba(45, 20, 90, .4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.9); backdrop-filter: blur(18px) saturate(1.9);
+}
+.new-post-box { padding: 16px; border-radius: 28px; margin-bottom: 18px; }
+.new-post-toggle .label { font-size: 17px; font-weight: 700; letter-spacing: -0.02em; }
+.post-form .field { margin: 0 0 14px; }
+.post-form .field > label, .exec-section .field > label { display: block; margin: 0 0 7px; font-size: 13px; font-weight: 700; color: var(--ink-2); }
+.post-form .input { min-height: 48px; border-radius: 16px; font-size: 16px; font-weight: 500; }
+.post-form textarea.input { min-height: 96px; padding-top: 12px; }
+.type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+.type-option {
+  min-height: 44px; padding: 0 8px; border-radius: 999px; font-size: 14px; font-weight: 700; color: var(--ink-2);
+  background: linear-gradient(140deg, rgba(255, 255, 255, .62), rgba(255, 255, 255, .3)); border: 1px solid rgba(255, 255, 255, .85);
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95), 0 6px 12px -8px rgba(45, 20, 90, .3);
+}
+.type-option.selected { color: #fff; background: linear-gradient(160deg, var(--accent-2), var(--brand)); border-color: rgba(255, 255, 255, .4); box-shadow: inset 0 1px 1px rgba(255, 255, 255, .4), 0 10px 18px -10px color-mix(in srgb, var(--brand) 80%, transparent); }
+.form-actions { display: flex; gap: 10px; margin-top: 8px; }
+.form-actions .btn { flex: 1; min-height: 50px; border-radius: 999px; font-size: 15px; font-weight: 700; }
+.form-actions .btn-primary { background: linear-gradient(160deg, var(--accent-2), var(--brand)); box-shadow: inset 0 1px 1px rgba(255, 255, 255, .35), 0 12px 20px -12px color-mix(in srgb, var(--brand) 80%, transparent); }
+.form-actions .btn-primary:disabled { opacity: .5; box-shadow: none; }
+.toggle-row { margin: 4px 0 16px; font-size: 15px; font-weight: 600; color: var(--ink-2); }
+.exec-item.list-card { align-items: center; }
+.exec-item.list-card > svg { color: var(--ink-3); flex: none; }
+
+/* ═══════════ Admin new-post form: ordered sections, every field the same glass ═══════════ */
+.post-form { display: flex; flex-direction: column; gap: 0; }
+.post-form .form-grid { display: flex; flex-direction: column; gap: 0; }
+.post-form .field > label { display: block; margin: 0 0 8px 0; font-size: 13px; font-weight: 700; letter-spacing: 0; color: var(--ink-2); }
+.post-form .field > label .form-hint { font-weight: 500; color: var(--ink-3); }
+.post-form .input, .post-form select.input, .post-form .dtp-trigger, .post-form .room-chip {
+  background: linear-gradient(140deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, .4)) !important;
+  border: 1px solid rgba(91, 46, 145, .16) !important;
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95), 0 6px 12px -10px rgba(45, 20, 90, .3) !important;
+}
+.post-form .input:focus { border-color: var(--brand) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 22%, transparent) !important; }
+.room-row { gap: 8px; align-items: stretch; }
+.room-chip { min-height: 48px; border-radius: 16px; font-weight: 700; }
+
+/* Repeat: select, then "Repeat on", then "Ends", then the summary, each with its own label above */
+.repeat-panel { display: flex; flex-direction: column; gap: 16px; margin-top: 12px; padding: 16px; border-radius: 22px; background: linear-gradient(140deg, rgba(255, 255, 255, .55), rgba(255, 255, 255, .25)); border: 1px solid rgba(255, 255, 255, .85); box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95); }
+.repeat-panel[hidden], .repeat-days[hidden], .repeat-row[hidden], .repeat-summary:empty { display: none; }
+.repeat-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.repeat-days::before { content: "Repeat on"; grid-column: 1 / -1; margin-bottom: 4px; font-size: 13px; font-weight: 700; color: var(--ink-2); }
+.day-chip { width: auto; aspect-ratio: 1; min-width: 0; padding: 0; border-radius: 50%; font-size: 14px; font-weight: 700; }
+.day-chip.on { background: linear-gradient(160deg, var(--accent-2), var(--brand)); border-color: transparent; box-shadow: 0 8px 14px -8px color-mix(in srgb, var(--brand) 80%, transparent); }
+.repeat-row { display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+.repeat-row > span { font-size: 13px; font-weight: 700; color: var(--ink-2); }
+.repeat-row .input-sm, .repeat-row .dtp { width: 100%; flex: none; min-height: 46px; border-radius: 14px; }
+.repeat-row input[type="number"].input-sm { width: 100%; }
+.repeat-summary { margin: 0; padding: 10px 14px; border-radius: 14px; font-size: 13px; font-weight: 600; line-height: 1.4; color: var(--brand-600); background: color-mix(in srgb, var(--brand) 9%, rgba(255, 255, 255, .6)); }
+.repeat-summary.is-error { color: var(--danger); background: color-mix(in srgb, var(--danger) 9%, rgba(255, 255, 255, .6)); }
+
+/* Pin toggle as a glass row, label left and switch right (like Settings) */
+.post-form .toggle-row {
+  display: flex; flex-direction: row-reverse; justify-content: space-between; align-items: center; gap: 12px; margin: 4px 0 18px; padding: 14px 16px; border-radius: 18px; cursor: pointer;
+  font-size: 15px; font-weight: 600; color: var(--ink);
+  background: linear-gradient(140deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, .4)); border: 1px solid rgba(91, 46, 145, .16); box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95);
+}
+.toggle-track { width: 50px; height: 30px; }
+.toggle-thumb { top: 3px; left: 3px; width: 24px; height: 24px; }
+.toggle-row input:checked + .toggle-track .toggle-thumb { left: 23px; }
+.toggle-row input:checked + .toggle-track { background: var(--brand); }
+
+/* Log out: a clean glass pill, vertically centred with the logo; and a red row in Settings */
+.app-header.masthead { align-items: center; }
+.logout-pill { display: inline-flex; align-items: center; justify-content: center; height: 40px; padding: 0 18px; margin: 0; line-height: 1; }
+.settings-logout { width: 100%; background: none; border: 0; font: inherit; font-size: 16px; font-weight: 700; color: #c0334a; text-align: left; cursor: pointer; }
+.settings-logout:active { background: color-mix(in srgb, #c0334a 8%, transparent); }
+.repeat-days { grid-template-columns: repeat(7, minmax(0, 1fr)); width: 100%; box-sizing: border-box; }
+.day-chip { width: 100%; max-width: 100%; }
+
+/* Admin list rows: type label on the left; "Repeats" and "Pinned" grouped together on the right */
+.exec-item .list-kicker { gap: 8px; }
+.exec-item .list-kicker .rec-mark { margin-left: auto; }
+.exec-item .list-kicker .rec-mark ~ .kicker-badges { margin-left: 0; }
+.exec-item .list-kicker > .kicker-badges:first-of-type:not(.rec-mark ~ .kicker-badges) { margin-left: auto; }
+.exec-item .list-body { padding-right: 4px; }
+.exec-item .list-title { font-size: 18px; }
+.exec-item .list-meta { margin-top: 6px; font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.exec-item.list-card > svg { margin-left: 4px; }
+
+/* ═══════════ Admin post detail: glass card, clear order, even action buttons ═══════════ */
+#detail-view .back-link {
+  display: inline-flex; align-items: center; gap: 8px; margin: 0 0 14px; padding: 10px 16px; border-radius: 999px; font-size: 13.5px; font-weight: 700; color: var(--brand);
+  background: linear-gradient(140deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, .35)); border: 1px solid rgba(255, 255, 255, .8);
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95), 0 10px 18px -12px rgba(45, 20, 90, .4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.9); backdrop-filter: blur(18px) saturate(1.9);
+}
+#detail-view .hero-card {
+  position: relative; margin-bottom: 20px; border-radius: 28px;
+  background: linear-gradient(140deg, rgba(255, 255, 255, .62) 0%, rgba(255, 255, 255, .28) 55%, rgba(255, 255, 255, .42) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, .7) !important;
+  box-shadow: inset 1.5px 1.5px 1px rgba(255, 255, 255, .95), inset -1px -1px 1px rgba(255, 255, 255, .35), 0 22px 44px -24px rgba(45, 20, 90, .42), 0 3px 8px rgba(45, 20, 90, .06) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(2); backdrop-filter: blur(26px) saturate(2);
+}
+#detail-view .hero-card::after { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; border-radius: inherit; background: linear-gradient(125deg, rgba(255, 255, 255, .38) 0%, rgba(255, 255, 255, .08) 28%, transparent 48%); }
+#detail-view .hero-card > * { position: relative; z-index: 1; }
+#detail-view .hero-status {
+  padding: 5px 11px; border-radius: 999px; font-size: 11.5px; font-weight: 700; letter-spacing: 0; color: color-mix(in srgb, var(--c) 82%, #1b1626);
+  background: rgba(255, 255, 255, .62); border: 1px solid rgba(255, 255, 255, .9); box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95);
+}
+#detail-view .hero-title { margin: 0 0 12px; }
+#detail-view .hero-chips { margin: 0; }
+#detail-view .hero-chips .chip { font-size: 15px; font-weight: 700; color: var(--ink); }
+#detail-view .rule-line { display: flex; align-items: center; gap: 6px; margin: 8px 0 0; font-size: 14px; font-weight: 600; color: var(--ink-2); }
+#detail-view .hero-notes { margin-top: 14px; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+#detail-view .detail-meta-grid { margin-top: 18px; padding-top: 16px; gap: 14px 16px; border-top: 1px solid rgba(91, 46, 145, .12); font-size: 15px; font-weight: 600; color: var(--ink); }
+#detail-view .detail-meta-label { margin-bottom: 4px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); opacity: 1; }
+
+/* the dates strip of a repeating post */
+.occ-strip { margin: 4px 0 0; }
+.occ-label { margin: 0 0 10px 2px; font-size: 11px; font-weight: 700; letter-spacing: .08em; color: var(--ink-3); }
+.occ-chip {
+  flex: none; min-height: 40px; padding: 0 16px; border-radius: 999px; font-size: 14px; font-weight: 700; color: var(--ink-2);
+  background: linear-gradient(140deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, .35)); border: 1px solid rgba(255, 255, 255, .85);
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95), 0 6px 12px -8px rgba(45, 20, 90, .3);
+}
+.occ-chip.selected { color: #fff; background: linear-gradient(160deg, var(--accent-2), var(--brand)); border-color: rgba(255, 255, 255, .4); box-shadow: inset 0 1px 1px rgba(255, 255, 255, .4), 0 10px 16px -10px color-mix(in srgb, var(--brand) 80%, transparent); }
+
+/* actions: equal pills; Delete is the only solid red one */
+.detail-actionbar { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 18px; padding-top: 18px; border-top: 1px solid rgba(91, 46, 145, .12); }
+@media (min-width: 520px) { .detail-actionbar { grid-template-columns: repeat(4, 1fr); } }
+.detail-actionbar .btn { min-width: 0; min-height: 48px; padding: 0 12px; border-radius: 999px; font-size: 14.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.detail-actionbar .btn-pin-action, .detail-actionbar .btn-secondary, .detail-actionbar .btn-restore-action {
+  color: var(--brand); background: linear-gradient(140deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, .38)); border: 1px solid rgba(255, 255, 255, .85);
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95), 0 8px 14px -10px rgba(45, 20, 90, .35);
+}
+.detail-actionbar .btn-cancel-action { color: #c0334a; background: linear-gradient(140deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, .38)); border: 1px solid color-mix(in srgb, #c0334a 35%, #fff); box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95), 0 8px 14px -10px rgba(192, 51, 74, .4); }
+.detail-actionbar .btn-delete-action { color: #fff; background: linear-gradient(160deg, #d64a3a, #b0301f); border: 0; box-shadow: inset 0 1px 1px rgba(255, 255, 255, .3), 0 12px 20px -12px rgba(176, 48, 31, .8); }
+#detail-hint { margin: 12px 4px 0; font-size: 13px; font-weight: 500; line-height: 1.45; color: var(--ink-3); }
+
+/* ═══════════ Admin events page, redesigned ═══════════ */
+.exec-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin: 6px 0 18px; }
+.exec-titlewrap .label { font-size: 34px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.05; color: var(--ink); }
+.exec-sub { margin: 6px 0 0; font-size: 14px; font-weight: 500; color: var(--ink-3); }
+.exec-heading .count { display: none; }
+
+/* summary tiles */
+.exec-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 0 18px; }
+.exec-stat {
+  display: flex; flex-direction: column; gap: 2px; padding: 14px 16px; border-radius: 22px;
+  background: linear-gradient(140deg, rgba(255, 255, 255, .66), rgba(255, 255, 255, .3)); border: 1px solid rgba(255, 255, 255, .8);
+  box-shadow: inset 1.5px 1.5px 1px rgba(255, 255, 255, .95), 0 14px 26px -18px rgba(45, 20, 90, .4);
+  -webkit-backdrop-filter: blur(22px) saturate(1.9); backdrop-filter: blur(22px) saturate(1.9);
+}
+.exec-stat b { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; color: var(--brand); }
+.exec-stat span { font-size: 12.5px; font-weight: 600; color: var(--ink-3); }
+
+/* New post: a clear call to action */
+.new-post-box { padding: 6px; border-radius: 28px; }
+.new-post-toggle { padding: 10px 12px; border-radius: 22px; gap: 14px; text-align: left; }
+.new-post-toggle .plus-icon { width: 46px; height: 46px; flex: none; border-radius: 16px; background: linear-gradient(160deg, var(--accent-2), var(--brand)); box-shadow: inset 0 1px 1px rgba(255, 255, 255, .4), 0 12px 20px -10px color-mix(in srgb, var(--brand) 80%, transparent); }
+.new-post-toggle .plus-icon svg { width: 22px; height: 22px; stroke-width: 3; }
+.np-text { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.np-text .label { font-size: 18px; font-weight: 750; letter-spacing: -0.02em; color: var(--ink); }
+.np-text small { font-size: 13px; font-weight: 500; color: var(--ink-3); }
+.new-post-toggle .chev { display: grid; place-items: center; width: 34px; height: 34px; flex: none; border-radius: 50%; color: var(--ink-2); background: rgba(255, 255, 255, .6); border: 1px solid rgba(255, 255, 255, .9); box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95); }
+.post-form { padding: 0 12px; }
+.post-form.open { max-height: 1800px; padding: 0 12px 14px; margin-top: 8px; }
+
+/* event rows */
+.exec-item.list-card {
+  gap: 16px; padding: 16px 16px 16px 18px; margin-bottom: 12px; border-radius: 24px;
+  box-shadow: inset 4px 0 0 color-mix(in srgb, var(--c) 75%, transparent), inset 1.5px 1.5px 1px rgba(255, 255, 255, .95), 0 18px 36px -22px rgba(45, 20, 90, .4), 0 3px 8px rgba(45, 20, 90, .05) !important;
+}
+.exec-item .list-icon { width: 54px; height: 54px; border-radius: 18px; color: var(--c); background: color-mix(in srgb, var(--c) 13%, rgba(255, 255, 255, .7)); border: 1px solid rgba(255, 255, 255, .9); box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95), 0 8px 14px -10px color-mix(in srgb, var(--c) 60%, transparent); }
+.exec-item .list-icon svg { width: 25px; height: 25px; stroke-width: 2.4; }
+.exec-item .list-kicker { margin-bottom: 6px; }
+.exec-item .list-title { font-size: 19px; font-weight: 750; letter-spacing: -0.02em; }
+.exec-item .list-meta { margin-top: 6px; font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.exec-item.list-card > svg { width: 32px; height: 32px; padding: 9px; flex: none; margin: 0; border-radius: 50%; color: var(--ink-2); background: rgba(255, 255, 255, .6); border: 1px solid rgba(255, 255, 255, .9); box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95); }
+.exec-item.list-card:active { scale: .985; }
+@media (max-width: 380px) { .exec-stat { padding: 12px 12px; } .exec-stat b { font-size: 24px; } }
+
+/* Admin rows: Pinned sits top right; Repeats sits on the date line at the bottom right */
+.exec-stats { display: none; }
+.exec-item .list-kicker .kicker-badges { margin-left: auto; }
+.exec-item .list-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.exec-item .list-meta .rec-mark { display: inline-flex; align-items: center; gap: 5px; margin: 0; font-size: 12.5px; font-weight: 600; color: var(--ink-3); white-space: nowrap; }
+.exec-item .list-meta { flex-wrap: wrap; row-gap: 4px; }
+.exec-item .list-meta > span:first-child { white-space: nowrap; }
+.exec-item .list-meta .rec-mark { margin-left: auto; }
+
+/* Admin rows, final: no arrow. Pin is a small badge in the card corner; Repeats is a small tag beside the date. */
+.exec-item.list-card { position: relative; padding: 16px 18px 16px 18px; }
+.exec-item.list-card > svg { display: none; }
+.exec-item .pin-badge {
+  position: absolute; top: 14px; right: 14px; z-index: 2; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
+  color: color-mix(in srgb, var(--c) 85%, #1b1626); background: color-mix(in srgb, var(--c) 14%, rgba(255, 255, 255, .7)); border: 1px solid rgba(255, 255, 255, .9);
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95), 0 6px 12px -8px color-mix(in srgb, var(--c) 60%, transparent);
+}
+.exec-item .pin-badge svg { width: 15px; height: 15px; stroke-width: 2.6; }
+.exec-item .list-body { padding-right: 34px; }
+.exec-item .list-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 6px 10px; }
+.exec-item .list-meta > span:first-child { white-space: nowrap; }
+.exec-item .list-meta .rec-mark {
+  display: inline-flex; align-items: center; gap: 5px; margin: 0; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap;
+  color: color-mix(in srgb, var(--c) 80%, #1b1626); background: color-mix(in srgb, var(--c) 12%, rgba(255, 255, 255, .6)); border: 1px solid rgba(255, 255, 255, .85);
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95);
+}
+.exec-item .list-meta .rec-mark svg { width: 13px; height: 13px; stroke-width: 2.6; }
+.exec-item .list-meta { flex-direction: column; align-items: flex-start; gap: 8px; }
+
+
+/* Open button: a round arrow, vertically centred on the right, same size as the pin badge */
+.exec-item .go-btn {
+  position: absolute; top: 50%; right: 14px; transform: translateY(-50%); z-index: 2; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
+  color: var(--ink-2); background: rgba(255, 255, 255, .7); border: 1px solid rgba(255, 255, 255, .9);
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .95), 0 6px 12px -8px rgba(45, 20, 90, .4);
+  transition: background-color .12s ease-out, color .12s ease-out;
+}
+.exec-item .go-btn svg { width: 15px; height: 15px; stroke-width: 3; transform: rotate(-90deg); }
+.exec-item.list-card:active .go-btn { color: #fff; background: linear-gradient(160deg, var(--accent-2), var(--brand)); }
+.exec-item .pin-badge { top: 12px; }
+/* Open arrow: bottom right of each card */
+.exec-item .go-btn { top: auto; bottom: 14px; transform: none; }
+/* Admin: more room between the logo row and the "Events" title */
+#panel-admin .exec-heading { margin-top: 28px; }
+
+/* Pinned on Updates: a solid, colour-coded pill so it stands out at a glance */
+#panel-updates .badge.badge-pin, #panel-view .badge.badge-pin, .list-card .kicker-badges .badge.badge-pin {
+  gap: 6px; padding: 7px 13px; border-radius: 999px; font-size: 12.5px; font-weight: 800; letter-spacing: .01em; color: #fff;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--c, var(--brand)) 92%, #fff), color-mix(in srgb, var(--c, var(--brand)) 82%, #1b1626));
+  border: 1px solid rgba(255, 255, 255, .55);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, .45), 0 8px 16px -8px color-mix(in srgb, var(--c, var(--brand)) 85%, transparent), 0 2px 4px rgba(45, 20, 90, .15);
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+#panel-updates .badge.badge-pin svg, #panel-view .badge.badge-pin svg, .list-card .kicker-badges .badge.badge-pin svg { width: 14px; height: 14px; color: #fff; stroke-width: 2.8; }
+/* a pinned card also gets a faint colour rim, so it reads as pinned even before you see the pill */
+#panel-updates .hero-card:has(.badge-pin), #panel-updates .list-card:has(.badge-pin) { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 45%, transparent), inset 1.5px 1.5px 1px rgba(255, 255, 255, .95), 0 22px 44px -24px color-mix(in srgb, var(--c) 55%, rgba(45, 20, 90, .5)), 0 3px 8px rgba(45, 20, 90, .06) !important; }

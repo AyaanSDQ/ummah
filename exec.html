@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ummah — Administrative</title>
-<link rel="stylesheet" href="assets/css/app.css?v=152">
+<title>Ummah - Administrative</title>
+<link rel="stylesheet" href="assets/css/app.css?v=206">
 <meta name="robots" content="noindex">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/svg+xml" href="assets/icons/logo.svg">
@@ -14,6 +14,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Ummah">
+<script>
+  try { var bg = localStorage.getItem("ummah-bg"); if (bg) document.documentElement.dataset.bg = bg; } catch (e) {}
+</script>
 </head>
 <body>
 
@@ -55,14 +58,17 @@
     <div id="list-view">
       <section class="feed-section exec-section">
       <div class="section-heading exec-heading">
-        <div class="label">All events</div>
+        <div class="exec-titlewrap">
+          <div class="label">Events</div>
+          <p class="exec-sub">Everything posted to Ummah</p>
+        </div>
         <span class="count" id="events-count">0</span>
       </div>
 
       <div class="new-post-box">
         <button type="button" id="new-post-toggle" class="new-post-toggle">
           <span class="plus-icon">PLUS_ICON</span>
-          <span class="label">New post</span>
+          <span class="np-text"><span class="label">New post</span><small>Prayer, social or announcement</small></span>
           <span id="new-post-chev" class="chev collapsed">CHEV_ICON</span>
         </button>
 
@@ -244,12 +250,44 @@
       </div>
     </section>
 
+    <section data-panel="calendar" id="panel-calendar" hidden>
+      <main id="calendar" class="calendar" aria-live="polite"></main>
+    </section>
+
+    <section data-panel="settings" id="panel-settings" hidden>
+      <div class="settings">
+        <h1 class="settings-title">Settings</h1>
+        <div class="settings-label">Notifications</div>
+        <div class="settings-group">
+          <div class="settings-row settings-switch-row">
+            <span class="settings-row-text"><span>Notifications</span><small id="notify-hint">Checking...</small></span>
+            <label class="switch"><input type="checkbox" id="notify-switch" disabled aria-label="Notifications"><span class="switch-track"></span></label>
+          </div>
+        </div>
+        <div class="settings-label">Background</div>
+        <div class="settings-group settings-swatches" id="bg-swatches" role="radiogroup" aria-label="Background colour"></div>
+        <div class="settings-label">About</div>
+        <div class="settings-group">
+          <a class="settings-row" href="privacy.html"><span>Privacy Policy</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a>
+          <a class="settings-row" href="terms.html"><span>Terms of Use</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a>
+          <a class="settings-row" href="index.html"><span>Public site</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a>
+        </div>
+        <div class="settings-label">Account</div>
+        <div class="settings-group">
+          <button type="button" class="settings-row settings-logout" id="settings-logout"><span>Log out</span></button>
+        </div>
+        <p class="settings-note">Made by students, for our community.<br>&copy; 2026 Ummah</p>
+      </div>
+    </section>
+
   </div>
 
   <!-- Outside #app-view on purpose: that element's entrance animation would trap this fixed bar inside it. -->
   <nav id="exec-nav" class="bnav" hidden aria-label="Administrative sections">
       <a href="exec.html" class="bnav-item" data-panel-link="admin" aria-current="page"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-case"></use></svg><span>Admins</span></a>
       <a href="exec.html#view" class="bnav-item" data-panel-link="view"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-mega"></use></svg><span>View</span></a>
+      <a href="exec.html#calendar" class="bnav-item" data-panel-link="calendar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-calendar"></use></svg><span>Calendar</span></a>
+      <a href="exec.html#settings" class="bnav-item" data-panel-link="settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-gear"></use></svg><span>Settings</span></a>
     </nav>
 
   <footer class="app-footer">
@@ -264,7 +302,7 @@
 </div>
 
 <script type="module">
-  import { ICON_SPRITE, icon } from "./assets/js/icons.js?v=15";
+  import { ICON_SPRITE, icon } from "./assets/js/icons.js?v=16";
   document.getElementById("icon-sprite").innerHTML = ICON_SPRITE;
   document.querySelector(".plus-icon").innerHTML = icon("i-plus", { size: 16, stroke: 2.75 });
   document.getElementById("new-post-chev").innerHTML = icon("i-chev", { size: 15, stroke: 2.75 });
@@ -279,10 +317,15 @@
 </script>
 <script type="module">
   import { initPanels } from "./assets/js/nav.js?v=1";
-  initPanels({ home: "admin", titles: { admin: "Ummah — Administrative", view: "View — Ummah" } });
+  initPanels({ home: "admin", titles: { admin: "Ummah - Administrative", view: "View - Ummah", calendar: "Calendar - Ummah", settings: "Settings - Ummah" } });
 </script>
-<script type="module" src="assets/js/exec.js?v=52"></script>
+<script type="module" src="assets/js/exec.js?v=58"></script>
+<script type="module" src="assets/js/calendar.js?v=45"></script>
 <script src="assets/js/fx.js?v=4" defer></script>
 <script src="assets/js/sw-register.js?v=3"></script>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script type="module" src="assets/js/notify.js?v=14"></script>
+<script type="module" src="assets/js/settings.js?v=2"></script>
+<script>document.getElementById("settings-logout")?.addEventListener("click",function(){document.getElementById("header-logout").click();});</script>
 </body>
 </html>

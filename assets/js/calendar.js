@@ -1,6 +1,6 @@
 import { supabase } from "./supabase-client.js";
-import { icon } from "./icons.js?v=15";
-import { TYPE_META, escapeHtml, formatTime, roomLabel, buildingFor, emptyCardHtml, animateRemove } from "./shared.js?v=30";
+import { icon } from "./icons.js?v=16";
+import { TYPE_META, escapeHtml, formatTime, roomLabel, buildingFor, emptyCardHtml, animateRemove } from "./shared.js?v=35";
 import { expandSeries, describeRule } from "./recurrence.js?v=3";
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -284,8 +284,8 @@ function nextEventHint(byDay) {
   const first = best.list[0];
   const when = `${new Date(best.y, best.m, best.d).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" })} · ${formatTime(first.event_time)}`;
   return `<button type="button" class="cal-next-hint" data-goto-day="${best.d}">
-    <span class="cal-next-text"><small>Next up</small><b>${escapeHtml(first.title)}</b></span>
-    <span class="cal-next-when">${escapeHtml(when)}${icon("i-chev", { size: 14 })}</span>
+    <span class="cal-next-text"><small>Next up</small><b>${escapeHtml(first.title)}</b><span class="cal-next-when">${escapeHtml(when)}</span></span>
+    ${icon("i-chev", { size: 18 })}
   </button>`;
 }
 
@@ -294,13 +294,9 @@ function eventCard(u) {
   if (!meta) return "";
   const cancelled = u.status === "cancelled";
   return `<article class="cal-ev${cancelled ? " is-cancelled" : ""}" style="--c:var(--type-${u.type}-hero)" data-update-id="${u.id}">
-    <div class="cal-ev-top">
-      <div class="cal-ev-id">
-        <div class="cal-ev-kicker"><i></i>${meta.label}${u.is_occurrence ? `<span class="rec-mark" title="${escapeHtml(describeRule(u.recurrence))}">${icon("i-repeat", { size: 12 })}${escapeHtml(describeRule(u.recurrence).split(" · ")[0])}</span>` : ""}</div>
-        <h3 class="cal-ev-title">${escapeHtml(u.title)}</h3>
-      </div>
-      <div class="cal-ev-when"><b>${escapeHtml(formatTime(u.event_time))}</b><small>${escapeHtml(new Date(u.event_time).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" }))}</small></div>
-    </div>
+    <div class="cal-ev-kicker"><span class="type-pill"><i></i>${meta.label}</span>${u.is_occurrence ? `<span class="rec-mark" title="${escapeHtml(describeRule(u.recurrence))}">${icon("i-repeat", { size: 12 })}${escapeHtml(describeRule(u.recurrence).split(" · ")[0])}</span>` : ""}</div>
+    <h3 class="cal-ev-title">${escapeHtml(u.title)}</h3>
+    <div class="cal-ev-when"><b>${escapeHtml(formatTime(u.event_time))}</b><small>${escapeHtml(new Date(u.event_time).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" }))}</small></div>
     ${cancelled ? `<div class="cal-ev-cancel">Cancelled${u.cancel_reason ? `: ${escapeHtml(u.cancel_reason)}` : ""}</div>` : ""}
     ${u.location ? `<div class="cal-ev-place">${icon("i-pin", { size: 15 })}<span>${escapeHtml(u.location)}${buildingFor(u.location) ? `<small>Building ${buildingFor(u.location)}</small>` : ""}</span></div>` : ""}
     ${u.body ? `<p class="cal-ev-notes">${escapeHtml(u.body)}</p>` : ""}

@@ -3,14 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Privacy Policy — Ummah</title>
+<title>Privacy Policy - Ummah</title>
 <meta name="description" content="How Ummah handles your data: what we collect, why, and the choices you have.">
-<link rel="stylesheet" href="assets/css/app.css?v=152">
+<link rel="stylesheet" href="assets/css/app.css?v=206">
 <link rel="icon" type="image/svg+xml" href="assets/icons/logo.svg">
 <link rel="icon" href="assets/icons/icon-192.png">
 <meta name="theme-color" content="#5b2e91">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>
+  try { var bg = localStorage.getItem("ummah-bg"); if (bg) document.documentElement.dataset.bg = bg; } catch (e) {}
+</script>
 </head>
 <body>
 <div class="app">
@@ -21,7 +24,7 @@
 
   <main class="legal">
     <h1>Privacy Policy</h1>
-    <p class="legal-meta">Last updated November 15, 2026</p>
+    <p class="legal-meta">Last updated November 18, 2026</p>
 
     <p class="legal-lede">Ummah shares updates, rooms and events for our Muslim Student Association. You don't need an account to use it, and we collect as little as we can. This page explains exactly what that is.</p>
 
@@ -36,9 +39,9 @@
     <table>
       <thead><tr><th>What</th><th>When</th><th>Why</th></tr></thead>
       <tbody>
-        <tr><td data-label="What"><strong>Push notification subscription</strong> (an anonymous device ID, browser type and notification permission)</td><td data-label="When">Only if you install the app and tap Enable</td><td data-label="Why">To alert you when an update or cancellation is posted</td></tr>
+        <tr><td data-label="What"><strong>Push notification subscription</strong> (an anonymous device ID, browser type and notification permission)</td><td data-label="When">Only if you install the app and switch on Update alerts in Settings</td><td data-label="Why">To alert you when an update or cancellation is posted</td></tr>
         <tr><td data-label="What"><strong>Administrative login</strong> (username, password and display name)</td><td data-label="When">Only for executive board members</td><td data-label="Why">To let authorised people post and manage updates. We do not collect any email address: our login provider requires an email-shaped identifier, so it stores a generated placeholder built from the username (for example <code>name@ummah.example.com</code>). That address is not real and never receives mail.</td></tr>
-        <tr><td data-label="What"><strong>Small settings on your device</strong> (for example, that you dismissed a banner)</td><td data-label="When">When you dismiss an install or notification banner</td><td data-label="Why">So we don't keep showing it</td></tr>
+        <tr><td data-label="What"><strong>Small settings on your device</strong> (for example, the background colour you pick in Settings)</td><td data-label="When">When you change a setting</td><td data-label="Why">So the app looks the way you chose next time. It stays on your device and is never sent to us</td></tr>
         <tr><td data-label="What"><strong>Technical data</strong> (IP address, browser and device type)</td><td data-label="When">Automatically, whenever any website is loaded</td><td data-label="Why">Needed to deliver the page, and handled by the services listed below</td></tr>
       </tbody>
     </table>
@@ -54,7 +57,7 @@
     <p>Ummah no longer collects feedback. Feedback sent through earlier versions was anonymous and was never shown publicly. Only executive board members can read it, and they can delete it on request.</p>
 
     <h2>Notifications</h2>
-    <p>Notifications use a service called OneSignal. If you choose to enable them, OneSignal receives an anonymous identifier for your device and browser so it can deliver alerts. You can turn notifications off at any time in your device or browser settings, and we'll stop sending them to that device.</p>
+    <p>Notifications use a service called OneSignal. If you choose to enable them, OneSignal receives an anonymous identifier for your device and browser so it can deliver alerts. You can turn notifications on or off at any time with the Update alerts switch and the Turn off notifications button in the app's Settings, or in your device or browser settings, and we'll stop sending them to that device.</p>
 
     <h2>Services we rely on</h2>
     <p>Ummah is built with a few outside services. They may receive technical data such as your IP address when your device connects to them.</p>
@@ -67,7 +70,7 @@
     <p>We don't sell your data or share it with anyone else, except where the law requires it.</p>
 
     <h2>Storage on your device</h2>
-    <p>The app saves its own files on your device so it loads faster and works with a weak connection. It also remembers small choices, such as dismissing a banner. Executive board members stay signed in using a login token saved on their device. You can clear all of this from your browser settings at any time.</p>
+    <p>The app saves its own files on your device so it loads faster and works with a weak connection. It also remembers small choices, such as the background colour you pick in Settings. Executive board members stay signed in using a login token saved on their device. You can clear all of this from your browser settings at any time.</p>
 
     <h2>How long we keep things</h2>
     <p>Posts and any earlier feedback are kept for as long as they are useful to the Muslim Student Association, and the executive board can delete them at any time. Notification subscriptions are kept until you turn notifications off or remove the app.</p>
@@ -75,7 +78,7 @@
     <h2>Your choices</h2>
     <ul>
       <li>Use the site without giving us any personal information at all.</li>
-      <li>Turn notifications off in your device or browser settings.</li>
+      <li>Turn notifications off from Settings in the app, or in your device or browser settings.</li>
       <li>Clear the app's stored data in your browser settings.</li>
       <li>Ask an executive board member to remove any earlier feedback that contains personal details. Because feedback was anonymous, we can't search for it by person, so tell us roughly what it said and which post it was on.</li>
     </ul>
