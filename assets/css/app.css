@@ -2611,3 +2611,12 @@ main.legal > * { position: relative; z-index: 1; }
 #panel-updates .badge.badge-pin svg, #panel-view .badge.badge-pin svg, .list-card .kicker-badges .badge.badge-pin svg { width: 14px; height: 14px; color: #fff; stroke-width: 2.8; }
 /* a pinned card also gets a faint colour rim, so it reads as pinned even before you see the pill */
 #panel-updates .hero-card:has(.badge-pin), #panel-updates .list-card:has(.badge-pin) { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 45%, transparent), inset 1.5px 1.5px 1px rgba(255, 255, 255, .95), 0 22px 44px -24px color-mix(in srgb, var(--c) 55%, rgba(45, 20, 90, .5)), 0 3px 8px rgba(45, 20, 90, .06) !important; }
+
+/* Calendar days stay rounded in every state (hover, press, selected), so a tap never flashes a square */
+#calendar .cal-day, #calendar .cal-day:hover, #calendar .cal-day:active, #calendar .cal-day:focus, #calendar .cal-day:focus-visible,
+#calendar .cal-day.has, #calendar .cal-day.has:hover, #calendar .cal-day.has:active,
+#calendar .cal-day.selected, #calendar .cal-day.selected:hover, #calendar .cal-day.selected:active, #calendar .cal-day.today,
+#calendar .cal-pad, #calendar .cal-pad:hover { border-radius: 18px !important; }
+#calendar .cal-day:focus-visible { outline: 0; box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand) 45%, transparent); }
+#calendar .cal-day { -webkit-tap-highlight-color: transparent; }
+#calendar .cal-day:active:not(.selected) { background: color-mix(in srgb, var(--brand) 10%, rgba(255, 255, 255, .55)); }
